@@ -7,36 +7,56 @@
             <b-card no-body class="p-4">
               <b-card-body>
                 <b-form>
-                  <h1>SIA<strong>UFV</strong></h1>
-                  <p class="text-muted">Entrar com sua conta</p>
+                  <h1>SIA<strong>UFV</strong></h1> 
+                  <p class="text-muted">Entre com sua conta</p>
                   <b-input-group class="mb-3">
                     <b-input-group-prepend><b-input-group-text><i class="icon-user"></i></b-input-group-text></b-input-group-prepend>
-                    <b-form-input type="text" class="form-control" placeholder="Username" autocomplete="username email" />
+                    <!-- E-MAIL -->
+                    <b-form-input type="email" 
+                        v-model="email" v-validate="'required|email'" 
+                        name="email" class="form-control" 
+                        :class="{ 'is-invalid': submitted && errors.has('email') }" 
+                        placeholder="E-mail"
+                    /> 
+                    <div v-if="submitted && errors.has('email')" class="invalid-feedback">{{ errors.first('email') }}</div>
+                    <!-- E-MAIL -->
                   </b-input-group>
                   <b-input-group class="mb-4">
                     <b-input-group-prepend><b-input-group-text><i class="icon-lock"></i></b-input-group-text></b-input-group-prepend>
-                    <b-form-input type="password" class="form-control" placeholder="Password" autocomplete="current-password" />
+                    <!-- PASSWORD-->
+                    <b-form-input type="password" 
+                          v-model="password" v-validate="{ required: true, min: 6 }" 
+                          name="password" class="form-control" 
+                          :class="{ 'is-invalid': submitted && errors.has('password') }" 
+                          placeholder="Senha"
+                    /> 
+                    <div v-if="submitted && errors.has('password')" class="invalid-feedback">{{ errors.first('password') }}</div>
+                    <!-- PASSWORD-->
                   </b-input-group>
                   <b-row>
                     <b-col cols="6">
-                      <b-button variant="primary" class="px-4">Login</b-button>
+                      <b-button variant="primary" @click="handleSubmit" class="px-4">Login</b-button>
                     </b-col>
                     <b-col cols="6" class="text-right">
                       <b-button variant="link" class="px-0">Perdeu a senha?</b-button>
                     </b-col>
+                  </b-input-group>
                   </b-row>
                 </b-form>
               </b-card-body>
+              <div v-if="submitted && errors.has('auth')" style="color: red" class="container">{{ errors.first('auth') }}</div>
             </b-card>
             <b-card no-body class="text-white bg-primary py-5 d-md-down-none" style="width:44%">
               <b-card-body class="text-center">
                 <div>
                   <h2>Registre-se</h2>
                   <p>Sistema gerencial do Simpósio de Integração Acadêmica da Universidade Federal de Viçosa</p>
-                  <b-button variant="primary" class="active mt-3">Registre-se</b-button>
+                  <b-button href="/#/pages/register" variant="primary" class="active mt-3">Registre-se</b-button>
                 </div>
               </b-card-body>
+              
             </b-card>
+            
           </b-card-group>
         </b-col>
       </b-row>
@@ -45,7 +65,61 @@
 </template>
 
 <script>
+import axios from 'axios';
+import Vue from 'vue'
+import VeeValidate, { Validator } from 'vee-validate';
+
+import pt_BR from 'vee-validate/dist/locale/pt_BR';
+
+Vue.use(VeeValidate, {fieldsBagName: 'formFields'}); // Esse fieldsBagName é só pra tirar o warn de conflito com field do veevalidate
+Validator.localize('pt_BR', pt_BR);
+
 export default {
-  name: 'Login'
+  name: 'Login',
+  data () {
+    return {
+      email: '',
+      password: '',
+      submitted: false
+    }
+  },
+  methods: {
+    //Checar o formulário em busca de erros
+    handleSubmit(e) {
+      this.submitted = true;
+      this.$validator.validate().then(valid => {
+          if (valid) {
+              this.login()
+              //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.user))
+          }
+      });
+    },
+    //Função de login para retornar o token
+    login() {
+      console.log("Entrou no metodo login")
+      console.log(this.email, this.password)
+      axios.post('http://127.0.0.1:3333/login', {
+        email: this.email,
+        password: this.password
+      })
+      .then(response => {
+        console.log("response: ")
+        console.log(response)
+        // console.log("response.data.userData: " )
+        // console.log(response.data.userData.isAdmin)
+        // console.log("response.data.tokenData: ")
+        // console.log(response.data.tokenData.token)
+        if(response.data.tokenData){
+          // Se entrar aqui autenticou com sucesso
+          sessionStorage.setItem('user', JSON.stringify(response.data))
+          this.$router.push('/dashboard')
+        } 
+        console.log(response.status)
+      })
+      .catch((error) => {
+        this.errors.add({ field: 'auth', msg: 'E-mail ou senha inválidos' })
+      });
+    },
+  }
 }
 </script>

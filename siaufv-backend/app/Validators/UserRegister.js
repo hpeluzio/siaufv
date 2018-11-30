@@ -4,8 +4,9 @@ class UserRegister {
   get rules () {
     return {
       'username': 'required|unique:users',
-      'email': 'required|email|unique:users',
-      'password': 'required'
+      'email': 'required|email|unique:users,email',
+      'password': 'required|min:6',
+      'confirm_password': 'required|min:6'
     }
   }
 
@@ -18,7 +19,8 @@ class UserRegister {
   }
 
   async fails(error) {
-    return this.ctx.response.json( { "error" : error })
+    console.log(error)
+    return this.ctx.response.status(400).json( { "error" : error })
   }
 }
 

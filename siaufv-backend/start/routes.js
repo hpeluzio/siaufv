@@ -21,6 +21,6 @@ Route.get('/', () => {
 })
 
 Route.get('/rotateste', 'UserController.rotateste')
-Route.post('/register', 'UserController.register').validator('UserRegister')
-Route.post('/login', 'UserController.login').validator('UserLogin')
+Route.post('/register', 'Auth/AuthController.register').validator('UserRegister')
+Route.post('/login', 'Auth/AuthController.login').validator('UserLogin')
 

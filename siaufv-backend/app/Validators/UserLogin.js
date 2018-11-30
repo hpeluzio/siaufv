@@ -16,7 +16,8 @@ class UserLogin {
   }
 
   async fails(error) {
-    return this.ctx.response.json( { "error" : error })
+    console.log(error)
+    return this.ctx.response.status(400).json( { "error" : error })
   }
 }
 

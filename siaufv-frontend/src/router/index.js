@@ -60,7 +60,8 @@ const User = () => import('@/views/users/User')
 
 Vue.use(Router)
 
-export default new Router({
+//export default new Router({
+const router = new Router({
   mode: 'hash', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
@@ -70,16 +71,26 @@ export default new Router({
       redirect: '/dashboard',
       name: 'Home',
       component: DefaultContainer,
+      meta: {
+        requiresAuth: true,
+      },
       children: [
         {
           path: 'dashboard',
           name: 'Dashboard',
-          component: Dashboard
+          component: Dashboard,
+          meta: {
+            requiresAuth: true,
+            isAdmin: true
+          }
         },
         {
           path: 'theme',
           redirect: '/theme/colors',
           name: 'Theme',
+          meta: {
+            requiresAuth: true,
+          },
           component: {
             render (c) { return c('router-view') }
           },
@@ -87,28 +98,43 @@ export default new Router({
             {
               path: 'colors',
               name: 'Colors',
-              component: Colors
+              component: Colors,
+              meta: {
+                requiresAuth: true
+              },
             },
             {
               path: 'typography',
               name: 'Typography',
-              component: Typography
+              component: Typography,
+              meta: {
+                requiresAuth: true,
+              },
             }
           ]
         },
         {
           path: 'charts',
           name: 'Charts',
-          component: Charts
+          component: Charts,
+          meta: {
+            requiresAuth: true,
+          },
         },
         {
           path: 'widgets',
           name: 'Widgets',
-          component: Widgets
+          component: Widgets,
+          meta: {
+            requiresAuth: true,
+          },
         },
         {
           path: 'users',
-          meta: { label: 'Users'},
+          meta: { 
+            label: 'Users',
+            requiresAuth: true
+          },
           component: {
             render (c) { return c('router-view') }
           },
@@ -116,12 +142,18 @@ export default new Router({
             {
               path: '',
               component: Users,
+              meta: {
+                requiresAuth: true,
+              },
             },
             {
               path: ':id',
               meta: { label: 'User Details'},
               name: 'User',
               component: User,
+              meta: {
+                requiresAuth: true,
+              },
             },
           ]
         },
@@ -132,11 +164,17 @@ export default new Router({
           component: {
             render (c) { return c('router-view') }
           },
+          meta: {
+            requiresAuth: true,
+          },
           children: [
             {
               path: 'cards',
               name: 'Cards',
-              component: Cards
+              component: Cards,
+              meta: {
+                requiresAuth: true,
+              },
             },
             {
               path: 'forms',
@@ -334,3 +372,36 @@ export default new Router({
     }
   ]
 })
+
+// Middleware de autenticação para as rotas
+router.beforeEach((to, from, next) => {
+  //Next é para onde está indo e from é de onde veio
+  console.log("beforeEach")
+  // //Se precisade de autenticacao e nao tiver sessao ja manda logo pra pagina de login
+  if(to.matched.some(record => record.meta.requiresAuth) && sessionStorage.getItem('user') == null) {
+    console.log("to.matched.some")
+    next({ name: 'Login' })
+  } 
+
+  //Setando a sessao na variavel user
+  let user = JSON.parse(sessionStorage.getItem('user'))
+  console.log("user");
+  // if(user)
+  // if(!user.userData.isAdmin != null)
+  //   console.log(user.userData.isAdmin);
+  //Se precisar de de autenticacao e admin ai continua
+  if(to.matched.some(record => record.meta.isAdmin) && user.userData.isAdmin == 1) {
+    console.log("COM permissao isAdmin")
+    next()
+  } else if (to.matched.some(record => record.meta.isAdmin) && (user.userData.isAdmin == 0 || user.userData.isAdmin == null)){ //Se precisa de autenticacao e nao eh admin entao manda pra tela do 
+    console.log("Sem permissao NAO isAdmin")
+    next({  path: 'users' }) 
+  }
+
+next()
+
+
+})
+
+export default router
+
