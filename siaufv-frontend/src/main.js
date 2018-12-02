@@ -14,6 +14,10 @@ import router from './router'
 
 Vue.use(BootstrapVue)
 
+// Vuetify
+import Vuetify from 'vuetify'
+Vue.use(Vuetify)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

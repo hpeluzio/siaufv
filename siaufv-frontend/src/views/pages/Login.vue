@@ -98,10 +98,19 @@ export default {
     login() {
       console.log("Entrou no metodo login")
       console.log(this.email, this.password)
-      axios.post('http://127.0.0.1:3333/login', {
-        email: this.email,
-        password: this.password
+      // axios.post('http://127.0.0.1:3333/login', {
+      //   email: this.email,
+      //   password: this.password
+      // })
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:3333/login',
+        data: {
+          email: this.email,
+          password: this.password
+        }
       })
+
       .then(response => {
         console.log("response: ")
         console.log(response)

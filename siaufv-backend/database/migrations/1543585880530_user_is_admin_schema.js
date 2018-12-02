@@ -11,7 +11,9 @@ class UserIsAdminSchema extends Schema {
   }
 
   down () {
-    this.drop('user_is_admins')
+    this.alter('users', (table) => {
+      table.dropColumn('isAdmin')
+    })
   }
 }
 

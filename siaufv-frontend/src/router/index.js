@@ -4,6 +4,14 @@ import Router from 'vue-router'
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer')
 
+
+// SIA
+const Ano = () => import('@/views/pages/Ano')
+const Avaliador = () => import('@/views/pages/Avaliador')
+
+// SIA
+
+
 // Views
 const Dashboard = () => import('@/views/Dashboard')
 
@@ -81,7 +89,25 @@ const router = new Router({
           component: Dashboard,
           meta: {
             requiresAuth: true,
-            isAdmin: true
+            //isAdmin: true
+          }
+        },
+        {
+          path: 'ano',
+          name: 'Ano',
+          component: Ano,
+          meta: {
+            requiresAuth: true,
+            //isAdmin: true
+          }
+        },
+        {
+          path: 'avaliador',
+          name: 'Avaliador',
+          component: Avaliador,
+          meta: {
+            requiresAuth: true,
+            //isAdmin: true
           }
         },
         {
@@ -374,34 +400,34 @@ const router = new Router({
 })
 
 // Middleware de autenticação para as rotas
-router.beforeEach((to, from, next) => {
-  //Next é para onde está indo e from é de onde veio
-  console.log("beforeEach")
-  // //Se precisade de autenticacao e nao tiver sessao ja manda logo pra pagina de login
-  if(to.matched.some(record => record.meta.requiresAuth) && sessionStorage.getItem('user') == null) {
-    console.log("to.matched.some")
-    next({ name: 'Login' })
-  } 
+// router.beforeEach((to, from, next) => {
+//   //Next é para onde está indo e from é de onde veio
+//   console.log("beforeEach")
+//   // //Se precisade de autenticacao e nao tiver sessao ja manda logo pra pagina de login
+//   if(to.matched.some(record => record.meta.requiresAuth) && sessionStorage.getItem('user') == null) {
+//     console.log("to.matched.some")
+//     next({ name: 'Login' })
+//   } 
 
-  //Setando a sessao na variavel user
-  let user = JSON.parse(sessionStorage.getItem('user'))
-  console.log("user");
-  // if(user)
-  // if(!user.userData.isAdmin != null)
-  //   console.log(user.userData.isAdmin);
-  //Se precisar de de autenticacao e admin ai continua
-  if(to.matched.some(record => record.meta.isAdmin) && user.userData.isAdmin == 1) {
-    console.log("COM permissao isAdmin")
-    next()
-  } else if (to.matched.some(record => record.meta.isAdmin) && (user.userData.isAdmin == 0 || user.userData.isAdmin == null)){ //Se precisa de autenticacao e nao eh admin entao manda pra tela do 
-    console.log("Sem permissao NAO isAdmin")
-    next({  path: 'users' }) 
-  }
+//   // //Setando a sessao na variavel user
+//   // let user = JSON.parse(sessionStorage.getItem('user'))
+//   // console.log("user");
+//   // // if(user)
+//   // // if(!user.userData.isAdmin != null)
+//   // //   console.log(user.userData.isAdmin);
+//   // //Se precisar de de autenticacao e admin ai continua
+//   // if(to.matched.some(record => record.meta.isAdmin) && user.userData.isAdmin == 1) {
+//   //   console.log("COM permissao isAdmin")
+//   //   next()
+//   // } else if (to.matched.some(record => record.meta.isAdmin) && (user.userData.isAdmin == 0 || user.userData.isAdmin == null)){ //Se precisa de autenticacao e nao eh admin entao manda pra tela do 
+//   //   console.log("Sem permissao NAO isAdmin")
+//   //   next({  path: 'users' }) 
+//   // }
 
-next()
+// next()
 
 
-})
+// })
 
 export default router
 

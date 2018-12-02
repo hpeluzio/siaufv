@@ -6,7 +6,7 @@ class AuthController {
 
     async register ( { request, response, auth}) {
         //Pegando os campos da requisicao
-          const { username, email, password, confirm_password } = await request.only(['username','email','password', 'confirm_password'])
+        const { username, email, password, confirm_password } = await request.only(['username','email','password', 'confirm_password'])
         //Try Catch para capturar possiveis erros e garantir 
         console.log(username, email, password, confirm_password)
 
@@ -17,7 +17,12 @@ class AuthController {
         try {
             await User.create({ username, email, password })
             const token = await auth.attempt(email, password)
-            return token
+
+            const user = await User.findByOrFail('email', email)
+            user.password = undefined
+
+            //Retornar o token e dados do usuario
+            return { 'tokenData': token, 'userData':  user}
         } catch (err) {
             console.log(err)
             return response.status(500).send( { "error": err } )
@@ -29,17 +34,14 @@ class AuthController {
         //Pegando os campos da requisicao
         const { email, password } = await request.only( ['email','password'] )
         //Try Catch para capturar possiveis erros e garantir 
-        try {
+        try {console.log("UAI0")
             console.log(email, password)
             const token = await auth.attempt(email, password)
-            //const user = await User.query().where('email','=', email)
+
             const user = await User.findByOrFail('email', email)
             user.password = undefined
-            //console.log(user)
-            console.log("AuthController - login")
-            //console.log(token);
-            
-            //token.
+
+            //Retornar o token e dados do usuario
             return { 'tokenData': token, 'userData':  user}
         } catch (err) {
             return response.status(401).send( { "error": "E-mail ou senha informados estão incorretos." } )

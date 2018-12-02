@@ -100,7 +100,7 @@ Validator.localize('pt_BR', pt_BR);
 
 export default {
   name: 'Register',
-    data () {
+  data () {
     return {
       username: '',
       email: '',
@@ -127,7 +127,8 @@ export default {
         confirm_password: this.confirm_password
       })
       .then(response => {
-        if(response.data.token){
+        if(response.data.tokenData){
+          console.log("Register Response")
           // Se entrar aqui autenticou com sucesso
           sessionStorage.setItem('user', JSON.stringify(response.data))
           console.log(response.data.token)

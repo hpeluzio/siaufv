@@ -20,7 +20,7 @@ export default {
     },
     {
       name: 'Ano',
-      url: '/theme/colors',
+      url: '/ano',
       icon: 'icon-calendar'
     },
     {
@@ -174,8 +174,8 @@ export default {
     //   ]
     // },
     {
-      name: 'Avaliadores',
-      url: '/1',
+      name: 'Avaliador',
+      url: '/avaliador',
       icon: 'icon-people'
     },
     {
