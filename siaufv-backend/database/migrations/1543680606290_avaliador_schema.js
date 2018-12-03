@@ -13,7 +13,8 @@ class AvaliadorSchema extends Schema {
       table.string('instituto').notNullable()
       table.string('email').notNullable()
       //table.integer('ano_id').references('id').inTable('anos').onDelete('CASCADE').notNullable()
-      table.integer('ano_id').references('id').inTable('anos').notNullable().onDelete('CASCADE').notNullable().unsigned()
+      table.integer('ano').unsigned().notNullable()
+      table.foreign('ano').references('anos.ano')
       table.timestamps()
     })
   }

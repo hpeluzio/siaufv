@@ -16,7 +16,16 @@ Vue.use(BootstrapVue)
 
 // Vuetify
 import Vuetify from 'vuetify'
-Vue.use(Vuetify)
+//Vue.use(Vuetify)
+import 'vuetify/dist/vuetify.min.css' 
+
+import pt from 'vuetify/src/locale/pt.ts'
+Vue.use(Vuetify,{
+  lang:{
+    locales: { 'pt': pt }
+  }
+})
+
 
 /* eslint-disable no-new */
 new Vue({

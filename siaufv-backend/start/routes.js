@@ -23,6 +23,14 @@ Route.post('/register', 'Auth/AuthController.register').validator('UserRegister'
 Route.post('/login', 'Auth/AuthController.login').validator('UserLogin')
 //
 Route.get('/ano', 'AnoController.index')//.middleware('auth:user')
-Route.get('/avaliador', 'AvaliadorController.index')//.middleware('auth:user')
+
+//Rotas do Avaliador
+Route
+    .resource('/avaliador', 'AvaliadorController')
+    .apiOnly()
+    .validator(new Map([
+        [['store'], ['AvaliadorStore']],
+        //[['update'], ['AvaliadorUpdate']]
+      ]))//.middleware('auth:user')
 
 

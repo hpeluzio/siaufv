@@ -25,18 +25,6 @@ class AvaliadorController {
   }
 
   /**
-   * Render a form to be used for creating a new avaliador.
-   * GET avaliadors/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-  }
-
-  /**
    * Create/save a new avaliador.
    * POST avaliadors
    *
@@ -45,6 +33,17 @@ class AvaliadorController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    
+    const { matricula, nome, curso, instituto, email, ano } = request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ano' ]);
+    //console.log(matricula, nome,curso, instituto, email, ano)
+    try {
+      await Avaliador.create({ matricula, nome, curso, instituto, email, ano })
+    } catch (error) {
+      //console.log(error)
+      return response.status(500).send({ "error": error });
+    }
+    //Se chegou até aqui então o avaliador foi adicionado com sucesso
+    return response.status(200).send({ "success": "Avaliador registrado com sucesso" });
   }
 
   /**
@@ -60,18 +59,6 @@ class AvaliadorController {
   }
 
   /**
-   * Render a form to update an existing avaliador.
-   * GET avaliadors/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
-
-  /**
    * Update avaliador details.
    * PUT or PATCH avaliadors/:id
    *
@@ -80,6 +67,25 @@ class AvaliadorController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    console.log(params.id)
+    //return "ok"
+    const { matricula, nome, curso, instituto, email, ano } = request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ano' ]);
+    //console.log(matricula, nome,curso, instituto, email, ano)
+    console.log('chegou aqui')
+    try {
+      var avaliador = await Avaliador.findOrFail(params.id)
+      avaliador.matricula = matricula
+      avaliador.curso = curso
+      avaliador.instituto = instituto
+      avaliador.email = email
+      avaliador.ano = ano
+      await avaliador.save()
+    } catch (error) {
+      //console.log(error)
+      return response.status(500).send({ "error": error });
+    }
+    //Se chegou até aqui então o avaliador foi adicionado com sucesso
+    return response.status(200).send({ "success": "Avaliador registrado com sucesso" });
   }
 
   /**
@@ -91,6 +97,16 @@ class AvaliadorController {
    * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
+
+    try {
+      var avaliador = await Avaliador.findOrFail(params.id)
+      await avaliador.delete()
+    } catch (error) {
+      //console.log(error)
+      return response.status(500).send({ "error": error });
+    }
+    //Se chegou até aqui então o avaliador foi adicionado com sucesso
+    return response.status(200).send({ "success": "Avaliador deletado com sucesso" });
   }
 }
 
