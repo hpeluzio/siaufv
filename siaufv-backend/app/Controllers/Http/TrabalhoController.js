@@ -23,15 +23,17 @@ class TrabalhoController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
-    //const trabalhos = await Trabalho.all().with('trabalho_autor')
+    const trabalhos = await Trabalho.all()
+    const trabalhos_autores = await TrabalhoAutor.all()
 
-    const trabalhos = await Database
-    .select('trabalhos.trabalho_id', 'nome', 'autor', 'orientador', 'modalidade', 'area', 'ano')
-    .table('trabalhos')
-    .innerJoin('trabalho_autors', function () {
-      this
-        .on('trabalhos.trabalho_id', 'trabalho_autors.trabalho_id')
-    })
+
+    // const trabalhos = await Database
+    //   .select('trabalhos.trabalho_id', 'nome', 'autor', 'orientador', 'modalidade', 'area', 'ano')
+    //   .table('trabalhos')
+    //   .innerJoin('trabalho_autors', function () {
+    //     this
+    //       .on('trabalhos.trabalho_id', 'trabalho_autors.trabalho_id')
+    // })
 
     //var trabalho_autor = await TrabalhoAutor.all()
     
@@ -40,8 +42,10 @@ class TrabalhoController {
     //console.log(trabalho_autor[0].trabalho_id)
 
     //console.log(JSON.parse(trabalho_autor))
+    console.log(trabalhos)
+    console.log(trabalhos_autores)
 
-    return trabalhos
+    return { 'trabalhos': trabalhos, 'trabalhos_autores':trabalhos_autores }//, trabalhosAutores
   }
 
   /**
@@ -141,7 +145,7 @@ class TrabalhoController {
   }
 
   //Pegar todos os autores de um trabalho
-  async getAutores ({ params, request, response }) {
+  async getTrabalhosAutores ({ params, request, response }) {
     console.log(params.trabalho_id)
     const autores = await TrabalhoAutor
       .query()

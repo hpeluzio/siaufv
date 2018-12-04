@@ -161,6 +161,7 @@ export default {
         { text: 'Actions', value: 'name', sortable: false }
       ],
       trabalhos: [],
+      trabalhos_autores: [],
       editedIndex: -1,
       editedItem: {
         id: '',
@@ -212,11 +213,16 @@ export default {
        })
       .then(response => {
         //console.log("response . data  trabalhos")
-        this.trabalhos = response.data
+        this.trabalhos = response.data.trabalhos
+        this.trabalhos_autores = response.data.trabalhos_autores
+        //console.log(this.trabalhos_autores)
+        //this.trabalhos.autor = this.trabalhos_autores
+       //console.log(this.trabalhos_autores)
+       //console.log(typeof this.trabalhos_autores)
       })
       .catch((error) => {
           console.log(error);
-      });
+      })
 
       //Pegando todos os anos
       axios_instance({
@@ -229,7 +235,8 @@ export default {
        })
       .catch((error) => {
           console.log(error);
-      });      
+      })
+            
     },
 
     //methods

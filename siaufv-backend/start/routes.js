@@ -31,5 +31,5 @@ Route.post('/trabalho', 'TrabalhoController.store').middleware('auth:jwt').valid
 Route.put('/trabalho/:id', 'TrabalhoController.update').middleware('auth:jwt').validator('TrabalhoUpdate')
 Route.delete('/trabalho/:id', 'TrabalhoController.destroy').middleware('auth:jwt')
 
-Route.get('/get_autores/:trabalho_id', 'TrabalhoController.getAutores')
+Route.get('/get_trabalhos_autores/:trabalho_id', 'TrabalhoController.getTrabalhosAutores')
 
