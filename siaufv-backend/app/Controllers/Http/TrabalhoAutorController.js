@@ -1,18 +1,16 @@
 'use strict'
 
-const Ano = use('App/Models/Ano')
-
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 /**
- * Resourceful controller for interacting with anos
+ * Resourceful controller for interacting with trabalhoautors
  */
-class AnoController {
+class TrabalhoAutorController {
   /**
-   * Show a list of all anos.
-   * GET anos
+   * Show a list of all trabalhoautors.
+   * GET trabalhoautors
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -20,20 +18,11 @@ class AnoController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
-    const ano = await Ano.all()
-    console.log(typeof ano)
-    return ano
-    return "oi";
-  }
-
-  async getAnos({ response }) {
-    console.log ('entrou anos')
-    return await Ano.all()
   }
 
   /**
-   * Render a form to be used for creating a new ano.
-   * GET anos/create
+   * Render a form to be used for creating a new trabalhoautor.
+   * GET trabalhoautors/create
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -44,8 +33,8 @@ class AnoController {
   }
 
   /**
-   * Create/save a new ano.
-   * POST anos
+   * Create/save a new trabalhoautor.
+   * POST trabalhoautors
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -55,8 +44,8 @@ class AnoController {
   }
 
   /**
-   * Display a single ano.
-   * GET anos/:id
+   * Display a single trabalhoautor.
+   * GET trabalhoautors/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -67,8 +56,8 @@ class AnoController {
   }
 
   /**
-   * Render a form to update an existing ano.
-   * GET anos/:id/edit
+   * Render a form to update an existing trabalhoautor.
+   * GET trabalhoautors/:id/edit
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -79,8 +68,8 @@ class AnoController {
   }
 
   /**
-   * Update ano details.
-   * PUT or PATCH anos/:id
+   * Update trabalhoautor details.
+   * PUT or PATCH trabalhoautors/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -90,8 +79,8 @@ class AnoController {
   }
 
   /**
-   * Delete a ano with id.
-   * DELETE anos/:id
+   * Delete a trabalhoautor with id.
+   * DELETE trabalhoautors/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -101,4 +90,4 @@ class AnoController {
   }
 }
 
-module.exports = AnoController
+module.exports = TrabalhoAutorController

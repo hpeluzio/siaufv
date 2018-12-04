@@ -2,7 +2,7 @@
   <div class="animated fadeIn">
 
       
- 
+ <div v-if="submitted && errors.has('defaulterror2')" style="color: red" class="container">{{ errors.first('defaulterror2') }}</div>
 <!-- Data Table -->
 <div data-app="true">
     <v-toolbar flat color="white">
@@ -20,8 +20,8 @@
         single-line
         hide-details
       ></v-text-field>
-      <v-dialog v-model="dialog" max-width="500px">
-        <v-btn slot="activator" color="primary" dark class="mb-2">Novo</v-btn>
+      <v-dialog v-model="dialog" max-width="600px">
+        <v-btn slot="activator" class="primary" color="green">Novo Avaliador</v-btn>
         <v-card>
           <v-card-title>
             <span class="headline">{{ formTitle }}</span>
@@ -33,38 +33,41 @@
                 <!--<v-flex xs12 sm6 md4>
                   <v-text-field v-model="editedItem.id" label="id"></v-text-field>
                 </v-flex>-->
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.matricula" label="Matrícula" data-vv-name="matricula" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('matricula') }"></v-text-field>
+                <v-flex xs12 sm6 md3>
+                  <v-text-field outline v-model="editedItem.matricula" label="Matrícula" data-vv-name="matricula" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('matricula') }"></v-text-field>
                   <div v-if="submitted && errors.has('matricula')" style="color: red">{{ errors.first('matricula') }}</div>
                 </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.nome" label="Nome" data-vv-name="nome" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('nome') }"></v-text-field>
-                  <div v-if="submitted && errors.has('curso')" style="color: red">{{ errors.first('nome') }}</div>
+                <v-flex xs12 sm6 md6>
+                  <v-text-field outline v-model="editedItem.nome" label="Nome" data-vv-name="nome" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('nome') }"></v-text-field>
+                  <div v-if="submitted && errors.has('nome')" style="color: red">{{ errors.first('nome') }}</div>
                 </v-flex>
+                <v-flex xs12 sm6 md3>
+                  <v-text-field outline v-model="editedItem.instituto" label="Instituto" data-vv-name="instituto" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('instituto') }"></v-text-field>
+                  <div v-if="submitted && errors.has('instituto')" style="color: red">{{ errors.first('instituto') }}</div>
+                </v-flex>                
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.curso" label="Curso" data-vv-name="curso" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('curso') }"></v-text-field>
+                  <v-text-field outline v-model="editedItem.curso" label="Curso" data-vv-name="curso" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('curso') }"></v-text-field>
                   <div v-if="submitted && errors.has('curso')" style="color: red">{{ errors.first('curso') }}</div>
                 </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.instituto" label="Instituto" data-vv-name="instituto" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('instituto') }"></v-text-field>
-                  <div v-if="submitted && errors.has('instituto')" style="color: red">{{ errors.first('instituto') }}</div>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.email" label="E-mail" data-vv-name="email" v-validate="'required|email'" :class="{ 'is-invalid': submitted && errors.has('email') }"></v-text-field>
+
+                <v-flex xs12 sm6 md5>
+                  <v-text-field outline v-model="editedItem.email" label="E-mail" data-vv-name="email" v-validate="'required|email'" :class="{ 'is-invalid': submitted && errors.has('email') }"></v-text-field>
                   <div v-if="submitted && errors.has('email')" style="color: red">{{ errors.first('email') }}</div>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.ano" label="Ano" data-vv-name="ano" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('ano') }"></v-text-field>
+                </v-flex></br>
+                <v-flex xs12 sm6 md3>
+                  <v-select :items="anos" outline v-model="editedItem.ano" label="Ano"  data-vv-name="ano" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('ano') }"></v-select>
                   <div v-if="submitted && errors.has('ano')" style="color: red">{{ errors.first('ano') }}</div>
                 </v-flex>
+                <div v-if="submitted && errors.has('defaulterror')" style="color: red" class="container">{{ errors.first('defaulterror') }}</div>
+                
               </v-layout>
             </v-container>
           </v-card-text>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="close">Cancelar</v-btn>
-            <v-btn color="blue darken-1" flat @click="handleSubmit">Salvar</v-btn>
+            <v-btn class="primary" color="blue" @click="close">Cancelar</v-btn>
+            <v-btn class="primary" color="blue" @click="handleSubmit">Salvar</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -105,42 +108,22 @@
       <v-alert slot="no-results" :value="true" color="error" icon="warning">
         <div style="color: red">Sua procura por <strong>"{{ search }}"</strong> não achou resultados.</div>
       </v-alert>
-      <!--<template slot="no-data">
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
-      </template>-->
     </v-data-table>
   </div>
   <!-- Data Table -->
-       
-      
- 
-   
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import Vue from 'vue'
-import VeeValidate, { Validator } from 'vee-validate';
-
-import pt_BR from 'vee-validate/dist/locale/pt_BR';
-
-Vue.use(VeeValidate, {fieldsBagName: 'formFields'}); // Esse fieldsBagName é só pra tirar o warn de conflito com field do veevalidate
-Validator.localize('pt_BR', pt_BR);
+import axios_instance from '../../axios';
 
 export default {
     data: () => ({
       submitted: false,
       dialog: false,
       search: '',
+      anos: [],
       headers: [
-        // {
-        //   text: 'Dessert (100g serving)',
-        //   align: 'left',
-        //   sortable: false,
-        //   value: 'name'
-        // },
-        //{ text: 'Id', value: 'id' },
         { text: 'Matrícula', value: 'matricula' },
         { text: 'Nome', value: 'nome' },
         { text: 'Curso', value: 'curso' },
@@ -149,7 +132,6 @@ export default {
         { text: 'Ano', value: 'ano' },
         { text: 'Actions', value: 'name', sortable: false }
       ],
-      //desserts: [],
       avaliadores: [],
       editedIndex: -1,
       editedItem: {
@@ -169,6 +151,7 @@ export default {
         instituto: '',
         email: '',
         ano: '',
+      
       },
       rowsPerPageItems: [10, 20, 50, 100],
       pagination: {
@@ -178,23 +161,27 @@ export default {
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Novo' : 'Editar'
+        return this.editedIndex === -1 ? 'Novo Avaliador' : 'Editar Avaliador'
       }
     },
 
     watch: {
       dialog (val) {
         val || this.close()
+        console.log(this.errors)
+        this.errors.clear() //Limpar os erros
       }
     },
 
     created () {
-      this.changeLocale ()
-      
-      axios({
+      //Mudando o locale do Vuetify
+      this.changeLocale () 
+
+      //Pegando todos avaliadores 
+      axios_instance({
           method:'get',
-          url:'http://127.0.0.1:3333/avaliador'
-      })
+          url: '/avaliador'
+       })
       .then(response => {
         //console.log("response . data  avaliadores")
         this.avaliadores = response.data
@@ -202,8 +189,22 @@ export default {
       .catch((error) => {
           console.log(error);
       });
+
+      //Pegando todos os anos
+      axios_instance({
+          method:'get',
+          url: '/getAnos'
+       })
+      .then(response => {
+         for(let i=0; i < response.data.length; i++)
+          this.anos.push(response.data[i].ano)
+       })
+      .catch((error) => {
+          console.log(error);
+      });      
     },
 
+    //methods
     methods: {
       //Checar o formulário em busca de erros
       handleSubmit(e) {
@@ -214,11 +215,11 @@ export default {
                 //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.user))
             }
         });
-      },  
+      },
+      
       changeLocale () {
         this.$vuetify.lang.current = 'pt'
       },
-      //initialize () {  },
 
       editItem (item) {
         //console.log(this.avaliadores.indexOf(item))
@@ -231,13 +232,14 @@ export default {
       },
 
       deleteItem (item) {
-        console.log(item.id)
+        //Setando algumas variaveis para uso do delete
         const index = this.avaliadores.indexOf(item)
-        confirm('Está certo que deseja deletar este item?') &&
 
-        axios({
+        // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
+        confirm('Está certo que deseja deletar este item?') &&
+        axios_instance({
             method: 'delete',
-            url: 'http://127.0.0.1:3333/avaliador/'+ item.id +'',
+            url: '/avaliador/'+ item.id +'',
           })
           .then(response => {
             this.avaliadores.splice(index, 1)
@@ -245,7 +247,7 @@ export default {
           .catch((error) => {
             console.log("error: ")
             console.log(error)
-            this.errors.add({ field: 'auth', msg: 'E-mail ou senha inválidos' })
+            this.errors.add({ field: 'defaulterror2', msg: 'Erro ao deletar item' })
           })
       },
 
@@ -258,14 +260,15 @@ export default {
       },
 
       save () {
-        if (this.editedIndex > -1) {
+        if (this.editedIndex > -1) { // Se this.editedIndex  > -1 entao estamos na edição
           //Editando item chama-se o metodo put na rota avaliador e irá para update
-          axios({
+          axios_instance({
             method: 'put',
-            url: 'http://127.0.0.1:3333/avaliador/'+ this.editedItem.id +'',
+            url: '/avaliador/'+ this.editedItem.id +'',
             data: {
               //newavaliador: JSON.stringify(this.editedItem)
               //avaliador: this.editedItem
+              id: this.editedItem.id,
               matricula: this.editedItem.matricula,
               nome: this.editedItem.nome,
               curso: this.editedItem.curso,
@@ -278,18 +281,25 @@ export default {
             //console.log("response: ")
             //console.log(response)
             //Inclui o item no array de item do front end 
+            alert('Avaliador editado.');
             Object.assign(this.avaliadores[this.editedIndex], this.editedItem)
-            alert('Sucesso! Avaliador foi editado.');
+            this.close()
           })
           .catch((error) => {
-            console.log("error: ")
-            console.log(error)
+            //console.log("error: ")
+            //console.log(error)
+            this.errors.clear() //Limpar os erros antes de setar novos erros
+            if(error.response.data.error[0].message)
+              this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })
+            else
+              this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
+            //confirm('Algum erro erro ocorreu.')
           })
 
-        } else {
-          axios({
+        } else { // Se this.editedIndex  == -1 entao estamos na inserção
+          axios_instance({
             method: 'post',
-            url: 'http://127.0.0.1:3333/avaliador',
+            url: '/avaliador',
             data: {
               //newavaliador: JSON.stringify(this.editedItem)
               //avaliador: this.editedItem
@@ -302,20 +312,24 @@ export default {
             }
           })
           .then(response => {
-            //console.log("response: ")
-            //console.log(response)
-            //Inclui o item no array de item do front end 
+            //Inclui o item no array de item do front end
+            alert('Avaliador adicionado.');
             this.avaliadores.push(this.editedItem)
+            this.close()
             //alert('Inclusão de autor feita com sucesso');
           })
           .catch((error) => {
-            console.log("error: ")
-            console.log(error)
-            this.errors.add({ field: 'auth', msg: 'E-mail ou senha inválidos' })
+            //console.log("error: ")
+            //console.log(error.response.data.error[0].message)
+            this.errors.clear()
+            if(error.response.data.error[0].message)
+              this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })
+            else
+              this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
           })
         }
         
-        this.close()
+        //this.close()
       }
     }
   }

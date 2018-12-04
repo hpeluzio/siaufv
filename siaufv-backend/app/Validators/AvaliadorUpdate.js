@@ -2,12 +2,17 @@
 
 class AvaliadorUpdate {
   get rules () {
+    const avaliadorsId = this.ctx.params.id
+    const matriculaAvaliador = this.ctx.params.id
+    const nomeAvaliador = this.ctx.params.id
+    console.log(avaliadorsId)
+
     return {
-      matricula: 'required',
-      nome: 'required',
+      //matricula: 'required|unique:avaliadors,matricula, id,'+ matriculaAvaliador,
+      nome: 'required|unique:avaliadors,nome, id,'+ nomeAvaliador,
       curso: 'required',
       instituto: 'required',
-      email: 'required|email',
+      email: 'required|email|unique:avaliadors,email, id,'+ avaliadorsId,
       ano: 'required'
     }
   }
@@ -15,7 +20,8 @@ class AvaliadorUpdate {
   get messages() {
     return {
       'required': 'O campo {{ field }} é obrigatório.',
-      'email': 'Digite um e-mail válido.'
+      'email': 'Digite um e-mail válido.',
+      'unique': 'O campo {{ field }} já está cadastrado(a).'
     }
   }
 

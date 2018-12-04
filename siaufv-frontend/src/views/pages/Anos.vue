@@ -21,13 +21,22 @@ export default {
   name: 'ano',
   data() {
       return{
-          anos: []
+          anos: [],
+          user: ''
       }
   },
   created() {
+
+    if(sessionStorage.getItem('user')){ 
+      this.user = JSON.parse(sessionStorage.getItem('user')) 
+    }
+
     axios({
         method:'get',
-        url:'http://127.0.0.1:3333/ano'
+        url:'http://127.0.0.1:3333/ano',
+        headers: {
+          'Authorization': 'Bearer ' + this.user.tokenData.token
+        }
     })
     .then(response => {
       console.log("response . data  ano")

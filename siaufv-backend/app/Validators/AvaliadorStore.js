@@ -1,13 +1,13 @@
 'use strict'
 
-class AvaliadorCreate {
+class AvaliadorStore {
   get rules () {
     return {
-      matricula: 'required|unique:avaliadors',
+      //matricula: 'required|unique:avaliadors',
       nome: 'required|unique:avaliadors',
       curso: 'required',
       instituto: 'required',
-      email: 'required|email',
+      email: 'required|email|unique:avaliadors,email',
       ano: 'required'
     }
   }
@@ -15,7 +15,8 @@ class AvaliadorCreate {
   get messages() {
     return {
       'required': 'O campo {{ field }} é obrigatório.',
-      'email': 'Digite um e-mail válido.'
+      'email': 'Digite um e-mail válido.',
+      'unique': 'O campo {{ field }} já está cadastrado(a).'
     }
   }
 
@@ -25,4 +26,4 @@ class AvaliadorCreate {
   }
 }
 
-module.exports = AvaliadorCreate
+module.exports = AvaliadorStore

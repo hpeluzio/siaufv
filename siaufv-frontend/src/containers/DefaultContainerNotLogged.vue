@@ -8,8 +8,7 @@
       </b-link>
       <SidebarToggler class="d-md-down-none" display="lg" />
       <b-navbar-nav class="d-md-down-none">
-        <b-nav-item class="px-3" to="/home">Home</b-nav-item>
-        <b-nav-item class="px-3" to="/users" exact>Usuários</b-nav-item>
+
         <!--<b-nav-item class="px-3">Configurações</b-nav-item>-->
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
@@ -23,7 +22,9 @@
         <b-nav-item class="d-md-down-none">
           <i class="icon-location-pin"></i>
         </b-nav-item>-->
-        <DefaultHeaderDropdownAccnt/>
+        <b-nav-item class="px-3" to="/register" exact>Register</b-nav-item>
+        <b-nav-item class="px-3" to="/login" exact>Login</b-nav-item>
+
       </b-navbar-nav>
       <!--<AsideToggler class="d-none d-lg-block" />-->
       <!--<AsideToggler class="d-lg-none" mobile />-->
@@ -62,13 +63,13 @@
 </template>
 
 <script>
-import nav from '@/_nav'
+import nav from '@/_nav_not_logged'
 import { Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Aside as AppAside, AsideToggler, Footer as TheFooter, Breadcrumb } from '@coreui/vue'
 import DefaultAside from './DefaultAside'
 import DefaultHeaderDropdownAccnt from './DefaultHeaderDropdownAccnt'
 
 export default {
-  name: 'DefaultContainer',
+  name: 'DefaultContainerNotLogged',
   components: {
     AsideToggler,
     AppHeader,

@@ -20,8 +20,7 @@ class AvaliadorController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
-    const avaliadores = await Avaliador.all()
-    return avaliadores;
+    return await Avaliador.all()
   }
 
   /**

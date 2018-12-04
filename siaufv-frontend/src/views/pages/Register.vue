@@ -1,5 +1,4 @@
 <template>
-  <div class="app flex-row align-items-center">
     <div class="container">
       <b-row class="justify-content-center">
         <b-col md="6" sm="8">
@@ -64,10 +63,13 @@
                           :class="{ 'is-invalid': submitted && errors.has('confirm_password') }" 
                           placeholder="Confirme sua senha" data-vv-as="password"
                     />
-                    <div v-if="submitted && errors.has('confirm_password')" class="invalid-feedback">{{ errors.first('confirm_password') }}</div>
+                    
+
                     <!-- CONFIRM PASSWORD-->   
                 </b-input-group>
-
+      
+                <div style="color: red"v-if="submitted && errors.has('defaulterror')" ><strong>{{ errors.first('defaulterror') }}</strong></div> 
+                </p>
                 <b-button variant="success" @click="handleSubmit" block>Criar Conta</b-button>
               </b-form>
             </b-card-body>
@@ -85,18 +87,10 @@
         </b-col>
       </b-row>
     </div>
-  </div>
 </template>
 
 <script>
 import axios from 'axios';
-import Vue from 'vue'
-import VeeValidate, { Validator } from 'vee-validate';
-
-import pt_BR from 'vee-validate/dist/locale/pt_BR';
-
-Vue.use(VeeValidate, {fieldsBagName: 'formFields'}); // Esse fieldsBagName é só pra tirar o warn de conflito com field do veevalidate
-Validator.localize('pt_BR', pt_BR);
 
 export default {
   name: 'Register',
@@ -131,17 +125,18 @@ export default {
           console.log("Register Response")
           // Se entrar aqui autenticou com sucesso
           sessionStorage.setItem('user', JSON.stringify(response.data))
-          console.log(response.data.token)
-          this.$router.push('/dashboard')
+
+          this.$router.push('/home')
         }
         console.log(response)
       })
       .catch((error) => {
-        console.log(error.response);
-        //console.log(error.response.data.error[0].field);
-        console.log(typeof error);
-        console.log(error.message);
-        this.errors.add({ field: 'auth', msg: 'E-mail ou senha inválidos' })
+        console.log(error);
+            this.errors.clear()
+            if(error.response.data.error[0].message)
+              this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })
+            else
+              this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
       });
     }
   }

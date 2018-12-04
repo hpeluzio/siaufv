@@ -8,13 +8,13 @@ class AvaliadorSchema extends Schema {
     this.create('avaliadors', (table) => {
       table.increments()
       table.string('matricula').notNullable()
-      table.string('nome').notNullable()
+      table.string('nome').notNullable().unique()
       table.string('curso').notNullable()
       table.string('instituto').notNullable()
-      table.string('email').notNullable()
+      table.string('email').notNullable().unique()
       //table.integer('ano_id').references('id').inTable('anos').onDelete('CASCADE').notNullable()
       table.integer('ano').unsigned().notNullable()
-      table.foreign('ano').references('anos.ano')
+      table.foreign('ano').references('anos.ano').onUpdate('CASCADE').onDelete('CASCADE')
       table.timestamps()
     })
   }

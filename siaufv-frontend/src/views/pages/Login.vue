@@ -1,5 +1,4 @@
 <template>
-  <div class="app flex-row align-items-center">
     <div class="container">
       <b-row class="justify-content-center">
         <b-col md="8">
@@ -51,7 +50,7 @@
                 <div>
                   <h2>Registre-se</h2>
                   <p>Sistema gerencial do Simpósio de Integração Acadêmica da Universidade Federal de Viçosa</p>
-                  <b-button href="/#/pages/register" variant="primary" class="active mt-3">Registre-se</b-button>
+                  <router-link to="/home"><b-button variant="primary" class="active mt-3">Registre-se</b-button></router-link>
                 </div>
               </b-card-body>
               
@@ -61,18 +60,11 @@
         </b-col>
       </b-row>
     </div>
-  </div>
+  
 </template>
 
 <script>
 import axios from 'axios';
-import Vue from 'vue'
-import VeeValidate, { Validator } from 'vee-validate';
-
-import pt_BR from 'vee-validate/dist/locale/pt_BR';
-
-Vue.use(VeeValidate, {fieldsBagName: 'formFields'}); // Esse fieldsBagName é só pra tirar o warn de conflito com field do veevalidate
-Validator.localize('pt_BR', pt_BR);
 
 export default {
   name: 'Login',
@@ -96,8 +88,8 @@ export default {
     },
     //Função de login para retornar o token
     login() {
-      console.log("Entrou no metodo login")
-      console.log(this.email, this.password)
+      //console.log("Entrou no metodo login")
+      //console.log(this.email, this.password)
       // axios.post('http://127.0.0.1:3333/login', {
       //   email: this.email,
       //   password: this.password
@@ -121,7 +113,7 @@ export default {
         if(response.data.tokenData){
           // Se entrar aqui autenticou com sucesso
           sessionStorage.setItem('user', JSON.stringify(response.data))
-          this.$router.push('/dashboard')
+          this.$router.push('/home')
         } 
         console.log(response.status)
       })
