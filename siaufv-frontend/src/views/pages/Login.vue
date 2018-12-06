@@ -50,7 +50,7 @@
                 <div>
                   <h2>Registre-se</h2>
                   <p>Sistema gerencial do Simpósio de Integração Acadêmica da Universidade Federal de Viçosa</p>
-                  <router-link to="/home"><b-button variant="primary" class="active mt-3">Registre-se</b-button></router-link>
+                  <router-link to="/register"><b-button variant="primary" class="active mt-3">Registre-se</b-button></router-link>
                 </div>
               </b-card-body>
               

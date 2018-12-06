@@ -28,8 +28,8 @@ Route
 //Rotas dos trabalhos
 Route.get('/trabalho', 'TrabalhoController.index')//.middleware('auth:jwt')
 Route.post('/trabalho', 'TrabalhoController.store').middleware('auth:jwt').validator('TrabalhoStore')
-Route.put('/trabalho/:id', 'TrabalhoController.update').middleware('auth:jwt').validator('TrabalhoUpdate')
-Route.delete('/trabalho/:id', 'TrabalhoController.destroy').middleware('auth:jwt')
+Route.put('/trabalho/:trabalho_id', 'TrabalhoController.update').middleware('auth:jwt').validator('TrabalhoUpdate')
+Route.delete('/trabalho/:trabalho_id', 'TrabalhoController.destroy').middleware('auth:jwt')
 
-Route.get('/get_trabalhos_autores/:trabalho_id', 'TrabalhoController.getTrabalhosAutores')
+Route.get('/get_trabalhos_autores/:trabalho_id', 'TrabalhoController.getTrabalhosAutores').middleware('auth:jwt')
 

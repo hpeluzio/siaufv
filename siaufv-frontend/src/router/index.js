@@ -81,7 +81,7 @@ const router = new Router({
       name: 'Home',
       component: DefaultContainer,
       meta: {
-        requiresAuth: false,
+        requiresAuth: true,
       },
       children: [
         {

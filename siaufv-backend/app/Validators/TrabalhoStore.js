@@ -5,7 +5,6 @@ class TrabalhoStore {
     return {
       trabalho_id: 'required|unique:trabalhos,trabalho_id',
       nome: 'required',
-      autor: 'required',
       orientador: 'required',
       modalidade: 'required',
       area: 'required',

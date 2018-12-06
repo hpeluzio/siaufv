@@ -22,8 +22,7 @@
         <v-card>
           <v-card-title>
             <span class="headline">{{ formTitle }}</span>
-          </v-card-title>
-
+          </v-card-title> 
           <v-card-text>
             <v-container grid-list-md>
               <v-layout wrap>
@@ -44,7 +43,7 @@
                   <div v-if="submitted && errors.has('orientador')" style="color: red">{{ errors.first('orientador') }}</div>
                 </v-flex>                            
                 <v-flex xs12 sm6 md4>
-                  <v-text-field outline v-model="editedItem.area" label="Área" data-vv-name="modalidade" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('area') }"></v-text-field>
+                  <v-text-field outline v-model="editedItem.area" label="Área" data-vv-name="area" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('area') }"></v-text-field>
                   <div v-if="submitted && errors.has('area')" style="color: red">{{ errors.first('area') }}</div>
                 </v-flex>     
 
@@ -52,22 +51,21 @@
                   <v-text-field outline v-model="editedItem.modalidade" label="Modalidade" data-vv-name="modalidade" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('modalidade') }"></v-text-field>
                   <div v-if="submitted && errors.has('modalidade')" style="color: red">{{ errors.first('modalidade') }}</div>
                 </v-flex>
-                <!-- Multiple input text for autor-->
-                <v-flex xs12 sm6 md9>
-                  <v-text-field outline v-model="editedItem.autor" label="Autor" data-vv-name="autor" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('autor') }"></v-text-field >
-                  <div v-if="submitted && errors.has('autor')" style="color: red">{{ errors.first('autor') }}</div>
-                </v-flex>  
+                
+                <!--<v-flex xs12 sm6 md9>
+                  <v-text-field outline v-model="editedItem.autores" label="Autores" data-vv-name="autores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('autores') }"></v-text-field >
+                  <div v-if="submitted && errors.has('autores')" style="color: red">{{ errors.first('autores') }}</div>
+                </v-flex>-->  
 
-                <div>
-                  <v-flex v-for="autor in editedItem.autor" xs12 sm6 md9 >
-                    <v-text-field outline   label="Autor" data-vv-name="autor" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('autor') }">
-                      <input v-model="autor.value">
-                      <div v-if="submitted && errors.has('autor')" style="color: red">{{ errors.first('autor') }}</div>
-                    </v-text-field >
-                  </v-flex>  
-
-                </div>            
+                
                 <!-- Multiple input text for autor-->
+                  <v-flex v-for="(autors, index) in editedAutores" :key="index" xs12 sm6 md9 >
+                    <v-text-field outline v-model="autors.autor"  label="Autor" data-vv-name="autores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('autores') }"></v-text-field >
+                    <div v-if="submitted && errors.has('autores')" style="color: red">{{ errors.first('autores') }}</div>
+                  </v-flex>
+                <!-- Multiple input text for autor-->
+
+                <!-- Errors-->
                 <div v-if="submitted && errors.has('defaulterror')" style="color: red" class="container">{{ errors.first('defaulterror') }}</div>
                 
               </v-layout>
@@ -75,11 +73,11 @@
           </v-card-text>
 
           <v-card-actions>
+            <v-btn @click="removerAutor()" slot="activator" class="primary" color="red">- Autor</v-btn>
+            <v-btn @click="adicionarAutor()" slot="activator" class="primary" color="green">+ Autor</v-btn>
             
-            <v-btn @click="addFind" slot="activator" class="primary" color="green">+ Autor</v-btn>
-            <v-btn @click="delFind" slot="activator" class="primary" color="red">- Autor</v-btn>
             <v-spacer></v-spacer>
-            <v-btn class="primary" color="blue"  @click="close">Cancelar</v-btn>
+            <v-btn class="primary" color="orange"  @click="close">Cancelar</v-btn>
             <v-btn class="primary" color="blue"  @click="handleSubmit">Salvar</v-btn>
           </v-card-actions>
         </v-card>
@@ -94,6 +92,7 @@
       :rows-per-page-items="rowsPerPageItems"
       :pagination.sync="pagination"
       :search="search"
+      
       class="elevation-1"
       
     >
@@ -101,18 +100,12 @@
        
         <td class="text-xs-right">{{ props.item.trabalho_id }}</td>
         <td class="text-xs-right">{{ props.item.nome }}</td>
-        <td class="text-xs-right">{{ props.item.autor }}</td>
-
+        
         <!-- AUTOR -->
-        <!--<td class="text-xs-right">
-        {{ props.item.autor.length }}
-          <a v-for="autor in props.item.autor">
-              {{ props.item.autor }}
-              
-          </a>
-        </td>-->
+         <td class="text-xs-right">
+            <span v-for="autor in props.item.autores"> {{ autor.autor }}</span></br>
+         </td>
         <!-- AUTOR -->
-
         <td class="text-xs-right">{{ props.item.orientador }}</td>
         <td class="text-xs-right">{{ props.item.modalidade }}</td>
         <td class="text-xs-right">{{ props.item.area }}</td>
@@ -151,23 +144,26 @@ export default {
       dialog: false,
       search: '',
       anos: [],
+      find: [],
       headers: [
-        { text: 'ID', value: 'id' },
+        { text: 'ID', value: 'trabalho_id' },
         { text: 'Nome', value: 'nome' },
-        { text: 'Autor', value: 'autor' },
+        { text: 'Autor(es)', value: 'autores' },
         { text: 'orientador', value: 'orientador' },
         { text: 'E-mail', value: 'modalidade' },
+        { text: 'Área', value: 'area' },
         { text: 'Ano', value: 'ano' },
         { text: 'Actions', value: 'name', sortable: false }
       ],
       trabalhos: [],
       trabalhos_autores: [],
+      editedAutores: [{id: '', trabalho_id: '', autor: ''}],
       editedIndex: -1,
       editedItem: {
         id: '',
         trabalho_id: '',
         nome: '',
-        autor: {},
+        autores: [{id: '', trabalho_id: '', autor: ''}],
         orientador: '',
         modalidade: '',
         area: '',
@@ -177,7 +173,7 @@ export default {
         id: '',
         trabalho_id: '',
         nome: '',
-        autor: {},
+        autores: [{id: '', trabalho_id: '', autor: ''}],
         orientador: '',
         modalidade: '',
         area: '',
@@ -199,10 +195,19 @@ export default {
       dialog (val) {
         val || this.close()
         this.errors.clear() //Limpar os erros
+        if(this.editedIndex === -1 ) 
+          this.editedAutores = [{}]
+        console.log(this.editedIndex)
+        //this.editedAutores = []
+        //this.editedItem.autores = this.editAutores
+        //for (let i=0; i < this.editAutores.length; i++)
+        // this.editedItem.autores[i] = Object.assign(this.editedItem.autores[i], this.editAutores[i])
+        //this.editedItem.autores = Object.assign({}, this.editAutores)
       }
     },
 
     created () {
+      console.log('created()')
       //Mudando o locale do Vuetify
       this.changeLocale () 
 
@@ -212,13 +217,29 @@ export default {
           url: '/trabalho'
        })
       .then(response => {
-        //console.log("response . data  trabalhos")
+        // Pegando os trabalhos e os autores desses trabalhos
         this.trabalhos = response.data.trabalhos
         this.trabalhos_autores = response.data.trabalhos_autores
-        //console.log(this.trabalhos_autores)
-        //this.trabalhos.autor = this.trabalhos_autores
-       //console.log(this.trabalhos_autores)
-       //console.log(typeof this.trabalhos_autores)
+
+        for(let i=0; i < this.trabalhos.length; i++){
+          this.trabalhos[i].autores = []
+        }
+
+        //Setando autores array base desse componente
+        for(let i=0; i < this.trabalhos.length; i++){
+          for(let j=0; j < this.trabalhos_autores.length; j++){
+            if (this.trabalhos[i].trabalho_id == this.trabalhos_autores[j].trabalho_id){
+              this.trabalhos[i].autores.push({ id: this.trabalhos_autores[j].id, trabalho_id: this.trabalhos_autores[j].trabalho_id, autor: this.trabalhos_autores[j].autor })
+            }
+          }
+        }
+
+        //Criando o array trabalhos_backup para utilizar como default
+        //Object.assign(this.trabalhos_backup, this.trabalhos)
+
+        console.log("array trabalhos depois de adicoinar autores")
+        console.log(this.trabalhos)
+
       })
       .catch((error) => {
           console.log(error);
@@ -239,18 +260,60 @@ export default {
             
     },
 
-    //methods
     methods: {
+       //customFilter(items, search, filter, headers) {
 
-      addFind: function () {
-        this.editedItem.autor.push({ value: '' });
-        console.log(this.editedItem.autor.length)
+        // var autors = []
+        // if(items){
+        //   for(let i=0; i < items.length; i++){
+        //     for(let j=0; j < items[i].autores.length; j++){
+        //       //if (this.trabalhos[i].trabalho_id == this.trabalhos_autores[j].trabalho_id)
+        //         autors.push(items[i].autores[j].autor)
+        //         //console.log(autors)
+        //       }
+        //       items[i].autores = autors.join(', ')
+
+        //   }
+        // }
+
+      //   console.log('items convertidos')
+      //   console.log(items)
+      //   //console.log(autors)
+
+      //   // search = search.toString().toLowerCase()
+      //   // if (search.trim() === '') return items
+
+      //   // const props = headers.map(h => h.value)
+
+      //   // return items.filter(item => props.some(prop => filter(getObjectValueByPath(item, prop, item[prop]), search)))
+      //   //   type: Function,
+
+      //   console.log(items)
+
+      //   search = search.toString().toLowerCase()
+      //   return items.filter(i => (
+      //     Object.keys(i).some(j => filter(i[j], search))
+      //   ))
+      
+      // },
+
+      adicionarAutor:  function () {
+        //this.editedItem.autores.push({ value: '' });
+        this.editedAutores.push({ value: '' });
+        //console.log(this.editedItem.autores.length)
+        //console.log(this.editedItem.autores)
+        console.log(this.editedAutores)
       },
-      delFind: function () {
-        if(this.editedItem.autor.length > 0){
-          var pop = this.editedItem.autor.pop();
-          console.log(pop.value)  
-        }
+      removerAutor: function () {
+        if(this.editedAutores.length > 1){
+          //if(this.editedItem.autores[this.editedItem.autores.length - 1].autor == '')
+            //this.editedItem.autores.pop();
+            this.editedAutores.pop();
+            console.log(this.editedAutores)
+          //else 
+          //  alert('Necessário deletar os valores do campo autor')
+        } else 
+            alert('Necesssário pelo menos um autor')
       },
 
       //Checar o formulário em busca de erros
@@ -269,12 +332,14 @@ export default {
       },
 
       editItem (item) {
-        //console.log(this.trabalhos.indexOf(item))
         this.editedIndex = this.trabalhos.indexOf(item)
         this.editedItem = Object.assign({}, item)
-        console.log("editedIndex  -  editedItem")
-        console.log(this.editedIndex)
-        console.log(this.editedItem)
+
+        for(let i=0; i < this.trabalhos.length; i++)
+           this.editedAutores = Object.assign([], this.editedItem.autores)
+
+        console.log('editAutor')
+        console.log(this.editedAutores)
         this.dialog = true
       },
 
@@ -286,7 +351,7 @@ export default {
         confirm('Está certo que deseja deletar este item?') &&
         axios_instance({
             method: 'delete',
-            url: '/trabalho/'+ item.id +'',
+            url: '/trabalho/'+ item.trabalho_id +'',
           })
           .then(response => {
             this.trabalhos.splice(index, 1)
@@ -294,30 +359,37 @@ export default {
           .catch((error) => {
             console.log("error: ")
             console.log(error)
-            //alert(JSON.stringify(error))
-            alert(error.response.data)
+            alert(JSON.stringify(error))
+            //alert(error.response.data)
           })
       },
 
       close () {
+        //console.log(this.editedIndex)
+        //this.trabalhos[this.editedIndex].autores = Object.assign({}, this.trabalhos_backup[this.editedIndex].autores)
+        //this.trabalhos[this.editedIndex].autores = this.trabalhos_backup[this.editedIndex].autores
+        //console.log(this.trabalhos[this.editedIndex].autores)
+        //console.log(this.trabalhos_backup[this.editedIndex].autores)
         this.dialog = false
         setTimeout(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
         }, 300)
+        //this.trabalhos.autores[this.editedIndex] = this.trabalhos_backup[this.editedIndex].autores
+
       },
 
       save () {
-        if (this.editedIndex > -1) { // Se this.editedIndex  > -1 entao estamos na edição
+        if (this.editedIndex > -1) { // EDICAO EDICAO EDICAO  Se this.editedIndex  > -1 entao estamos na edição
           //Editando item chama-se o metodo put na rota trabalho e irá para update
           axios_instance({
             method: 'put',
-            url: '/trabalho/'+ this.editedItem.id +'',
+            url: '/trabalho/' + this.editedItem.trabalho_id + '',
             data: {
               id: this.editedItem.id,
               trabalho_id: this.editedItem.trabalho_id,
               nome: this.editedItem.nome,
-              autor: this.editedItem.autor,
+              autores: this.editedAutores,
               orientador: this.editedItem.orientador,
               modalidade: this.editedItem.modalidade,
               area: this.editedItem.area,
@@ -329,7 +401,9 @@ export default {
             //console.log(response)
             //Inclui o item no array de item do front end 
             alert('Trabalho editado.');
+            this.editedItem.autores = Object.assign([], this.editedAutores)
             Object.assign(this.trabalhos[this.editedIndex], this.editedItem)
+            
             this.close()
           })
           .catch((error) => {
@@ -343,7 +417,7 @@ export default {
               this.errors.add({ field: 'defaulterror', msg: error.response.data.message })
           })
 
-        } else { // Se this.editedIndex  == -1 entao estamos na inserção de um novo trabalho
+        } else { // INSERT INSERT Se this.editedIndex  == -1 entao estamos na inserção de um novo trabalho
           axios_instance({
             method: 'post',
             url: '/trabalho',
@@ -353,7 +427,7 @@ export default {
               id: this.editedItem.id,
               trabalho_id: this.editedItem.trabalho_id,
               nome: this.editedItem.nome,
-              autor: this.editedItem.autor,
+              autores: this.editedAutores,
               orientador: this.editedItem.orientador,
               modalidade: this.editedItem.modalidade,
               area: this.editedItem.area,
@@ -365,7 +439,7 @@ export default {
             alert('Trabalho adicionado.');
             this.trabalhos.push(this.editedItem)
             this.close()
-            //alert('Inclusão de autor feita com sucesso');
+            //alert('Inclusão de autores feita com sucesso');
           })
           .catch((error) => {
             console.log("error: ")

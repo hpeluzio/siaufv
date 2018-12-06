@@ -42,8 +42,6 @@ class TrabalhoController {
     //console.log(trabalho_autor[0].trabalho_id)
 
     //console.log(JSON.parse(trabalho_autor))
-    console.log(trabalhos)
-    console.log(trabalhos_autores)
 
     return { 'trabalhos': trabalhos, 'trabalhos_autores':trabalhos_autores }//, trabalhosAutores
   }
@@ -57,10 +55,17 @@ class TrabalhoController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
-    const { id, nome, autor, orientador, modalidade, area, ano } = request.only([ 'id', 'nome', 'autor', 'orientador', 'modalidade', 'area', 'ano' ]);
+    const { trabalho_id, nome, autores, orientador, modalidade, area, ano } = request.only([ 'trabalho_id', 'nome', 'autores','orientador', 'modalidade', 'area', 'ano' ]);
     //console.log(matricula, nome,curso, instituto, email, ano)
+    //console.log(autores[0].autor)
+    console.log(autores)
+    for(var i=0; i < autores.length; i++)
+      console.log(autores[i].autor)
     try {
-      await Trabalho.create({ id, nome, autor, orientador, modalidade, area, ano })
+      await Trabalho.create({ trabalho_id, nome, orientador, modalidade, area, ano })
+      for(var i=0; i < autores.length; i++){
+        await TrabalhoAutor.create({ 'trabalho_id': trabalho_id, 'autor': autores[i].autor })
+      }  
     } catch (error) {
       //console.log(error)
       return response.status(500).send({ "error": error });
@@ -102,18 +107,18 @@ class TrabalhoController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
-    console.log(params.id)
+    //console.log(params.id)
 
-    const { id, nome, autor, orientador, modalidade, area, ano } = request.only([ 'id', 'nome', 'autor', 'orientador', 'modalidade', 'area', 'ano' ]);
+    const { id, trabalho_id, nome, orientador, modalidade, area, ano } = request.only([ 'id', 'trabalho_id', 'nome', 'orientador', 'modalidade', 'area', 'ano' ]);
 
     try {
-      var trabalho = await Trabalho.findOrFail(params.id)
-      trabalho.id = id
+      var trabalho = await Trabalho.findOrFail(id)
+      trabalho.trabalho_id = trabalho_id
       trabalho.nome = nome
       trabalho.orientador = orientador
       trabalho.modalidade = modalidade
       trabalho.area = area
-      trabalho  .ano = ano
+      trabalho.ano = ano
       await trabalho.save()
     } catch (error) {
       console.log(error)
@@ -133,8 +138,9 @@ class TrabalhoController {
    */
   async destroy ({ params, request, response }) {
 
+    console.log(params.trabalho_id)
     try {
-      var trabalho = await Trabalho.findOrFail(params.id)
+      var trabalho = await Trabalho.findByOrFail('trabalho_id', params.trabalho_id)
       await trabalho.delete()
     } catch (error) {
       //console.log(error)
