@@ -17,6 +17,8 @@
         label="Procurar"
         hide-details
       ></v-text-field>
+
+
       <v-dialog v-model="dialog" max-width="700px">
         <v-btn slot="activator" class="primary" color="green">Novo Trabalho</v-btn>
         <v-card>
@@ -59,7 +61,7 @@
 
                 
                 <!-- Multiple input text for autor-->
-                  <v-flex v-for="(autors, index) in editedAutores" :key="index" xs12 sm6 md9 >
+                  <v-flex v-for="(autors, index) in paraSeremEditadosAutores" :key="index" xs12 sm6 md9 >
                     <v-text-field outline v-model="autors.autor"  label="Autor" data-vv-name="autores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('autores') }"></v-text-field >
                     <div v-if="submitted && errors.has('autores')" style="color: red">{{ errors.first('autores') }}</div>
                   </v-flex>
@@ -92,7 +94,7 @@
       :rows-per-page-items="rowsPerPageItems"
       :pagination.sync="pagination"
       :search="search"
-      
+      :custom-filter="customFilter"
       class="elevation-1"
       
     >
@@ -157,7 +159,8 @@ export default {
       ],
       trabalhos: [],
       trabalhos_autores: [],
-      editedAutores: [{id: '', trabalho_id: '', autor: ''}],
+      paraSeremEditadosAutores: [{id: '', trabalho_id: '', autor: ''}],
+      paraSeremDeletadosAutores:[],
       editedIndex: -1,
       editedItem: {
         id: '',
@@ -195,10 +198,12 @@ export default {
       dialog (val) {
         val || this.close()
         this.errors.clear() //Limpar os erros
-        if(this.editedIndex === -1 ) 
-          this.editedAutores = [{}]
+        if(this.editedIndex === -1 ){ 
+          this.paraSeremEditadosAutores = [{id: '', trabalho_id: '', autor: ''}]
+          this.paraSeremDeletadosAutores = []
+        }
         console.log(this.editedIndex)
-        //this.editedAutores = []
+        //this.paraSeremEditadosAutores = []
         //this.editedItem.autores = this.editAutores
         //for (let i=0; i < this.editAutores.length; i++)
         // this.editedItem.autores[i] = Object.assign(this.editedItem.autores[i], this.editAutores[i])
@@ -211,39 +216,8 @@ export default {
       //Mudando o locale do Vuetify
       this.changeLocale () 
 
-      //Pegando todos trabalhos 
-      axios_instance({
-          method:'get',
-          url: '/trabalho'
-       })
-      .then(response => {
-        // Pegando os trabalhos e os autores desses trabalhos
-        this.trabalhos = response.data.trabalhos
-        this.trabalhos_autores = response.data.trabalhos_autores
-
-        for(let i=0; i < this.trabalhos.length; i++){
-          this.trabalhos[i].autores = []
-        }
-
-        //Setando autores array base desse componente
-        for(let i=0; i < this.trabalhos.length; i++){
-          for(let j=0; j < this.trabalhos_autores.length; j++){
-            if (this.trabalhos[i].trabalho_id == this.trabalhos_autores[j].trabalho_id){
-              this.trabalhos[i].autores.push({ id: this.trabalhos_autores[j].id, trabalho_id: this.trabalhos_autores[j].trabalho_id, autor: this.trabalhos_autores[j].autor })
-            }
-          }
-        }
-
-        //Criando o array trabalhos_backup para utilizar como default
-        //Object.assign(this.trabalhos_backup, this.trabalhos)
-
-        console.log("array trabalhos depois de adicoinar autores")
-        console.log(this.trabalhos)
-
-      })
-      .catch((error) => {
-          console.log(error);
-      })
+      //Pegando todos trabalhos... Importa ARRAY TRABALHO do
+      this.getAxiosArrayTrabalhos()
 
       //Pegando todos os anos
       axios_instance({
@@ -261,55 +235,168 @@ export default {
     },
 
     methods: {
-       //customFilter(items, search, filter, headers) {
+      getAxiosArrayTrabalhos() {
+              axios_instance({
+          method:'get',
+          url: '/trabalho'
+       })
+      .then(response => {
+        // Pegando os trabalhos e os autores desses trabalhos
+        this.trabalhos = response.data.trabalhos
+        this.trabalhos_autores = response.data.trabalhos_autores
+        // Zerando array trabalhos[].autores
+        for(let i=0; i < this.trabalhos.length; i++){
+          this.trabalhos[i].autores = []
+        }
+        //Setando autores array base desse componente
+        for(let i=0; i < this.trabalhos.length; i++){
+          for(let j=0; j < this.trabalhos_autores.length; j++){
+            if (this.trabalhos[i].trabalho_id == this.trabalhos_autores[j].trabalho_id){
+              this.trabalhos[i].autores.push({ id: this.trabalhos_autores[j].id, trabalho_id: this.trabalhos_autores[j].trabalho_id, autor: this.trabalhos_autores[j].autor })
+            }
+          }
+        }
 
-        // var autors = []
-        // if(items){
-        //   for(let i=0; i < items.length; i++){
-        //     for(let j=0; j < items[i].autores.length; j++){
-        //       //if (this.trabalhos[i].trabalho_id == this.trabalhos_autores[j].trabalho_id)
-        //         autors.push(items[i].autores[j].autor)
-        //         //console.log(autors)
-        //       }
-        //       items[i].autores = autors.join(', ')
+        //console.log("Array trabalhos depois do AXIOS GET")
+        //console.log(this.trabalhos)
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+      },
 
-        //   }
+       customFilter(items, search, filter, headers) {
+        // console.log(search)
+        
+
+        //search = search.toString().toLowerCase()
+        console.log(search)
+
+        if (!search) 
+          return items
+        /////////////////////////////////////////////
+
+        //console.log("OBJECT KEEEEEEEEEEEYS")
+        //console.log(Object.entries(items))
+
+
+        
+        // return Object.keys(items).some( verif => (k,v) (
+        //   console.log(verif)
+        // ))
+
+
+        // for (var [key, value] of Object.entries(items)) {
+        //     console.log(key + ' ' + JSON.stringify(value)); // "a 5", "b 7", "c 9"
+        // }
+        ///////////////////////////////////////////
+
+        // var ositemsquesaoretornados = items.filter(i => (
+        //   Object.keys(i).some(j => filter(i[j], search))
+        // ))
+        // console.log("KKKKKKKKKKKKKKKKKKKKK KEEEEEEEEEEEYS", ositemsquesaoretornados )
+        // return ositemsquesaoretornados
+
+
+
+        // function fil(valor) {
+        //   console.log(valor)
+        //   return valor>=2
         // }
 
-      //   console.log('items convertidos')
-      //   console.log(items)
-      //   //console.log(autors)
+        // function dididi(item) {
+        //   if (item.ano == 2018) 
+        //     return item
+        //   else return false
+        // }
+        const props = headers.map(h => h.value)
+        console.log(props)
 
-      //   // search = search.toString().toLowerCase()
-      //   // if (search.trim() === '') return items
 
-      //   // const props = headers.map(h => h.value)
+        return items.filter((itemdoitemporitem) => {
+          //console.log(JSON.stringify(itemano))
+          if (search.includes(itemdoitemporitem.trabalho_id)) 
+            return itemdoitemporitem
+          if (search.includes(itemdoitemporitem.ano)) 
+            return itemdoitemporitem
+          if (search.includes(itemdoitemporitem.nome)) 
+            return itemdoitemporitem
+          if (search.includes(itemdoitemporitem.orientador)) 
+            return itemdoitemporitem
+          if (search.includes(itemdoitemporitem.area)) 
+            return itemdoitemporitem
+          else 
+            return false
+       })
 
-      //   // return items.filter(item => props.some(prop => filter(getObjectValueByPath(item, prop, item[prop]), search)))
-      //   //   type: Function,
 
-      //   console.log(items)
 
-      //   search = search.toString().toLowerCase()
-      //   return items.filter(i => (
-      //     Object.keys(i).some(j => filter(i[j], search))
-      //   ))
+        // return items.filter(dididi)
+
+        // const filtered = Object.keys(items).filter(fil)
+        // console.log(filtered)
+
+
+
+
+
+        // return filtered
+
+        // // const filtered = Object.keys(items).filter(retorna => (
+        // //   if (items.indexOf > 1)
+        // //     return 
+        // // ))
+        // //           items.filter(i => (
+        // //   //console.log(i),
+        // //   Object.keys(i).some(j => filter(i[j], search))
+        // // ))
+
+
+        // console.log("filteredddddddddddddddddddd")
+        // console.log(filtered)
+        // return filtered
+
+
+
+        // // Filtro Waltim
+        // return items.filter(item  => {
+        //     return Object.entries(item).some(([key,value]) => {
+        //       if(value != null || value != undefined) {
+        //         if(typeof value === 'object'){
+        //           return value.some(autor => {
+        //             return search.includes(autor.autor)
+        //           })
+        //         }
+        //         console.log("QUALUQR COISAUASHpl")
+        //         return search.includes(value)
+        //       }
+        //     })
+        //   }
+        // )
+
+        // //PEguei da net
+        return items.filter(i => (
+          Object.keys(i).some(j => filter(i[j], search))
+        ))
       
-      // },
+      },
 
       adicionarAutor:  function () {
         //this.editedItem.autores.push({ value: '' });
-        this.editedAutores.push({ value: '' });
+        this.paraSeremEditadosAutores.push({id: '', trabalho_id: '', autor: ''});
         //console.log(this.editedItem.autores.length)
         //console.log(this.editedItem.autores)
-        console.log(this.editedAutores)
+        //console.log(this.paraSeremEditadosAutores)
       },
       removerAutor: function () {
-        if(this.editedAutores.length > 1){
+        if(this.paraSeremEditadosAutores.length > 1){
           //if(this.editedItem.autores[this.editedItem.autores.length - 1].autor == '')
             //this.editedItem.autores.pop();
-            this.editedAutores.pop();
-            console.log(this.editedAutores)
+            const pop = this.paraSeremEditadosAutores.pop();
+            if(pop.id)
+              this.paraSeremDeletadosAutores.push(pop)
+
+            console.log(this.paraSeremDeletadosAutores)
           //else 
           //  alert('Necessário deletar os valores do campo autor')
         } else 
@@ -336,10 +423,10 @@ export default {
         this.editedItem = Object.assign({}, item)
 
         for(let i=0; i < this.trabalhos.length; i++)
-           this.editedAutores = Object.assign([], this.editedItem.autores)
+           this.paraSeremEditadosAutores = Object.assign([], this.editedItem.autores)
 
-        console.log('editAutor')
-        console.log(this.editedAutores)
+        //console.log('editAutor')
+        //console.log(this.paraSeremEditadosAutores)
         this.dialog = true
       },
 
@@ -354,7 +441,8 @@ export default {
             url: '/trabalho/'+ item.trabalho_id +'',
           })
           .then(response => {
-            this.trabalhos.splice(index, 1)
+            //Nao precisa dar o splice pq o getAxiosArrayTrabalhos atualiza pra gente
+            //this.trabalhos.splice(index, 1)
           })
           .catch((error) => {
             console.log("error: ")
@@ -362,6 +450,7 @@ export default {
             alert(JSON.stringify(error))
             //alert(error.response.data)
           })
+          this.getAxiosArrayTrabalhos()
       },
 
       close () {
@@ -380,6 +469,7 @@ export default {
       },
 
       save () {
+        //EDICAO
         if (this.editedIndex > -1) { // EDICAO EDICAO EDICAO  Se this.editedIndex  > -1 entao estamos na edição
           //Editando item chama-se o metodo put na rota trabalho e irá para update
           axios_instance({
@@ -389,7 +479,8 @@ export default {
               id: this.editedItem.id,
               trabalho_id: this.editedItem.trabalho_id,
               nome: this.editedItem.nome,
-              autores: this.editedAutores,
+              autores: this.paraSeremEditadosAutores,
+              deletedAutores: this.paraSeremDeletadosAutores,
               orientador: this.editedItem.orientador,
               modalidade: this.editedItem.modalidade,
               area: this.editedItem.area,
@@ -401,9 +492,9 @@ export default {
             //console.log(response)
             //Inclui o item no array de item do front end 
             alert('Trabalho editado.');
-            this.editedItem.autores = Object.assign([], this.editedAutores)
-            Object.assign(this.trabalhos[this.editedIndex], this.editedItem)
-            
+            //this.editedItem.autores = Object.assign([], this.paraSeremEditadosAutores)
+            //Object.assign(this.trabalhos[this.editedIndex], this.editedItem)
+            this.getAxiosArrayTrabalhos()
             this.close()
           })
           .catch((error) => {
@@ -416,7 +507,7 @@ export default {
             else
               this.errors.add({ field: 'defaulterror', msg: error.response.data.message })
           })
-
+        // INSERT
         } else { // INSERT INSERT Se this.editedIndex  == -1 entao estamos na inserção de um novo trabalho
           axios_instance({
             method: 'post',
@@ -427,7 +518,7 @@ export default {
               id: this.editedItem.id,
               trabalho_id: this.editedItem.trabalho_id,
               nome: this.editedItem.nome,
-              autores: this.editedAutores,
+              autores: this.paraSeremEditadosAutores,
               orientador: this.editedItem.orientador,
               modalidade: this.editedItem.modalidade,
               area: this.editedItem.area,
@@ -437,7 +528,8 @@ export default {
           .then(response => {
             //Inclui o item no array de item do front end
             alert('Trabalho adicionado.');
-            this.trabalhos.push(this.editedItem)
+            //this.trabalhos.push(this.editedItem)
+            this.getAxiosArrayTrabalhos()
             this.close()
             //alert('Inclusão de autores feita com sucesso');
           })
@@ -459,8 +551,10 @@ export default {
 
           })
         }
-        
+      
         //this.close()
+        // Importando novamente o array trabalho depois do save
+        
       }
     }
   }

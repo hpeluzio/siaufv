@@ -21,26 +21,11 @@ class AnoController {
    */
   async index ({ request, response, view }) {
     const ano = await Ano.all()
-    console.log(typeof ano)
     return ano
-    return "oi";
   }
 
   async getAnos({ response }) {
-    console.log ('entrou anos')
     return await Ano.all()
-  }
-
-  /**
-   * Render a form to be used for creating a new ano.
-   * GET anos/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
   }
 
   /**
@@ -64,18 +49,6 @@ class AnoController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
-  }
-
-  /**
-   * Render a form to update an existing ano.
-   * GET anos/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
   }
 
   /**

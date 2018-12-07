@@ -87,18 +87,6 @@ class TrabalhoController {
   }
 
   /**
-   * Render a form to update an existing trabalho.
-   * GET trabalhos/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
-
-  /**
    * Update trabalho details.
    * PUT or PATCH trabalhos/:id
    *
@@ -109,9 +97,17 @@ class TrabalhoController {
   async update ({ params, request, response }) {
     //console.log(params.id)
 
-    const { id, trabalho_id, nome, orientador, modalidade, area, ano } = request.only([ 'id', 'trabalho_id', 'nome', 'orientador', 'modalidade', 'area', 'ano' ]);
+    const { id, trabalho_id, nome, autores, deletedAutores, orientador, modalidade, area, ano } = request.only([ 'id', 'trabalho_id', 'nome', 'autores', 'deletedAutores', 'orientador', 'modalidade', 'area', 'ano' ]);
+    
+    if(typeof autores !== 'undefined' &&  autores.length > 0){
+       console.log("autores")
+       console.log(autores)}
+    if(deletedAutores){
+       console.log('deletedAutores')
+       console.log(deletedAutores)}
 
     try {
+      //Update de trabalhos
       var trabalho = await Trabalho.findOrFail(id)
       trabalho.trabalho_id = trabalho_id
       trabalho.nome = nome
@@ -120,6 +116,33 @@ class TrabalhoController {
       trabalho.area = area
       trabalho.ano = ano
       await trabalho.save()
+
+      //Update de autores dos trabalhos
+        //Inserts
+      if(typeof autores !== 'undefined' &&  autores.length > 0){
+        for(var i=0; i < autores.length; i++){
+          
+          if(!autores[i].id || autores[i].id === 'undefined'){
+            await TrabalhoAutor.create({ 'trabalho_id': trabalho_id, 'autor': autores[i].autor })
+          } else {
+            var trabalho_autor = await TrabalhoAutor.findOrFail(autores[i].id)
+            trabalho_autor.autor = autores[i].autor
+            trabalho_autor.save()           
+          }
+        }
+      }
+
+        //Deletes
+      if (typeof deletedAutores !== 'undefined' && deletedAutores.length > 0) {
+        for(var i=0; i < deletedAutores.length; i++){
+          if(deletedAutores[i].id){
+            var trabalho_autor = await TrabalhoAutor.findOrFail(deletedAutores[i].id)
+            await trabalho_autor.delete()
+          }
+        }
+      }
+      //Fim Deletes  
+
     } catch (error) {
       console.log(error)
       return response.status(500).send({ "error": error });

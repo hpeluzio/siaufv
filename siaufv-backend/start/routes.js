@@ -1,6 +1,6 @@
 'use strict'
 
-
+//SIA ROUTES
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
@@ -33,3 +33,14 @@ Route.delete('/trabalho/:trabalho_id', 'TrabalhoController.destroy').middleware(
 
 Route.get('/get_trabalhos_autores/:trabalho_id', 'TrabalhoController.getTrabalhosAutores').middleware('auth:jwt')
 
+
+
+//Rotas do Avaliador Resource
+// Route
+//     .resource('/avaliador', 'AvaliadorController')
+//     .apiOnly()
+//     .validator(new Map([
+//         [['store'], ['AvaliadorStore']],
+//         [['update'], ['AvaliadorUpdate']]
+//       ]))
+//     .middleware('auth:jwt')
