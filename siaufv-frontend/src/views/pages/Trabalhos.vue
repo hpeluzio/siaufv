@@ -265,98 +265,41 @@ export default {
         })
       },
 
-       customFilter(items, search, filter, headers) {
-        // console.log(search)
-        
+      //Custom filter da datatable
+      customFilter(items, search, filter, headers) {
+        //
+        function normaliza(s) {
+            return s.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+        }
 
-        //search = search.toString().toLowerCase()
+        search = normaliza(search)
         console.log(search)
 
-        if (!search) 
-          return items
-        /////////////////////////////////////////////
-
-        //console.log("OBJECT KEEEEEEEEEEEYS")
-        //console.log(Object.entries(items))
-
-
-        
-        // return Object.keys(items).some( verif => (k,v) (
-        //   console.log(verif)
-        // ))
-
-
-        // for (var [key, value] of Object.entries(items)) {
-        //     console.log(key + ' ' + JSON.stringify(value)); // "a 5", "b 7", "c 9"
-        // }
-        ///////////////////////////////////////////
-
-        // var ositemsquesaoretornados = items.filter(i => (
-        //   Object.keys(i).some(j => filter(i[j], search))
-        // ))
-        // console.log("KKKKKKKKKKKKKKKKKKKKK KEEEEEEEEEEEYS", ositemsquesaoretornados )
-        // return ositemsquesaoretornados
-
-
-
-        // function fil(valor) {
-        //   console.log(valor)
-        //   return valor>=2
-        // }
-
-        // function dididi(item) {
-        //   if (item.ano == 2018) 
-        //     return item
-        //   else return false
-        // }
-        const props = headers.map(h => h.value)
-        console.log(props)
-
-
-        return items.filter((itemdoitemporitem) => {
-          //console.log(JSON.stringify(itemano))
-          if (search.includes(itemdoitemporitem.trabalho_id)) 
-            return itemdoitemporitem
-          if (search.includes(itemdoitemporitem.ano)) 
-            return itemdoitemporitem
-          if (search.includes(itemdoitemporitem.nome)) 
-            return itemdoitemporitem
-          if (search.includes(itemdoitemporitem.orientador)) 
-            return itemdoitemporitem
-          if (search.includes(itemdoitemporitem.area)) 
-            return itemdoitemporitem
+        return items.filter((item) => {
+          console.log(item)
+          if (normaliza(item.trabalho_id).includes(search)) 
+            return item
+          if (normaliza(item.ano).includes(search)) 
+            return item
+          if (normaliza(item.nome).includes(search)) 
+            return item
+          for(var autors of item.autores)
+            if (normaliza(autors.autor).includes(search))
+              return item
+          if (normaliza(item.orientador).includes(search)) 
+             return item
+          if (normaliza(item.modalidade).includes(search)) 
+             return item   
+          if (normaliza(item.area).includes(search)) 
+            return item
           else 
             return false
        })
 
 
-
-        // return items.filter(dididi)
-
-        // const filtered = Object.keys(items).filter(fil)
-        // console.log(filtered)
-
-
-
-
-
-        // return filtered
-
-        // // const filtered = Object.keys(items).filter(retorna => (
-        // //   if (items.indexOf > 1)
-        // //     return 
-        // // ))
-        // //           items.filter(i => (
-        // //   //console.log(i),
-        // //   Object.keys(i).some(j => filter(i[j], search))
-        // // ))
-
-
-        // console.log("filteredddddddddddddddddddd")
-        // console.log(filtered)
-        // return filtered
-
-
+        // return items.filter(i => (
+        //   Object.keys(i).some(j => filter(i[j], search))
+        // ))
 
         // // Filtro Waltim
         // return items.filter(item  => {
@@ -375,9 +318,7 @@ export default {
         // )
 
         // //PEguei da net
-        return items.filter(i => (
-          Object.keys(i).some(j => filter(i[j], search))
-        ))
+
       
       },
 
