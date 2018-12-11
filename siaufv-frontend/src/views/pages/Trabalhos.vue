@@ -18,7 +18,6 @@
         hide-details
       ></v-text-field>
 
-
       <v-dialog v-model="dialog" max-width="700px">
         <v-btn slot="activator" class="primary" color="green">Novo Trabalho</v-btn>
         <v-card>
@@ -29,7 +28,7 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex xs12 sm6 md3>
-                  <v-text-field outline v-model="editedItem.trabalho_id" label="ID" data-vv-name="trabalho_id" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('trabalho_id') }"></v-text-field>
+                  <v-text-field outline v-model="editedItem.trabalho_id" label="Trabalho ID" data-vv-name="trabalho_id" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('trabalho_id') }"></v-text-field>
                   <div v-if="submitted && errors.has('trabalho_id')" style="color: red">{{ errors.first('trabalho_id') }}</div>
                 </v-flex>
                 <v-flex xs12 sm6 md6>
@@ -37,9 +36,9 @@
                   <div v-if="submitted && errors.has('nome')" style="color: red">{{ errors.first('nome') }}</div>
                 </v-flex>
                 <v-flex xs12 sm6 md3>
-                  <v-select :items="anos" outline v-model="editedItem.ano" label="Ano"  data-vv-name="ano" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('ano') }"></v-select>
+                  <v-select :items="anos" item-value="id" item-text="ano"  outline v-model="editedItem.ano_id" label="Ano"  data-vv-name="ano" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('ano') }"></v-select>
                   <div v-if="submitted && errors.has('ano')" style="color: red">{{ errors.first('ano') }}</div>
-                </v-flex>    
+                </v-flex>
                 <v-flex xs12 sm6 md4>
                   <v-text-field outline v-model="editedItem.orientador" label="Orientador" data-vv-name="orientador" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('orientador') }"></v-text-field>
                   <div v-if="submitted && errors.has('orientador')" style="color: red">{{ errors.first('orientador') }}</div>
@@ -105,7 +104,7 @@
         
         <!-- AUTOR -->
          <td class="text-xs-right">
-            <span v-for="autor in props.item.autores"> {{ autor.autor }}</span></br>
+            <span v-for="(autor, index) in props.item.autores" :key="index"> {{ autor.autor }}</span>
          </td>
         <!-- AUTOR -->
         <td class="text-xs-right">{{ props.item.orientador }}</td>
@@ -139,6 +138,7 @@
 
 <script>
 import axios_instance from '../../axios';
+import normaliza from '../../normaliza';
 
 export default {
     data: () => ({
@@ -170,7 +170,7 @@ export default {
         orientador: '',
         modalidade: '',
         area: '',
-        ano: '',
+        ano_id: '',
       },
       defaultItem: {
         id: '',
@@ -180,7 +180,7 @@ export default {
         orientador: '',
         modalidade: '',
         area: '',
-        ano: '',
+        ano_id: '',
       },
       rowsPerPageItems: [10, 20, 50, 100],
       pagination: {
@@ -202,17 +202,10 @@ export default {
           this.paraSeremEditadosAutores = [{id: '', trabalho_id: '', autor: ''}]
           this.paraSeremDeletadosAutores = []
         }
-        console.log(this.editedIndex)
-        //this.paraSeremEditadosAutores = []
-        //this.editedItem.autores = this.editAutores
-        //for (let i=0; i < this.editAutores.length; i++)
-        // this.editedItem.autores[i] = Object.assign(this.editedItem.autores[i], this.editAutores[i])
-        //this.editedItem.autores = Object.assign({}, this.editAutores)
       }
     },
 
     created () {
-      console.log('created()')
       //Mudando o locale do Vuetify
       this.changeLocale () 
 
@@ -220,21 +213,11 @@ export default {
       this.getAxiosArrayTrabalhos()
 
       //Pegando todos os anos
-      axios_instance({
-          method:'get',
-          url: '/getAnos'
-       })
-      .then(response => {
-         for(let i=0; i < response.data.length; i++)
-          this.anos.push(response.data[i].ano)
-       })
-      .catch((error) => {
-          console.log(error);
-      })
-            
+      this.getAxiosArrayAnos()   
     },
 
     methods: {
+      // Pega todos trabalhos
       getAxiosArrayTrabalhos() {
               axios_instance({
           method:'get',
@@ -245,9 +228,9 @@ export default {
         this.trabalhos = response.data.trabalhos
         this.trabalhos_autores = response.data.trabalhos_autores
         // Zerando array trabalhos[].autores
-        for(let i=0; i < this.trabalhos.length; i++){
+        for(let i=0; i < this.trabalhos.length; i++)
           this.trabalhos[i].autores = []
-        }
+
         //Setando autores array base desse componente
         for(let i=0; i < this.trabalhos.length; i++){
           for(let j=0; j < this.trabalhos_autores.length; j++){
@@ -256,9 +239,21 @@ export default {
             }
           }
         }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+      },
 
-        //console.log("Array trabalhos depois do AXIOS GET")
-        //console.log(this.trabalhos)
+      getAxiosArrayAnos() {
+        //Pegando todos os anos
+        axios_instance({
+            method:'get',
+            url: '/ano'
+        })
+        .then(response => {
+          for(let i=0; i < response.data.length; i++)
+            this.anos.push({ 'id': response.data[i].id, 'ano': response.data[i].ano })
         })
         .catch((error) => {
             console.log(error);
@@ -267,16 +262,12 @@ export default {
 
       //Custom filter da datatable
       customFilter(items, search, filter, headers) {
-        //
-        function normaliza(s) {
-            return s.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-        }
 
-        search = normaliza(search)
-        console.log(search)
+        //Normalizando a search
+        if (search.trim() === '') return items
+        search = normaliza(search).trim()
 
         return items.filter((item) => {
-          console.log(item)
           if (normaliza(item.trabalho_id).includes(search)) 
             return item
           if (normaliza(item.ano).includes(search)) 
@@ -296,10 +287,22 @@ export default {
             return false
        })
 
-
+        // //PEguei da net
         // return items.filter(i => (
         //   Object.keys(i).some(j => filter(i[j], search))
         // ))
+
+        // customFilter: {
+        //   type: Function,
+        //   default: (items, search, filter, headers) => {
+        //     search = search.toString().toLowerCase()
+        //     if (search.trim() === '') return items
+
+        //     const props = headers.map(h => h.value)
+
+        //     return items.filter(item => props.some(prop => filter(getObjectValueByPath(item, prop, item[prop]), search)))
+        //   }
+        // }
 
         // // Filtro Waltim
         // return items.filter(item  => {
@@ -316,30 +319,18 @@ export default {
         //     })
         //   }
         // )
-
-        // //PEguei da net
-
-      
-      },
+       },
 
       adicionarAutor:  function () {
-        //this.editedItem.autores.push({ value: '' });
         this.paraSeremEditadosAutores.push({id: '', trabalho_id: '', autor: ''});
-        //console.log(this.editedItem.autores.length)
-        //console.log(this.editedItem.autores)
-        //console.log(this.paraSeremEditadosAutores)
       },
+      
       removerAutor: function () {
         if(this.paraSeremEditadosAutores.length > 1){
-          //if(this.editedItem.autores[this.editedItem.autores.length - 1].autor == '')
-            //this.editedItem.autores.pop();
             const pop = this.paraSeremEditadosAutores.pop();
-            if(pop.id)
+            if(pop.id){
               this.paraSeremDeletadosAutores.push(pop)
-
-            console.log(this.paraSeremDeletadosAutores)
-          //else 
-          //  alert('Necessário deletar os valores do campo autor')
+            }
         } else 
             alert('Necesssário pelo menos um autor')
       },
@@ -366,8 +357,6 @@ export default {
         for(let i=0; i < this.trabalhos.length; i++)
            this.paraSeremEditadosAutores = Object.assign([], this.editedItem.autores)
 
-        //console.log('editAutor')
-        //console.log(this.paraSeremEditadosAutores)
         this.dialog = true
       },
 
@@ -379,14 +368,13 @@ export default {
         confirm('Está certo que deseja deletar este item?') &&
         axios_instance({
             method: 'delete',
-            url: '/trabalho/'+ item.trabalho_id +'',
+            url: '/trabalho/'+ item.id +'',
           })
           .then(response => {
             //Nao precisa dar o splice pq o getAxiosArrayTrabalhos atualiza pra gente
             //this.trabalhos.splice(index, 1)
           })
           .catch((error) => {
-            console.log("error: ")
             console.log(error)
             alert(JSON.stringify(error))
             //alert(error.response.data)
@@ -395,18 +383,13 @@ export default {
       },
 
       close () {
-        //console.log(this.editedIndex)
-        //this.trabalhos[this.editedIndex].autores = Object.assign({}, this.trabalhos_backup[this.editedIndex].autores)
-        //this.trabalhos[this.editedIndex].autores = this.trabalhos_backup[this.editedIndex].autores
-        //console.log(this.trabalhos[this.editedIndex].autores)
-        //console.log(this.trabalhos_backup[this.editedIndex].autores)
         this.dialog = false
         setTimeout(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
           this.editedIndex = -1
         }, 300)
-        //this.trabalhos.autores[this.editedIndex] = this.trabalhos_backup[this.editedIndex].autores
-
+        this.search = ''
+        this.getAxiosArrayTrabalhos()
       },
 
       save () {
@@ -415,7 +398,7 @@ export default {
           //Editando item chama-se o metodo put na rota trabalho e irá para update
           axios_instance({
             method: 'put',
-            url: '/trabalho/' + this.editedItem.trabalho_id + '',
+            url: '/trabalho/' + this.editedItem.id + '',
             data: {
               id: this.editedItem.id,
               trabalho_id: this.editedItem.trabalho_id,
@@ -425,21 +408,14 @@ export default {
               orientador: this.editedItem.orientador,
               modalidade: this.editedItem.modalidade,
               area: this.editedItem.area,
-              ano: this.editedItem.ano,
+              ano_id: this.editedItem.ano_id,
             }
           })
           .then(response => {
-            //console.log("response: ")
-            //console.log(response)
-            //Inclui o item no array de item do front end 
             alert('Trabalho editado.');
-            //this.editedItem.autores = Object.assign([], this.paraSeremEditadosAutores)
-            //Object.assign(this.trabalhos[this.editedIndex], this.editedItem)
-            this.getAxiosArrayTrabalhos()
             this.close()
           })
           .catch((error) => {
-            //console.log("error: ")
             console.log(error)
 
             this.errors.clear()
@@ -463,19 +439,15 @@ export default {
               orientador: this.editedItem.orientador,
               modalidade: this.editedItem.modalidade,
               area: this.editedItem.area,
-              ano: this.editedItem.ano,
+              ano_id: this.editedItem.ano_id,
             }
           })
           .then(response => {
             //Inclui o item no array de item do front end
             alert('Trabalho adicionado.');
-            //this.trabalhos.push(this.editedItem)
-            this.getAxiosArrayTrabalhos()
             this.close()
-            //alert('Inclusão de autores feita com sucesso');
           })
           .catch((error) => {
-            console.log("error: ")
             console.log(error.response)
 
             this.errors.clear()
@@ -483,13 +455,6 @@ export default {
               this.errors.add({ field: 'defaulterror', msg: error.response.data[0].message })
             else
               this.errors.add({ field: 'defaulterror', msg: error.response.data.message })
-
-            // this.errors.clear()
-            // if(error.response.data[0].message)
-            //   alert(error.response.data[0].message)
-            // else
-            //   alert(error.response.data.message)
-
           })
         }
       

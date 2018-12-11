@@ -53,25 +53,29 @@
                 <v-flex xs12 sm6 md5>
                   <v-text-field outline v-model="editedItem.email" label="E-mail" data-vv-name="email" v-validate="'required|email'" :class="{ 'is-invalid': submitted && errors.has('email') }"></v-text-field>
                   <div v-if="submitted && errors.has('email')" style="color: red">{{ errors.first('email') }}</div>
-                </v-flex></br>
+                </v-flex>
+
                 <v-flex xs12 sm6 md3>
-                  <v-select :items="anos" outline v-model="editedItem.ano" label="Ano"  data-vv-name="ano" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('ano') }"></v-select>
+                  <v-select :items="anos" item-value="id" item-text="ano"  outline v-model="editedItem.ano_id" label="Ano"  data-vv-name="ano" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('ano') }"></v-select>
                   <div v-if="submitted && errors.has('ano')" style="color: red">{{ errors.first('ano') }}</div>
                 </v-flex>
+
                 <div v-if="submitted && errors.has('defaulterror')" style="color: red" class="container">{{ errors.first('defaulterror') }}</div>
-                
+
               </v-layout>
             </v-container>
           </v-card-text>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="primary" color="blue" @click="close">Cancelar</v-btn>
+            <v-btn class="primary" color="orange" @click="close">Cancelar</v-btn>
             <v-btn class="primary" color="blue" @click="handleSubmit">Salvar</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-toolbar>
+
+    <!-- Data Table -->
     <v-data-table
       :headers="headers"
       :items="avaliadores"
@@ -141,7 +145,7 @@ export default {
         curso: '',
         instituto: '',
         email: '',
-        ano: '',
+        ano_id: '',
       },
       defaultItem: {
         id: '',
@@ -150,7 +154,7 @@ export default {
         curso: '',
         instituto: '',
         email: '',
-        ano: '',
+        ano_id: '',
       
       },
       rowsPerPageItems: [10, 20, 50, 100],
@@ -168,7 +172,6 @@ export default {
     watch: {
       dialog (val) {
         val || this.close()
-        console.log(this.errors)
         this.errors.clear() //Limpar os erros
       }
     },
@@ -177,42 +180,50 @@ export default {
       //Mudando o locale do Vuetify
       this.changeLocale () 
 
-      //Pegando todos avaliadores 
-      axios_instance({
-          method:'get',
-          url: '/avaliador'
-       })
-      .then(response => {
-        //console.log("response . data  avaliadores")
-        this.avaliadores = response.data
-      })
-      .catch((error) => {
-          console.log(error);
-      });
+      //Pegando todos avaliadores
+      this.getAxiosArrayAvaliadores()
 
       //Pegando todos os anos
-      axios_instance({
-          method:'get',
-          url: '/getAnos'
-       })
-      .then(response => {
-         for(let i=0; i < response.data.length; i++)
-          this.anos.push(response.data[i].ano)
-       })
-      .catch((error) => {
-          console.log(error);
-      });      
+      this.getAxiosArrayAnos()
     },
 
     //methods
     methods: {
+      getAxiosArrayAvaliadores() {
+        //Pegando todos avaliadores 
+        axios_instance({
+            method:'get',
+            url: '/avaliador'
+        })
+        .then(response => {
+          this.avaliadores = response.data
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+      },
+
+      getAxiosArrayAnos() {
+        //Pegando todos os anos
+        axios_instance({
+            method:'get',
+            url: '/ano'
+        })
+        .then(response => {
+          for(let i=0; i < response.data.length; i++)
+            this.anos.push({ 'id': response.data[i].id, 'ano': response.data[i].ano })
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+      },
+
       //Checar o formulário em busca de erros
       handleSubmit(e) {
         this.submitted = true;
         this.$validator.validate().then(valid => {
             if (valid) {
                 this.save()
-                //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.user))
             }
         });
       },
@@ -222,12 +233,8 @@ export default {
       },
 
       editItem (item) {
-        //console.log(this.avaliadores.indexOf(item))
         this.editedIndex = this.avaliadores.indexOf(item)
         this.editedItem = Object.assign({}, item)
-        console.log("editedIndex  -  editedItem")
-        console.log(this.editedIndex)
-        console.log(this.editedItem)
         this.dialog = true
       },
 
@@ -242,13 +249,12 @@ export default {
             url: '/avaliador/'+ item.id +'',
           })
           .then(response => {
-            this.avaliadores.splice(index, 1)
+            //this.getAxiosArrayAvaliadores()
           })
           .catch((error) => {
-            console.log("error: ")
-            console.log(error)
             this.errors.add({ field: 'defaulterror2', msg: 'Erro ao deletar item' })
           })
+          this.getAxiosArrayAvaliadores()
       },
 
       close () {
@@ -266,34 +272,26 @@ export default {
             method: 'put',
             url: '/avaliador/'+ this.editedItem.id +'',
             data: {
-              //newavaliador: JSON.stringify(this.editedItem)
-              //avaliador: this.editedItem
               id: this.editedItem.id,
               matricula: this.editedItem.matricula,
               nome: this.editedItem.nome,
               curso: this.editedItem.curso,
               instituto: this.editedItem.instituto,
               email: this.editedItem.email,
-              ano: this.editedItem.ano,
+              ano_id: this.editedItem.ano_id,
             }
           })
           .then(response => {
-            //console.log("response: ")
-            //console.log(response)
-            //Inclui o item no array de item do front end 
             alert('Avaliador editado.');
-            Object.assign(this.avaliadores[this.editedIndex], this.editedItem)
+            this.getAxiosArrayAvaliadores()
             this.close()
           })
           .catch((error) => {
-            //console.log("error: ")
-            //console.log(error)
             this.errors.clear() //Limpar os erros antes de setar novos erros
             if(error.response.data.error[0].message)
               this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })
             else
               this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
-            //confirm('Algum erro erro ocorreu.')
           })
 
         } else { // Se this.editedIndex  == -1 entao estamos na inserção
@@ -308,19 +306,18 @@ export default {
               curso: this.editedItem.curso,
               instituto: this.editedItem.instituto,
               email: this.editedItem.email,
-              ano: this.editedItem.ano,
+              ano_id: this.editedItem.ano_id,
             }
           })
           .then(response => {
             //Inclui o item no array de item do front end
             alert('Avaliador adicionado.');
-            this.avaliadores.push(this.editedItem)
+            this.getAxiosArrayAvaliadores()
             this.close()
-            //alert('Inclusão de autor feita com sucesso');
           })
           .catch((error) => {
-            //console.log("error: ")
-            //console.log(error.response.data.error[0].message)
+            console.log(error)
+
             this.errors.clear()
             if(error.response.data.error[0].message)
               this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })

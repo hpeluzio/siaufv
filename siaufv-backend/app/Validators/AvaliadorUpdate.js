@@ -2,18 +2,16 @@
 
 class AvaliadorUpdate {
   get rules () {
-    const avaliadorsId = this.ctx.params.id
-    const matriculaAvaliador = this.ctx.params.id
-    const nomeAvaliador = this.ctx.params.id
-    console.log(avaliadorsId)
+    //const matriculaAvaliador = this.ctx.params.id
+    const idAvaliador = this.ctx.params.id
 
     return {
       //matricula: 'required|unique:avaliadors,matricula, id,'+ matriculaAvaliador,
-      nome: 'required|unique:avaliadors,nome, id,'+ nomeAvaliador,
+      nome: 'required|unique:avaliadors,nome, id,'+ idAvaliador,
       curso: 'required',
       instituto: 'required',
-      email: 'required|email|unique:avaliadors,email, id,'+ avaliadorsId,
-      ano: 'required'
+      email: 'required|email|unique:avaliadors,email, id,'+ idAvaliador,
+      ano_id: 'required'
     }
   }
 

@@ -13,7 +13,10 @@ Route.post('/login', 'Auth/AuthController.login').validator('UserLogin')
 
 //Rotas do Ano
 Route.get('/ano', 'AnoController.index').middleware('auth:jwt')
-Route.get('/getAnos', 'AnoController.getAnos').middleware('auth:jwt')
+Route.post('/ano', 'AnoController.store').middleware('auth:jwt').validator('AnoStore')
+Route.delete('/ano/:id', 'AnoController.destroy').middleware('auth:jwt')
+Route.put('/ano/:id', 'AnoController.update').middleware('auth:jwt').validator('AnoUpdate')
+
 
 //Rotas do Avaliador
 Route
@@ -26,12 +29,10 @@ Route
     .middleware('auth:jwt')
 
 //Rotas dos trabalhos
-Route.get('/trabalho', 'TrabalhoController.index')//.middleware('auth:jwt')
+Route.get('/trabalho', 'TrabalhoController.index').middleware('auth:jwt')
 Route.post('/trabalho', 'TrabalhoController.store').middleware('auth:jwt').validator('TrabalhoStore')
-Route.put('/trabalho/:trabalho_id', 'TrabalhoController.update').middleware('auth:jwt').validator('TrabalhoUpdate')
-Route.delete('/trabalho/:trabalho_id', 'TrabalhoController.destroy').middleware('auth:jwt')
-
-Route.get('/get_trabalhos_autores/:trabalho_id', 'TrabalhoController.getTrabalhosAutores').middleware('auth:jwt')
+Route.put('/trabalho/:id', 'TrabalhoController.update').middleware('auth:jwt').validator('TrabalhoUpdate')
+Route.delete('/trabalho/:id', 'TrabalhoController.destroy').middleware('auth:jwt')
 
 
 

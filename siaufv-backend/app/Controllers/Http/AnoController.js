@@ -2,75 +2,55 @@
 
 const Ano = use('App/Models/Ano')
 
-/** @typedef {import('@adonisjs/framework/src/Request')} Request */
-/** @typedef {import('@adonisjs/framework/src/Response')} Response */
-/** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with anos
- */
 class AnoController {
-  /**
-   * Show a list of all anos.
-   * GET anos
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
-    const ano = await Ano.all()
-    return ano
-  }
 
-  async getAnos({ response }) {
+  async index ({ request, response, view }) {
     return await Ano.all()
   }
 
-  /**
-   * Create/save a new ano.
-   * POST anos
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
+
   async store ({ request, response }) {
+    const { ano } = request.only([ 'ano' ]);
+
+    try {
+      await Ano.create({ ano })
+    } catch (error) {
+      console.log(error)
+      return response.status(500).send({ "error": error });
+    }
+    //Se chegou até aqui então o ano foi adicionado com sucesso
+    return response.status(200).send({ "success": "Ano registrado com sucesso" });
   }
 
-  /**
-   * Display a single ano.
-   * GET anos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
-  }
-
-  /**
-   * Update ano details.
-   * PUT or PATCH anos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
   async update ({ params, request, response }) {
+    const { ano } = request.only([ 'ano' ]);
+
+    try {
+      var anoParaAtualizar = await Ano.findOrFail(params.id)
+      anoParaAtualizar.ano = ano
+      await anoParaAtualizar.save()
+    } catch (error) {
+      console.log(error)
+      return response.status(500).send({ "error": error });
+    }
+    //Se chegou até aqui então o ano foi adicionado com sucesso
+    return response.status(200).send({ "success": "Ano atualizado com sucesso" });
   }
 
-  /**
-   * Delete a ano with id.
-   * DELETE anos/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
   async destroy ({ params, request, response }) {
+    try {
+      console.log('ANTES')
+      console.log(params.id)
+
+      var ano = await Ano.findOrFail(params.id)
+      await ano.delete() 
+    } catch (error) {
+      //console.log(error)
+      return response.status(500).send({ "error": error });
+    }
+    //Se chegou até aqui então o ano foi adicionado com sucesso
+    return response.status(200).send({ "success": "Ano deletado com sucesso" });
   }
 }
 

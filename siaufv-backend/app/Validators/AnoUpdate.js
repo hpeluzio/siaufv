@@ -1,21 +1,19 @@
 'use strict'
 
-class AvaliadorStore {
+class AnoUpdate {
   get rules () {
+
+    const id = this.ctx.params.id
+
     return {
-      //matricula: 'required|unique:avaliadors',
-      nome: 'required|unique:avaliadors',
-      curso: 'required',
-      instituto: 'required',
-      email: 'required|email|unique:avaliadors,email',
-      ano_id: 'required'
+      ano: 'required|unique:anos,ano,id,'+ id,
     }
   }
 
   get messages() {
     return {
       'required': 'O campo {{ field }} é obrigatório.',
-      'email': 'Digite um e-mail válido.',
+      'integer': 'Digite um valor numérico válido.',
       'unique': 'O campo {{ field }} já está cadastrado(a).'
     }
   }
@@ -26,4 +24,4 @@ class AvaliadorStore {
   }
 }
 
-module.exports = AvaliadorStore
+module.exports = AnoUpdate

@@ -1,42 +1,34 @@
 'use strict'
 
 const Avaliador = use('App/Models/Avaliador')
+const Database = use('Database')
 
-/** @typedef {import('@adonisjs/framework/src/Request')} Request */
-/** @typedef {import('@adonisjs/framework/src/Response')} Response */
-/** @typedef {import('@adonisjs/framework/src/View')} View */
 
-/**
- * Resourceful controller for interacting with avaliadors
- */
 class AvaliadorController {
-  /**
-   * Show a list of all avaliadors.
-   * GET avaliadors
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
+
   async index ({ request, response, view }) {
-    return await Avaliador.all()
+    //return await Avaliador.all()
+    const avaliadors = 
+      await Database
+        .select('avaliadors.id as id', 
+                'avaliadors.matricula', 
+                'avaliadors.nome', 
+                'avaliadors.curso', 
+                'avaliadors.instituto', 
+                'avaliadors.email', 
+                'avaliadors.ano_id', 
+                'anos.ano')
+        .table('avaliadors')
+        .innerJoin('anos', 'avaliadors.ano_id', 'anos.id')
+    return avaliadors
   }
 
-  /**
-   * Create/save a new avaliador.
-   * POST avaliadors
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
   async store ({ request, response }) {
     
-    const { matricula, nome, curso, instituto, email, ano } = request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ano' ]);
+    const { matricula, nome, curso, instituto, email, ano_id } = request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ano_id' ]);
     //console.log(matricula, nome,curso, instituto, email, ano)
     try {
-      await Avaliador.create({ matricula, nome, curso, instituto, email, ano })
+      await Avaliador.create({ matricula, nome, curso, instituto, email, ano_id })
     } catch (error) {
       //console.log(error)
       return response.status(500).send({ "error": error });
@@ -45,63 +37,33 @@ class AvaliadorController {
     return response.status(200).send({ "success": "Avaliador registrado com sucesso" });
   }
 
-  /**
-   * Display a single avaliador.
-   * GET avaliadors/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
-  }
 
-  /**
-   * Update avaliador details.
-   * PUT or PATCH avaliadors/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
   async update ({ params, request, response }) {
-    console.log(params.id)
-    //return "ok"
-    const { matricula, nome, curso, instituto, email, ano } = request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ano' ]);
-    //console.log(matricula, nome,curso, instituto, email, ano)
-    console.log('chegou aqui')
+    const { matricula, nome, curso, instituto, email, ano_id } = request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ano_id' ]);
+
     try {
       var avaliador = await Avaliador.findOrFail(params.id)
       avaliador.matricula = matricula
+      avaliador.nome = nome
       avaliador.curso = curso
       avaliador.instituto = instituto
       avaliador.email = email
-      avaliador.ano = ano
+      avaliador.ano_id = ano_id
       await avaliador.save()
     } catch (error) {
-      //console.log(error)
+      console.log(error)
       return response.status(500).send({ "error": error });
     }
     //Se chegou até aqui então o avaliador foi adicionado com sucesso
     return response.status(200).send({ "success": "Avaliador registrado com sucesso" });
   }
 
-  /**
-   * Delete a avaliador with id.
-   * DELETE avaliadors/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
   async destroy ({ params, request, response }) {
-
     try {
       var avaliador = await Avaliador.findOrFail(params.id)
       await avaliador.delete()
     } catch (error) {
-      //console.log(error)
+      console.log(error)
       return response.status(500).send({ "error": error });
     }
     //Se chegou até aqui então o avaliador foi adicionado com sucesso

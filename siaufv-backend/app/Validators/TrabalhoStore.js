@@ -8,7 +8,7 @@ class TrabalhoStore {
       orientador: 'required',
       modalidade: 'required',
       area: 'required',
-      ano: 'required'
+      ano_id: 'required'
     }
   }
 

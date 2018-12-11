@@ -3,16 +3,15 @@
 class TrabalhoUpdate {
   get rules () {
 
-    const trabalho_id = this.ctx.params.trabalho_id
-    console.log(trabalho_id)
+    const id = this.ctx.params.id
 
     return {
-      trabalho_id: 'required|unique:trabalhos,trabalho_id, trabalho_id,'+ trabalho_id,
+      trabalho_id: 'required|unique:trabalhos,trabalho_id, id,'+ id,
       nome: 'required',
       orientador: 'required',
       modalidade: 'required',
       area: 'required',
-      ano: 'required'
+      ano_id: 'required'
     }
   }
 
