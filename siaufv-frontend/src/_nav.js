@@ -67,7 +67,7 @@ export default {
     },
     {
       name: 'Salas',
-      url: '/3',
+      url: '/salas',
       icon: 'icon-star'
     },
     {

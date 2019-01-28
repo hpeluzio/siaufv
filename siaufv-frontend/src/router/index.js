@@ -10,6 +10,7 @@ const DefaultContainerNotLogged = () => import('@/containers/DefaultContainerNot
 const Anos = () => import('@/views/pages/Anos')
 const Avaliadores = () => import('@/views/pages/Avaliadores')
 const Trabalhos = () => import('@/views/pages/Trabalhos')
+const Salas = () => import('@/views/pages/Salas')
 // SIA
 
 
@@ -104,6 +105,11 @@ const router = new Router({
           name: 'Trabalhos',
           component: Trabalhos,
         },
+        {
+          path: 'salas',
+          name: 'Salas',
+          component: Salas,
+        },        
         {
           path: 'users',
           meta: { 

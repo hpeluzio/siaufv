@@ -35,6 +35,12 @@ Route.put('/trabalho/:id', 'TrabalhoController.update').middleware('auth:jwt').v
 Route.delete('/trabalho/:id', 'TrabalhoController.destroy').middleware('auth:jwt')
 
 
+//Rotas da Sala
+Route.get('/sala', 'SalaController.index').middleware('auth:jwt')
+Route.post('/sala', 'SalaController.store').middleware('auth:jwt').validator('SalaStore')
+Route.delete('/sala/:id', 'SalaController.destroy').middleware('auth:jwt')
+Route.put('/sala/:id', 'SalaController.update').middleware('auth:jwt').validator('SalaUpdate')
+
 
 //Rotas do Avaliador Resource
 // Route
