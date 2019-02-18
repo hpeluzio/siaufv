@@ -5,6 +5,11 @@ const Model = use('Model')
 
 class TrabalhoAutor extends Model {
 
+    // Tabela trabalho_autores
+    static get table () {
+        return 'trabalho_autores'
+    }
+
     trabalho () {
         return this.hasOne('App/Models/Trabalho')
     }

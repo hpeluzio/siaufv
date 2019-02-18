@@ -8,19 +8,19 @@ class AvaliadorController {
 
   async index ({ request, response, view }) {
     //return await Avaliador.all()
-    const avaliadors = 
+    const avaliadores = 
       await Database
-        .select('avaliadors.id as id', 
-                'avaliadors.matricula', 
-                'avaliadors.nome', 
-                'avaliadors.curso', 
-                'avaliadors.instituto', 
-                'avaliadors.email', 
-                'avaliadors.ano_id', 
+        .select('avaliadores.id as id', 
+                'avaliadores.matricula', 
+                'avaliadores.nome', 
+                'avaliadores.curso', 
+                'avaliadores.instituto', 
+                'avaliadores.email', 
+                'avaliadores.ano_id', 
                 'anos.ano')
-        .table('avaliadors')
-        .innerJoin('anos', 'avaliadors.ano_id', 'anos.id')
-    return avaliadors
+        .table('avaliadores')
+        .innerJoin('anos', 'avaliadores.ano_id', 'anos.id')
+    return avaliadores
   }
 
   async store ({ request, response }) {
