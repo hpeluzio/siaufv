@@ -8,11 +8,10 @@ class AvaliacaoSchema extends Schema {
     this.create('avaliacoes', table => {
       table.increments()
       table.date('data').notNullable()
-      table.time('horario', 4).notNullable()
+      table.time('horario').notNullable()
       table.integer('tipo').notNullable()
+      table.string('instituto').notNullable()
       table.integer('sala_id').notNullable().unsigned()
-      table.integer('avaliador_id').notNullable().unsigned()
-      table.integer('ano_id').notNullable().unsigned()
       table.integer('trabalho_id').notNullable()
       table.timestamps()
       table
@@ -27,18 +26,7 @@ class AvaliacaoSchema extends Schema {
         .inTable('trabalhos')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
-      // table
-      //   .foreign('avaliador_id')
-      //   .references('id')
-      //   .inTable('avaliadores')
-      //   .onUpdate('CASCADE')
-      //   .onDelete('CASCADE')
-      // table
-      //   .foreign('ano_id')
-      //   .references('id')
-      //   .inTable('anos')
-      //   .onUpdate('CASCADE')
-      //   .onDelete('CASCADE')        
+    
     })
   }
 

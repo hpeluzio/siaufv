@@ -80,8 +80,8 @@ export default {
       }
     },
     {
-      name: 'Orais',
-      url: '/4',
+      name: 'Avaliações',
+      url: '/avaliacoes',
       icon: 'icon-bubbles'
     },
     {

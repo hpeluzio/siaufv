@@ -1,473 +1,559 @@
 <template>
   <div class="animated fadeIn">
+    <!-- Data Table -->
+    <div data-app="true">
+      <v-toolbar flat color="white">
+        <i class="icon-pencil"></i>
+        <strong>Trabalhos</strong>
+        <v-divider class="mx-2" inset vertical></v-divider>
+        <v-spacer></v-spacer>
+        <v-text-field v-model="search" append-icon="search" label="Procurar" hide-details></v-text-field>
 
-<!-- Data Table -->
-<div data-app="true">
-    <v-toolbar flat color="white">
-      <i class="icon-pencil"></i> <strong>Trabalhos</strong>
-      <v-divider
-        class="mx-2"
-        inset
-        vertical
-      ></v-divider>
-      <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        append-icon="search"
-        label="Procurar"
-        hide-details
-      ></v-text-field>
+        <v-dialog v-model="dialog" max-width="700px">
+          <v-btn slot="activator" class="primary" color="green">Novo Trabalho</v-btn>
+          <v-card>
+            <v-card-title>
+              <span class="headline">{{ formTitle }}</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container grid-list-md>
+                <v-layout wrap>
+                  <v-flex xs12 sm6 md3>
+                    <v-text-field
+                      outline
+                      v-model="editedItem.trabalho_id"
+                      label="Trabalho ID"
+                      data-vv-name="trabalho_id"
+                      v-validate="'required'"
+                      :class="{ 'is-invalid': submitted && errors.has('trabalho_id') }"
+                    ></v-text-field>
+                    <div
+                      v-if="submitted && errors.has('trabalho_id')"
+                      style="color: red"
+                    >{{ errors.first('trabalho_id') }}</div>
+                  </v-flex>
+                  <v-flex xs12 sm6 md6>
+                    <v-text-field
+                      outline
+                      v-model="editedItem.nome"
+                      label="Nome"
+                      data-vv-name="nome"
+                      v-validate="'required'"
+                      :class="{ 'is-invalid': submitted && errors.has('nome') }"
+                    ></v-text-field>
+                    <div
+                      v-if="submitted && errors.has('nome')"
+                      style="color: red"
+                    >{{ errors.first('nome') }}</div>
+                  </v-flex>
+                  <v-flex xs12 sm6 md3>
+                    <v-select
+                      :items="anos"
+                      item-value="id"
+                      item-text="ano"
+                      outline
+                      v-model="editedItem.ano_id"
+                      label="Ano"
+                      data-vv-name="ano"
+                      v-validate="'required|integer'"
+                      :class="{ 'is-invalid': submitted && errors.has('ano') }"
+                    ></v-select>
+                    <div
+                      v-if="submitted && errors.has('ano')"
+                      style="color: red"
+                    >{{ errors.first('ano') }}</div>
+                  </v-flex>
+                  <v-flex xs12 sm6 md4>
+                    <v-text-field
+                      outline
+                      v-model="editedItem.orientador"
+                      label="Orientador"
+                      data-vv-name="orientador"
+                      v-validate="'required'"
+                      :class="{ 'is-invalid': submitted && errors.has('orientador') }"
+                    ></v-text-field>
+                    <div
+                      v-if="submitted && errors.has('orientador')"
+                      style="color: red"
+                    >{{ errors.first('orientador') }}</div>
+                  </v-flex>
+                  <v-flex xs12 sm6 md4>
+                    <v-text-field
+                      outline
+                      v-model="editedItem.area"
+                      label="Área"
+                      data-vv-name="area"
+                      v-validate="'required'"
+                      :class="{ 'is-invalid': submitted && errors.has('area') }"
+                    ></v-text-field>
+                    <div
+                      v-if="submitted && errors.has('area')"
+                      style="color: red"
+                    >{{ errors.first('area') }}</div>
+                  </v-flex>
 
-      <v-dialog v-model="dialog" max-width="700px">
-        <v-btn slot="activator" class="primary" color="green">Novo Trabalho</v-btn>
-        <v-card>
-          <v-card-title>
-            <span class="headline">{{ formTitle }}</span>
-          </v-card-title> 
-          <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex xs12 sm6 md3>
-                  <v-text-field outline v-model="editedItem.trabalho_id" label="Trabalho ID" data-vv-name="trabalho_id" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('trabalho_id') }"></v-text-field>
-                  <div v-if="submitted && errors.has('trabalho_id')" style="color: red">{{ errors.first('trabalho_id') }}</div>
-                </v-flex>
-                <v-flex xs12 sm6 md6>
-                  <v-text-field outline v-model="editedItem.nome" label="Nome" data-vv-name="nome" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('nome') }"></v-text-field>
-                  <div v-if="submitted && errors.has('nome')" style="color: red">{{ errors.first('nome') }}</div>
-                </v-flex>
-                <v-flex xs12 sm6 md3>
-                  <v-select :items="anos" item-value="id" item-text="ano"  outline v-model="editedItem.ano_id" label="Ano"  data-vv-name="ano" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('ano') }"></v-select>
-                  <div v-if="submitted && errors.has('ano')" style="color: red">{{ errors.first('ano') }}</div>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field outline v-model="editedItem.orientador" label="Orientador" data-vv-name="orientador" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('orientador') }"></v-text-field>
-                  <div v-if="submitted && errors.has('orientador')" style="color: red">{{ errors.first('orientador') }}</div>
-                </v-flex>                            
-                <v-flex xs12 sm6 md4>
-                  <v-text-field outline v-model="editedItem.area" label="Área" data-vv-name="area" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('area') }"></v-text-field>
-                  <div v-if="submitted && errors.has('area')" style="color: red">{{ errors.first('area') }}</div>
-                </v-flex>     
+                  <v-flex xs12 sm6 md4>
+                    <v-text-field
+                      outline
+                      v-model="editedItem.modalidade"
+                      label="Modalidade"
+                      data-vv-name="modalidade"
+                      v-validate="'required'"
+                      :class="{ 'is-invalid': submitted && errors.has('modalidade') }"
+                    ></v-text-field>
+                    <div
+                      v-if="submitted && errors.has('modalidade')"
+                      style="color: red"
+                    >{{ errors.first('modalidade') }}</div>
+                  </v-flex>
 
-                <v-flex xs12 sm6 md4>
-                  <v-text-field outline v-model="editedItem.modalidade" label="Modalidade" data-vv-name="modalidade" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('modalidade') }"></v-text-field>
-                  <div v-if="submitted && errors.has('modalidade')" style="color: red">{{ errors.first('modalidade') }}</div>
-                </v-flex>
-                
-                <!--<v-flex xs12 sm6 md9>
+                  <!--<v-flex xs12 sm6 md9>
                   <v-text-field outline v-model="editedItem.autores" label="Autores" data-vv-name="autores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('autores') }"></v-text-field >
                   <div v-if="submitted && errors.has('autores')" style="color: red">{{ errors.first('autores') }}</div>
-                </v-flex>-->  
-
-                
-                <!-- Multiple input text for autor-->
-                  <v-flex v-for="(autors, index) in paraSeremEditadosAutores" :key="index" xs12 sm6 md9 >
-                    <v-text-field outline v-model="autors.autor"  label="Autor" data-vv-name="autores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('autores') }"></v-text-field >
-                    <div v-if="submitted && errors.has('autores')" style="color: red">{{ errors.first('autores') }}</div>
+                  </v-flex>-->
+                  <!-- Multiple input text for autor-->
+                  <v-flex
+                    v-for="(autors, index) in paraSeremEditadosAutores"
+                    :key="index"
+                    xs12
+                    sm6
+                    md9
+                  >
+                    <v-text-field
+                      outline
+                      v-model="autors.autor"
+                      label="Autor"
+                      data-vv-name="autores"
+                      v-validate="'required'"
+                      :class="{ 'is-invalid': submitted && errors.has('autores') }"
+                    ></v-text-field>
+                    <div
+                      v-if="submitted && errors.has('autores')"
+                      style="color: red"
+                    >{{ errors.first('autores') }}</div>
                   </v-flex>
-                <!-- Multiple input text for autor-->
+                  <!-- Multiple input text for autor-->
+                  <!-- Errors-->
+                  <div
+                    v-if="submitted && errors.has('defaulterror')"
+                    style="color: red"
+                    class="container"
+                  >{{ errors.first('defaulterror') }}</div>
+                </v-layout>
+              </v-container>
+            </v-card-text>
 
-                <!-- Errors-->
-                <div v-if="submitted && errors.has('defaulterror')" style="color: red" class="container">{{ errors.first('defaulterror') }}</div>
-                
-              </v-layout>
-            </v-container>
-          </v-card-text>
+            <v-card-actions>
+              <v-btn @click="removerAutor()" slot="activator" class="primary" color="red">- Autor</v-btn>
+              <v-btn
+                @click="adicionarAutor()"
+                slot="activator"
+                class="primary"
+                color="green"
+              >+ Autor</v-btn>
 
-          <v-card-actions>
-            <v-btn @click="removerAutor()" slot="activator" class="primary" color="red">- Autor</v-btn>
-            <v-btn @click="adicionarAutor()" slot="activator" class="primary" color="green">+ Autor</v-btn>
-            
-            <v-spacer></v-spacer>
-            <v-btn class="primary" color="orange"  @click="close">Cancelar</v-btn>
-            <v-btn class="primary" color="blue"  @click="handleSubmit">Salvar</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-toolbar>
-<!-- Data Table -->
-<!-- Data Table -->
-<!-- Data Table -->
-    <v-data-table
-      :headers="headers"
-      :items="trabalhos"
-      :rows-per-page-items="rowsPerPageItems"
-      :pagination.sync="pagination"
-      :search="search"
-      :custom-filter="customFilter"
-      class="elevation-1"
-      
-    >
-      <template slot="items" slot-scope="props">
-       
-        <td class="text-xs-right">{{ props.item.trabalho_id }}</td>
-        <td class="text-xs-right">{{ props.item.nome }}</td>
-        
-        <!-- AUTOR -->
-         <td class="text-xs-right">
-            <span v-for="(autor, index) in props.item.autores" :key="index"> {{ autor.autor }}</span>
-         </td>
-        <!-- AUTOR -->
-        <td class="text-xs-right">{{ props.item.orientador }}</td>
-        <td class="text-xs-right">{{ props.item.modalidade }}</td>
-        <td class="text-xs-right">{{ props.item.area }}</td>
-        <td class="text-xs-right">{{ props.item.ano }}</td>
-        <td class="justify-center layout px-0">
-          <v-icon
-            small
-            class="mr-2"
-            @click="editItem(props.item)"
-          >
-            edit
-          </v-icon>
-          <v-icon
-            small
-            @click="deleteItem(props.item)"
-          >
-            delete
-          </v-icon>
-        </td>
-      </template>
-      <v-alert slot="no-results" :value="true" color="error" icon="warning">
-        <div style="color: red">Sua procura por <strong>"{{ search }}"</strong> não achou resultados.</div>
-      </v-alert>
-    </v-data-table>
-  </div>
-  <!-- Data Table -->
+              <v-spacer></v-spacer>
+              <v-btn class="primary" color="orange" @click="close">Cancelar</v-btn>
+              <v-btn class="primary" color="blue" @click="handleSubmit">Salvar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-toolbar>
+      <!-- Data Table -->
+      <!-- Data Table -->
+      <!-- Data Table -->
+      <v-data-table
+        :headers="headers"
+        :items="trabalhos"
+        :rows-per-page-items="rowsPerPageItems"
+        :pagination.sync="pagination"
+        :search="search"
+        :custom-filter="customFilter"
+        class="elevation-1"
+      >
+        <template slot="items" slot-scope="props">
+          <td class="text-xs-right">{{ props.item.trabalho_id }}</td>
+          <td class="text-xs-right">{{ props.item.nome }}</td>
+
+          <!-- AUTOR -->
+          <td class="text-xs-right">
+            <span v-for="(autor, index) in props.item.autores" :key="index">{{ autor.autor }}</span>
+          </td>
+          <!-- AUTOR -->
+          <td class="text-xs-right">{{ props.item.orientador }}</td>
+          <td class="text-xs-right">{{ props.item.modalidade }}</td>
+          <td class="text-xs-right">{{ props.item.area }}</td>
+          <td class="text-xs-right">{{ props.item.ano }}</td>
+          <td class="justify-center layout px-0">
+            <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+            <v-icon small @click="deleteItem(props.item)">delete</v-icon>
+          </td>
+        </template>
+        <v-alert slot="no-results" :value="true" color="error" icon="warning">
+          <div style="color: red">Sua procura por
+            <strong>"{{ search }}"</strong> não achou resultados.
+          </div>
+        </v-alert>
+      </v-data-table>
+    </div>
+    <!-- Data Table -->
   </div>
 </template>
 
 <script>
-import axios_instance from '../../axios';
-import normaliza from '../../normaliza';
+import axios_instance from "../../axios";
+import normaliza from "../../normaliza";
 
 export default {
-    data: () => ({
-      submitted: false,
-      dialog: false,
-      search: '',
-      anos: [],
-      find: [],
-      headers: [
-        { text: 'ID', value: 'trabalho_id' },
-        { text: 'Nome', value: 'nome' },
-        { text: 'Autor(es)', value: 'autores' },
-        { text: 'orientador', value: 'orientador' },
-        { text: 'E-mail', value: 'modalidade' },
-        { text: 'Área', value: 'area' },
-        { text: 'Ano', value: 'ano' },
-        { text: 'Actions', value: 'name', sortable: false }
-      ],
-      trabalhos: [],
-      trabalhos_autores: [],
-      paraSeremEditadosAutores: [{id: '', trabalho_id: '', autor: ''}],
-      paraSeremDeletadosAutores:[],
-      editedIndex: -1,
-      editedItem: {
-        id: '',
-        trabalho_id: '',
-        nome: '',
-        autores: [{id: '', trabalho_id: '', autor: ''}],
-        orientador: '',
-        modalidade: '',
-        area: '',
-        ano_id: '',
-      },
-      defaultItem: {
-        id: '',
-        trabalho_id: '',
-        nome: '',
-        autores: [{id: '', trabalho_id: '', autor: ''}],
-        orientador: '',
-        modalidade: '',
-        area: '',
-        ano_id: '',
-      },
-      rowsPerPageItems: [10, 20, 50, 100],
-      pagination: {
-          rowsPerPage: 10
-      },
-    }),
+  data: () => ({
+    submitted: false,
+    dialog: false,
+    search: "",
+    anos: [],
+    find: [],
+    headers: [
+      { text: "ID", value: "trabalho_id" },
+      { text: "Nome", value: "nome" },
+      { text: "Autor(es)", value: "autores" },
+      { text: "orientador", value: "orientador" },
+      { text: "E-mail", value: "modalidade" },
+      { text: "Área", value: "area" },
+      { text: "Ano", value: "ano" },
+      { text: "Actions", value: "name", sortable: false }
+    ],
+    trabalhos: [],
+    trabalhos_autores: [],
+    paraSeremEditadosAutores: [{ id: "", trabalho_id: "", autor: "" }],
+    paraSeremDeletadosAutores: [],
+    editedIndex: -1,
+    editedItem: {
+      id: "",
+      trabalho_id: "",
+      nome: "",
+      autores: [{ id: "", trabalho_id: "", autor: "" }],
+      orientador: "",
+      modalidade: "",
+      area: "",
+      ano_id: ""
+    },
+    defaultItem: {
+      id: "",
+      trabalho_id: "",
+      nome: "",
+      autores: [{ id: "", trabalho_id: "", autor: "" }],
+      orientador: "",
+      modalidade: "",
+      area: "",
+      ano_id: ""
+    },
+    rowsPerPageItems: [10, 20, 50, 100],
+    pagination: {
+      rowsPerPage: 10
+    }
+  }),
 
-    computed: {
-      formTitle () {
-        return this.editedIndex === -1 ? 'Novo Trabalho' : 'Editar Trabalho'
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "Novo Trabalho" : "Editar Trabalho";
+    }
+  },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+      this.errors.clear(); //Limpar os erros
+      if (this.editedIndex === -1) {
+        this.paraSeremEditadosAutores = [
+          { id: "", trabalho_id: "", autor: "" }
+        ];
+        this.paraSeremDeletadosAutores = [];
       }
-    },
+    }
+  },
 
-    watch: {
-      dialog (val) {
-        val || this.close()
-        this.errors.clear() //Limpar os erros
-        if(this.editedIndex === -1 ){ 
-          this.paraSeremEditadosAutores = [{id: '', trabalho_id: '', autor: ''}]
-          this.paraSeremDeletadosAutores = []
-        }
-      }
-    },
+  created() {
+    //Mudando o locale do Vuetify
+    this.changeLocale();
 
-    created () {
-      //Mudando o locale do Vuetify
-      this.changeLocale () 
+    //Pegando todos trabalhos... Importa ARRAY TRABALHO do
+    this.getAxiosArrayTrabalhos();
 
-      //Pegando todos trabalhos... Importa ARRAY TRABALHO do
-      this.getAxiosArrayTrabalhos()
+    //Pegando todos os anos
+    this.getAxiosArrayAnos();
+  },
 
-      //Pegando todos os anos
-      this.getAxiosArrayAnos()   
-    },
+  methods: {
+    // Pega todos trabalhos
+    getAxiosArrayTrabalhos() {
+      axios_instance({
+        method: "get",
+        url: "/trabalho"
+      })
+        .then(response => {
+          // Pegando os trabalhos e os autores desses trabalhos
+          this.trabalhos = response.data.trabalhos;
+          this.trabalhos_autores = response.data.trabalhos_autores;
+          // Zerando array trabalhos[].autores
+          for (let i = 0; i < this.trabalhos.length; i++)
+            this.trabalhos[i].autores = [];
 
-    methods: {
-      // Pega todos trabalhos
-      getAxiosArrayTrabalhos() {
-              axios_instance({
-          method:'get',
-          url: '/trabalho'
-       })
-      .then(response => {
-        // Pegando os trabalhos e os autores desses trabalhos
-        this.trabalhos = response.data.trabalhos
-        this.trabalhos_autores = response.data.trabalhos_autores
-        // Zerando array trabalhos[].autores
-        for(let i=0; i < this.trabalhos.length; i++)
-          this.trabalhos[i].autores = []
-
-        //Setando autores array base desse componente
-        for(let i=0; i < this.trabalhos.length; i++){
-          for(let j=0; j < this.trabalhos_autores.length; j++){
-            if (this.trabalhos[i].trabalho_id == this.trabalhos_autores[j].trabalho_id){
-              this.trabalhos[i].autores.push({ id: this.trabalhos_autores[j].id, trabalho_id: this.trabalhos_autores[j].trabalho_id, autor: this.trabalhos_autores[j].autor })
+          //Setando autores array base desse componente
+          for (let i = 0; i < this.trabalhos.length; i++) {
+            for (let j = 0; j < this.trabalhos_autores.length; j++) {
+              if (
+                this.trabalhos[i].trabalho_id ==
+                this.trabalhos_autores[j].trabalho_id
+              ) {
+                this.trabalhos[i].autores.push({
+                  id: this.trabalhos_autores[j].id,
+                  trabalho_id: this.trabalhos_autores[j].trabalho_id,
+                  autor: this.trabalhos_autores[j].autor
+                });
+              }
             }
           }
-        }
         })
-        .catch((error) => {
-            console.log(error);
-        })
-      },
-
-      getAxiosArrayAnos() {
-        //Pegando todos os anos
-        axios_instance({
-            method:'get',
-            url: '/ano'
-        })
-        .then(response => {
-          for(let i=0; i < response.data.length; i++)
-            this.anos.push({ 'id': response.data[i].id, 'ano': response.data[i].ano })
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-      },
-
-      //Custom filter da datatable
-      customFilter(items, search, filter, headers) {
-
-        //Normalizando a search
-        if (search.trim() === '') return items
-        search = normaliza(search).trim()
-
-        return items.filter((item) => {
-          if (normaliza(item.trabalho_id).includes(search)) 
-            return item
-          if (normaliza(item.ano).includes(search)) 
-            return item
-          if (normaliza(item.nome).includes(search)) 
-            return item
-          for(var autors of item.autores)
-            if (normaliza(autors.autor).includes(search))
-              return item
-          if (normaliza(item.orientador).includes(search)) 
-             return item
-          if (normaliza(item.modalidade).includes(search)) 
-             return item   
-          if (normaliza(item.area).includes(search)) 
-            return item
-          else 
-            return false
-       })
-
-        // //PEguei da net
-        // return items.filter(i => (
-        //   Object.keys(i).some(j => filter(i[j], search))
-        // ))
-
-        // customFilter: {
-        //   type: Function,
-        //   default: (items, search, filter, headers) => {
-        //     search = search.toString().toLowerCase()
-        //     if (search.trim() === '') return items
-
-        //     const props = headers.map(h => h.value)
-
-        //     return items.filter(item => props.some(prop => filter(getObjectValueByPath(item, prop, item[prop]), search)))
-        //   }
-        // }
-
-        // // Filtro Waltim
-        // return items.filter(item  => {
-        //     return Object.entries(item).some(([key,value]) => {
-        //       if(value != null || value != undefined) {
-        //         if(typeof value === 'object'){
-        //           return value.some(autor => {
-        //             return search.includes(autor.autor)
-        //           })
-        //         }
-        //         console.log("QUALUQR COISAUASHpl")
-        //         return search.includes(value)
-        //       }
-        //     })
-        //   }
-        // )
-       },
-
-      adicionarAutor:  function () {
-        this.paraSeremEditadosAutores.push({id: '', trabalho_id: '', autor: ''});
-      },
-      
-      removerAutor: function () {
-        if(this.paraSeremEditadosAutores.length > 1){
-            const pop = this.paraSeremEditadosAutores.pop();
-            if(pop.id){
-              this.paraSeremDeletadosAutores.push(pop)
-            }
-        } else 
-            alert('Necesssário pelo menos um autor')
-      },
-
-      //Checar o formulário em busca de erros
-      handleSubmit(e) {
-        this.submitted = true;
-        this.$validator.validate().then(valid => {
-            if (valid) {
-                this.save()
-                //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.user))
-            }
+        .catch(error => {
+          console.log(error);
         });
-      },
-      
-      changeLocale () {
-        this.$vuetify.lang.current = 'pt'
-      },
+    },
 
-      editItem (item) {
-        this.editedIndex = this.trabalhos.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+    getAxiosArrayAnos() {
+      //Pegando todos os anos
+      axios_instance({
+        method: "get",
+        url: "/ano"
+      })
+        .then(response => {
+          for (let i in response.data)
+            this.anos.push({
+              id: response.data[i].id,
+              ano: response.data[i].ano
+            });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
 
-        for(let i=0; i < this.trabalhos.length; i++)
-           this.paraSeremEditadosAutores = Object.assign([], this.editedItem.autores)
+    //Custom filter da datatable
+    customFilter(items, search, filter, headers) {
+      //Normalizando a search
+      if (search.trim() === "") return items;
+      search = normaliza(search).trim();
 
-        this.dialog = true
-      },
+      return items.filter(item => {
+        if (normaliza(item.trabalho_id).includes(search)) return item;
+        if (normaliza(item.ano).includes(search)) return item;
+        if (normaliza(item.nome).includes(search)) return item;
+        for (var autors of item.autores)
+          if (normaliza(autors.autor).includes(search)) return item;
+        if (normaliza(item.orientador).includes(search)) return item;
+        if (normaliza(item.modalidade).includes(search)) return item;
+        if (normaliza(item.area).includes(search)) return item;
+        else return false;
+      });
 
-      deleteItem (item) {
-        //Setando algumas variaveis para uso do delete
-        const index = this.trabalhos.indexOf(item)
+      // //PEguei da net
+      // return items.filter(i => (
+      //   Object.keys(i).some(j => filter(i[j], search))
+      // ))
 
-        // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
-        confirm('Está certo que deseja deletar este item?') &&
+      // customFilter: {
+      //   type: Function,
+      //   default: (items, search, filter, headers) => {
+      //     search = search.toString().toLowerCase()
+      //     if (search.trim() === '') return items
+
+      //     const props = headers.map(h => h.value)
+
+      //     return items.filter(item => props.some(prop => filter(getObjectValueByPath(item, prop, item[prop]), search)))
+      //   }
+      // }
+
+      // // Filtro Waltim
+      // return items.filter(item  => {
+      //     return Object.entries(item).some(([key,value]) => {
+      //       if(value != null || value != undefined) {
+      //         if(typeof value === 'object'){
+      //           return value.some(autor => {
+      //             return search.includes(autor.autor)
+      //           })
+      //         }
+      //         console.log("QUALUQR COISAUASHpl")
+      //         return search.includes(value)
+      //       }
+      //     })
+      //   }
+      // )
+    },
+
+    adicionarAutor: function() {
+      this.paraSeremEditadosAutores.push({
+        id: "",
+        trabalho_id: "",
+        autor: ""
+      });
+    },
+
+    removerAutor: function() {
+      if (this.paraSeremEditadosAutores.length > 1) {
+        const pop = this.paraSeremEditadosAutores.pop();
+        if (pop.id) {
+          this.paraSeremDeletadosAutores.push(pop);
+        }
+      } else alert("Necesssário pelo menos um autor");
+    },
+
+    //Checar o formulário em busca de erros
+    handleSubmit(e) {
+      this.submitted = true;
+      this.$validator.validate().then(valid => {
+        if (valid) {
+          this.save();
+          //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.user))
+        }
+      });
+    },
+
+    changeLocale() {
+      this.$vuetify.lang.current = "pt";
+    },
+
+    editItem(item) {
+      this.editedIndex = this.trabalhos.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+
+      for (let i = 0; i < this.trabalhos.length; i++)
+        this.paraSeremEditadosAutores = Object.assign(
+          [],
+          this.editedItem.autores
+        );
+
+      this.dialog = true;
+    },
+
+    deleteItem(item) {
+      //Setando algumas variaveis para uso do delete
+      const index = this.trabalhos.indexOf(item);
+
+      // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
+      confirm("Está certo que deseja deletar este item?") &&
         axios_instance({
-            method: 'delete',
-            url: '/trabalho/'+ item.id +'',
-          })
+          method: "delete",
+          url: "/trabalho/" + item.id + ""
+        })
           .then(response => {
             //Nao precisa dar o splice pq o getAxiosArrayTrabalhos atualiza pra gente
             //this.trabalhos.splice(index, 1)
           })
-          .catch((error) => {
-            console.log(error)
-            alert(JSON.stringify(error))
+          .catch(error => {
+            console.log(error);
+            alert(JSON.stringify(error));
             //alert(error.response.data)
-          })
-          this.getAxiosArrayTrabalhos()
-      },
+          });
+      this.getAxiosArrayTrabalhos();
+    },
 
-      close () {
-        this.dialog = false
-        setTimeout(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        }, 300)
-        this.search = ''
-        this.getAxiosArrayTrabalhos()
-      },
+    close() {
+      this.dialog = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
+      this.search = "";
+      this.getAxiosArrayTrabalhos();
+    },
 
-      save () {
-        //EDICAO
-        if (this.editedIndex > -1) { // EDICAO EDICAO EDICAO  Se this.editedIndex  > -1 entao estamos na edição
-          //Editando item chama-se o metodo put na rota trabalho e irá para update
-          axios_instance({
-            method: 'put',
-            url: '/trabalho/' + this.editedItem.id + '',
-            data: {
-              id: this.editedItem.id,
-              trabalho_id: this.editedItem.trabalho_id,
-              nome: this.editedItem.nome,
-              autores: this.paraSeremEditadosAutores,
-              deletedAutores: this.paraSeremDeletadosAutores,
-              orientador: this.editedItem.orientador,
-              modalidade: this.editedItem.modalidade,
-              area: this.editedItem.area,
-              ano_id: this.editedItem.ano_id,
-            }
-          })
+    save() {
+      //EDICAO
+      if (this.editedIndex > -1) {
+        // EDICAO EDICAO EDICAO  Se this.editedIndex  > -1 entao estamos na edição
+        //Editando item chama-se o metodo put na rota trabalho e irá para update
+        axios_instance({
+          method: "put",
+          url: "/trabalho/" + this.editedItem.id + "",
+          data: {
+            id: this.editedItem.id,
+            trabalho_id: this.editedItem.trabalho_id,
+            nome: this.editedItem.nome,
+            autores: this.paraSeremEditadosAutores,
+            deletedAutores: this.paraSeremDeletadosAutores,
+            orientador: this.editedItem.orientador,
+            modalidade: this.editedItem.modalidade,
+            area: this.editedItem.area,
+            ano_id: this.editedItem.ano_id
+          }
+        })
           .then(response => {
-            alert('Trabalho editado.');
-            this.close()
+            alert("Trabalho editado.");
+            this.close();
           })
-          .catch((error) => {
-            console.log(error)
+          .catch(error => {
+            console.log(error);
 
-            this.errors.clear()
-            if(error.response.data[0].message)
-              this.errors.add({ field: 'defaulterror', msg: error.response.data[0].message })
+            this.errors.clear();
+            if (error.response.data[0].message)
+              this.errors.add({
+                field: "defaulterror",
+                msg: error.response.data[0].message
+              });
             else
-              this.errors.add({ field: 'defaulterror', msg: error.response.data.message })
-          })
+              this.errors.add({
+                field: "defaulterror",
+                msg: error.response.data.message
+              });
+          });
         // INSERT
-        } else { // INSERT INSERT Se this.editedIndex  == -1 entao estamos na inserção de um novo trabalho
-          axios_instance({
-            method: 'post',
-            url: '/trabalho',
-            data: {
-              //newtrabalho: JSON.stringify(this.editedItem)
-              //trabalho: this.editedItem
-              id: this.editedItem.id,
-              trabalho_id: this.editedItem.trabalho_id,
-              nome: this.editedItem.nome,
-              autores: this.paraSeremEditadosAutores,
-              orientador: this.editedItem.orientador,
-              modalidade: this.editedItem.modalidade,
-              area: this.editedItem.area,
-              ano_id: this.editedItem.ano_id,
-            }
-          })
+      } else {
+        // INSERT INSERT Se this.editedIndex  == -1 entao estamos na inserção de um novo trabalho
+        axios_instance({
+          method: "post",
+          url: "/trabalho",
+          data: {
+            //newtrabalho: JSON.stringify(this.editedItem)
+            //trabalho: this.editedItem
+            id: this.editedItem.id,
+            trabalho_id: this.editedItem.trabalho_id,
+            nome: this.editedItem.nome,
+            autores: this.paraSeremEditadosAutores,
+            orientador: this.editedItem.orientador,
+            modalidade: this.editedItem.modalidade,
+            area: this.editedItem.area,
+            ano_id: this.editedItem.ano_id
+          }
+        })
           .then(response => {
             //Inclui o item no array de item do front end
-            alert('Trabalho adicionado.');
-            this.close()
+            alert("Trabalho adicionado.");
+            this.close();
           })
-          .catch((error) => {
-            console.log(error.response)
+          .catch(error => {
+            console.log(error.response);
 
-            this.errors.clear()
-            if(error.response.data[0].message)
-              this.errors.add({ field: 'defaulterror', msg: error.response.data[0].message })
+            this.errors.clear();
+            if (error.response.data[0].message)
+              this.errors.add({
+                field: "defaulterror",
+                msg: error.response.data[0].message
+              });
             else
-              this.errors.add({ field: 'defaulterror', msg: error.response.data.message })
-          })
-        }
-      
-        //this.close()
-        // Importando novamente o array trabalho depois do save
-        
+              this.errors.add({
+                field: "defaulterror",
+                msg: error.response.data.message
+              });
+          });
       }
+
+      //this.close()
+      // Importando novamente o array trabalho depois do save
     }
   }
+};
 </script>
 
 <style>
 .mytable .v-table tbody tr:not(:last-child) {
-    border-bottom: none;
+  border-bottom: none;
 }
 </style>

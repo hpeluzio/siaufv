@@ -5,7 +5,7 @@ const Schema = use('Schema')
 
 class AvaliadorAvaliacaoSchema extends Schema {
   up () {
-    this.create('avaliadores_avaliacoes', (table) => {
+    this.create('avaliador_avaliacao', (table) => {
       //table.increments()
       table.integer('avaliador_id').notNullable().unsigned()
       table.integer('avaliacao_id').notNullable().unsigned()
@@ -27,7 +27,7 @@ class AvaliadorAvaliacaoSchema extends Schema {
   }
 
   down () {
-    this.drop('avaliadores_avaliacoes')
+    this.drop('avaliador_avaliacao')
   }
 }
 

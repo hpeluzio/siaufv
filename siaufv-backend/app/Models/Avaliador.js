@@ -14,6 +14,14 @@ class Avaliador extends Model {
     ano () {
         return this.hasOne('App/Models/Ano')
     }
+
+    //Relaçao com Avaliacao
+    avaliacao () {
+        return this
+          .belongsToMany('App/Models/Avaliacao')
+          .pivotTable('avaliador_avaliacao')
+    }
+
 }
 
 module.exports = Avaliador

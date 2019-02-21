@@ -17,7 +17,6 @@ Route.post('/ano', 'AnoController.store').middleware('auth:jwt').validator('AnoS
 Route.delete('/ano/:id', 'AnoController.destroy').middleware('auth:jwt')
 Route.put('/ano/:id', 'AnoController.update').middleware('auth:jwt').validator('AnoUpdate')
 
-
 //Rotas do Avaliador
 Route
     .resource('/avaliador', 'AvaliadorController')
@@ -41,6 +40,10 @@ Route.post('/sala', 'SalaController.store').middleware('auth:jwt').validator('Sa
 Route.delete('/sala/:id', 'SalaController.destroy').middleware('auth:jwt')
 Route.put('/sala/:id', 'SalaController.update').middleware('auth:jwt').validator('SalaUpdate')
 
+//Rotas das Avaliacoes Orais
+Route.get('/avaliacao', 'AvaliacaoController.index').middleware('auth:jwt')
+Route.post('/avaliacao', 'AvaliacaoController.store').middleware('auth:jwt').validator('AvaliacaoStore')
+Route.put('/avaliacao/:id', 'AvaliacaoController.update').middleware('auth:jwt')//.validator('AvaliacaoUpdate')
 
 //Rotas do Avaliador Resource
 // Route
