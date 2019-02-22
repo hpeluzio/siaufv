@@ -7,7 +7,7 @@ class SalaSchema extends Schema {
   up () {
     this.create('salas', (table) => {
       table.increments()
-      table.string('nome', 10).notNullable()
+      table.string('nome').notNullable()
       table.string('descricao').notNullable()
       table.integer('capacidade').notNullable()
       table.timestamps()

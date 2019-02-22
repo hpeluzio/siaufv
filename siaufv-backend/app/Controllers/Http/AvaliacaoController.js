@@ -71,7 +71,7 @@ class AvaliacaoController {
 
   async update ({ params, request, response }) {
     const { id, data, horario, tipo, trabalho_id, sala_id, avaliadores_nome, instituto } = request.only([ 'id', 'data', 'horario', 'tipo', 'trabalho_id', 'sala_id', 'avaliadores_nome', 'instituto' ]);
-    console.log( id, data, horario, tipo, trabalho_id, sala_id, avaliadores_nome, instituto)
+    console.log( '\nid:' + id,'\ndata:' + data, '\nhorario:' + horario, '\ntipo:' + tipo, '\ntrabalho_id:' + trabalho_id, '\nsala_id:' + sala_id, '\ninstituto' + instituto)
     try {
       //Update de trabalhos
       var avaliacao = await Avaliacao.findOrFail(id)
@@ -80,30 +80,65 @@ class AvaliacaoController {
       avaliacao.tipo = tipo
       avaliacao.trabalho_id = trabalho_id
       avaliacao.instituto = instituto
-      avaliacao.sala_id = trabalho_id
+      avaliacao.sala_id = sala_id
 
       await avaliacao.save()
 
-      //Update de avaliadores das avaliacoes
-        //Inserts
-      if(typeof avaliadores_nome !== 'undefined' &&  avaliadores_nome.length > 0){
-        for(var i=0; i < avaliadores_nome.length; i++){
+      console.log('avaliadores_nome: ', avaliadores_nome, '\n')
 
-          let avaliador_avaliacao = await AvaliadorAvaliacao.findOrFail(avaliadores_nome[i].avaliadores_id)
-          avaliador_avaliacao.avaliador_id = avaliadores_nome[i].avaliadores_id
-          avaliador_avaliacao.save()           
+      let avaliadores_id_atualizacao = await Database.select('avaliador_id').table('avaliador_avaliacao').where('avaliacao_id','=',id)
+
+      //console.log('avaliadores_id_atualizacao: ', avaliadores_id_atualizacao)
+      console.log('avaliadores_id_atualizacao[0]: ', avaliadores_id_atualizacao[0].avaliador_id)
+      console.log('avaliadores_id_atualizacao[1]: ', avaliadores_id_atualizacao[1].avaliador_id)
+
+
+      //Update de avaliadores das avaliacoes
+      if(typeof avaliadores_nome !== 'undefined' &&  avaliadores_nome.length > 0){
+        //For para percorrer os avaliadores nome
+        for(let i in avaliadores_nome){
+ 
+          //Se avaliador_id for diferente do avaliador_id para ser atualizado entao pode modificar
+          if (avaliadores_id_atualizacao[i].avaliador_id != avaliadores_nome[i].avaliadores_id){
+            //instanciando objeto AvaliadorAvaliacao do banco
+            let avaliador_avaliacao = await AvaliadorAvaliacao.findBy({ 'avaliacao_id': avaliacao.id, 'avaliador_id': avaliadores_id_atualizacao[i].avaliador_id })
+            //Setando novo valor de avaliador_id na tabela AvaliadorAvaliacao
+            avaliador_avaliacao.avaliador_id = avaliadores_nome[i].avaliadores_id
+            await avaliador_avaliacao.save()
+          }
+
+          //console.log('avaliador_avaliacao: ', JSON.stringify(avaliador_avaliacao))
+          // console.log("-=-=-=-=-=-=-")
+          // console.log ('typeof avaliadores_nome[i].avaliadores_id:', typeof avaliadores_nome[i].avaliadores_id  ,' - ', avaliadores_nome[i].avaliadores_id)                                                
+          // avaliador_avaliacao.avaliador_id = avaliadores_nome[i].avaliadores_id
+           
+          // console.log("----------")
+          // console.log( 'avaliadores_nome[i].avaliadores_id: ', typeof avaliadores_nome[i].avaliadores_id, ' - ', avaliadores_nome[i].avaliadores_id)
+          // console.log( 'avaliador_avaliacao.avaliador_id: ', typeof avaliador_avaliacao.avaliador_id, ' - ', avaliador_avaliacao.avaliador_id)
+          // console.log( 'avaliador_avaliacao.avaliacao_id: ', typeof avaliador_avaliacao.avaliacao_id, ' - ', avaliador_avaliacao.avaliacao_id)
+          // console.log("-=-=-=-=-=-=-")  
+          // await avaliador_avaliacao.save()          
         }
       }
     } catch (error) {
       console.log(error)
       return response.status(500).send({ "error": error });
     }
-    //Se chegou até aqui então o Trabalho foi adicionado com sucesso
+    //Se chegou até aqui então o Avaliação foi adicionado com sucesso
     return response.status(200).send({ "success": "Avaliação atualizada com sucesso" });
 
   }
 
   async destroy ({ params, request, response }) {
+    try {
+      var avaliacao = await Avaliacao.findOrFail(params.id)
+      await avaliacao.delete()
+    } catch (error) {
+      console.log(error)
+      return response.status(500).send({ "error": error });
+    }
+    //Se chegou até aqui então o avaliacao foi adicionada com sucesso
+    return response.status(200).send({ "success": "Avaliacao deletada com sucesso" });
   }
 }
 

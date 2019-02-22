@@ -37,12 +37,12 @@
                 </v-flex>
 
                 <v-flex xs12 sm6 md4>
-                  <v-text-field outline v-model="editedItem.descricao" label="descricao" data-vv-name="Descrição" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('descricao') }"></v-text-field>
+                  <v-text-field outline v-model="editedItem.descricao" label="Descrição" data-vv-name="Descrição" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('descricao') }"></v-text-field>
                   <div v-if="submitted && errors.has('descricao')" style="color: red">{{ errors.first('descricao') }}</div>
                 </v-flex>
 
                 <v-flex xs12 sm6 md4>
-                  <v-text-field outline v-model="editedItem.capacidade" label="capacidade" data-vv-name="Capacidade" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('capacidade') }"></v-text-field>
+                  <v-text-field outline v-model="editedItem.capacidade" label="Capacidade" data-vv-name="capacidade" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('capacidade') }"></v-text-field>
                   <div v-if="submitted && errors.has('capacidade')" style="color: red">{{ errors.first('capacidade') }}</div>
                 </v-flex>                
 

@@ -469,7 +469,7 @@ export default {
             url: '/avaliacao/'+ item.id +'',
           })
           .then(response => {
-            this.getAxiosArrayAvaliacoes()
+            //this.getAxiosArrayAvaliacoes()
           })
           .catch((error) => {
             this.errors.add({ field: 'defaulterror2', msg: 'Erro ao deletar item' })
@@ -505,7 +505,7 @@ export default {
           .then(response => {
             alert('Avaliacao editada.');
             this.getAxiosArrayAvaliacoes()
-            this.close()
+            //this.close()
           })
           .catch((error) => {
             this.errors.clear() //Limpar os erros antes de setar novos erros
@@ -536,7 +536,7 @@ export default {
             //Inclui o item no array de item do front end
             alert('Avaliacoes adicionada.');
             this.getAxiosArrayAvaliacoes()
-            this.close()
+            //this.close()
           })
           .catch((error) => {
             console.log(error)

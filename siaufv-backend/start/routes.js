@@ -44,6 +44,7 @@ Route.put('/sala/:id', 'SalaController.update').middleware('auth:jwt').validator
 Route.get('/avaliacao', 'AvaliacaoController.index').middleware('auth:jwt')
 Route.post('/avaliacao', 'AvaliacaoController.store').middleware('auth:jwt').validator('AvaliacaoStore')
 Route.put('/avaliacao/:id', 'AvaliacaoController.update').middleware('auth:jwt')//.validator('AvaliacaoUpdate')
+Route.delete('/avaliacao/:id', 'AvaliacaoController.destroy').middleware('auth:jwt')
 
 //Rotas do Avaliador Resource
 // Route

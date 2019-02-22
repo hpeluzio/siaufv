@@ -6,10 +6,11 @@ const Schema = use('Schema')
 class AvaliadorAvaliacaoSchema extends Schema {
   up () {
     this.create('avaliador_avaliacao', (table) => {
-      //table.increments()
+      table.increments()
       table.integer('avaliador_id').notNullable().unsigned()
       table.integer('avaliacao_id').notNullable().unsigned()
-      table.primary(['avaliador_id','avaliacao_id']) 
+      //No momento adonis nao suporta composite primary key
+      //table.primary(['avaliador_id','avaliacao_id']) 
       table.timestamps()
       table
         .foreign('avaliador_id')
