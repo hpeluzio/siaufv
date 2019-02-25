@@ -162,13 +162,14 @@
       <!-- Data Table -->
       <!-- Data Table -->
       <!-- Data Table -->
+      <!-- :custom-filter="customFilter" -->
       <v-data-table
         :headers="headers"
         :items="trabalhos"
         :rows-per-page-items="rowsPerPageItems"
         :pagination.sync="pagination"
         :search="search"
-        :custom-filter="customFilter"
+        
         class="elevation-1"
       >
         <template slot="items" slot-scope="props">
@@ -291,27 +292,8 @@ export default {
       })
         .then(response => {
           // Pegando os trabalhos e os autores desses trabalhos
-          this.trabalhos = response.data.trabalhos;
-          this.trabalhos_autores = response.data.trabalhos_autores;
-          // Zerando array trabalhos[].autores
-          for (let i = 0; i < this.trabalhos.length; i++)
-            this.trabalhos[i].autores = [];
-
-          //Setando autores array base desse componente
-          for (let i = 0; i < this.trabalhos.length; i++) {
-            for (let j = 0; j < this.trabalhos_autores.length; j++) {
-              if (
-                this.trabalhos[i].trabalho_id ==
-                this.trabalhos_autores[j].trabalho_id
-              ) {
-                this.trabalhos[i].autores.push({
-                  id: this.trabalhos_autores[j].id,
-                  trabalho_id: this.trabalhos_autores[j].trabalho_id,
-                  autor: this.trabalhos_autores[j].autor
-                });
-              }
-            }
-          }
+          this.trabalhos = response.data//.trabalhos;
+          //console.log(this.trabalhos)
         })
         .catch(error => {
           console.log(error);
@@ -353,39 +335,6 @@ export default {
         if (normaliza(item.area).includes(search)) return item;
         else return false;
       });
-
-      // //PEguei da net
-      // return items.filter(i => (
-      //   Object.keys(i).some(j => filter(i[j], search))
-      // ))
-
-      // customFilter: {
-      //   type: Function,
-      //   default: (items, search, filter, headers) => {
-      //     search = search.toString().toLowerCase()
-      //     if (search.trim() === '') return items
-
-      //     const props = headers.map(h => h.value)
-
-      //     return items.filter(item => props.some(prop => filter(getObjectValueByPath(item, prop, item[prop]), search)))
-      //   }
-      // }
-
-      // // Filtro Waltim
-      // return items.filter(item  => {
-      //     return Object.entries(item).some(([key,value]) => {
-      //       if(value != null || value != undefined) {
-      //         if(typeof value === 'object'){
-      //           return value.some(autor => {
-      //             return search.includes(autor.autor)
-      //           })
-      //         }
-      //         console.log("QUALUQR COISAUASHpl")
-      //         return search.includes(value)
-      //       }
-      //     })
-      //   }
-      // )
     },
 
     adicionarAutor: function() {
@@ -446,13 +395,13 @@ export default {
           .then(response => {
             //Nao precisa dar o splice pq o getAxiosArrayTrabalhos atualiza pra gente
             //this.trabalhos.splice(index, 1)
+            this.getAxiosArrayTrabalhos();
           })
           .catch(error => {
             console.log(error);
             alert(JSON.stringify(error));
             //alert(error.response.data)
           });
-      this.getAxiosArrayTrabalhos();
     },
 
     close() {

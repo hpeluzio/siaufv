@@ -33,6 +33,9 @@ Route.post('/trabalho', 'TrabalhoController.store').middleware('auth:jwt').valid
 Route.put('/trabalho/:id', 'TrabalhoController.update').middleware('auth:jwt').validator('TrabalhoUpdate')
 Route.delete('/trabalho/:id', 'TrabalhoController.destroy').middleware('auth:jwt')
 
+//Rotas dos trabalhos autores
+Route.get('/trabalhoautor', 'TrabalhoAutorController.index').middleware('auth:jwt')
+
 
 //Rotas da Sala
 Route.get('/sala', 'SalaController.index').middleware('auth:jwt')

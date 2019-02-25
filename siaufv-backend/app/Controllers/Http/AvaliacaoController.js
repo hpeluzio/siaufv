@@ -21,30 +21,63 @@ class AvaliacaoController {
     //return response.status(200).send({ "success": "Avaliacao INDEX" });
     //const q = await Avaliacao.all()
     //return await Avaliacao.all()
-    const avaliacoes = 
+    let avaliacoes = 
     await Database
       .select('avaliacoes.*',
               'salas.id as salas_id',
               'salas.nome as salas_nome',
               'salas.descricao as salas_descricao',
-              'avaliadores.id as avaliadores_id',
-              'avaliadores.nome as avaliadores_nome',
-              'avaliadores.curso as avaliadores_curso',
-              'avaliadores.email as avaliadores_email',
               'anos.id as anos_id',
               'anos.ano as anos_ano',
               'trabalhos.trabalho_id as trabalhos_trabalho_id',
               'trabalhos.nome as trabalhos_nome',
               'trabalhos.orientador as trabalhos_orientador',
-              'trabalhos.modalidade as trabalhos_orientador',
+              'trabalhos.modalidade as trabalhos_modalidade',
               'trabalhos.area as trabalhos_area',
               'trabalhos.ano_id as trabalhos_ano_id')
       .table('avaliacoes')
       .innerJoin('salas', 'avaliacoes.sala_id', 'salas.id')
       .innerJoin('trabalhos', 'avaliacoes.trabalho_id', 'trabalhos.trabalho_id')
       .innerJoin('anos', 'trabalhos.ano_id', 'anos.id')
-      .innerJoin('avaliador_avaliacao', 'avaliacoes.id', 'avaliador_avaliacao.avaliacao_id')
-      .innerJoin('avaliadores', 'avaliadores.id', 'avaliador_avaliacao.avaliador_id')
+
+    // async () => { 
+    //   avaliacoes.map( (item, index) => { 
+    //   item.avaliadores_nome = 
+    //   await Database
+    //     .select('avaliadores.id as avaliadores_id',
+    //             'avaliadores.nome as avaliadores_nome',
+    //             'avaliadores.curso as avaliadores_curso',
+    //             'avaliadores.email as avaliadores_email')
+    //     .table('avaliadores')
+    //     .innerJoin('avaliador_avaliacao', 'avaliadores.id', 'avaliador_avaliacao.avaliador_id')
+    //     .where('avaliador_avaliacao.avaliacao_id', '=', avaliacoes[index].id )
+    //   })
+    // }
+
+    //Anexando os avaliadores as suas respectivas avaliacoes
+    for(let index in avaliacoes){  
+      avaliacoes[index].avaliadores_nome = 
+      await Database
+        .select('avaliadores.id as avaliadores_id',
+                'avaliadores.nome as avaliadores_nome',
+                'avaliadores.curso as avaliadores_curso',
+                'avaliadores.email as avaliadores_email')
+        .table('avaliadores')
+        .innerJoin('avaliador_avaliacao', 'avaliadores.id', 'avaliador_avaliacao.avaliador_id')
+        .where('avaliador_avaliacao.avaliacao_id', '=', avaliacoes[index].id )
+    }
+    //Anexando os trabalho_autores as suas respectivas avaliacoes
+    for(let index in avaliacoes){  
+      avaliacoes[index].trabalhos_autores = 
+      await Database
+        .select('trabalho_autores.id as id',
+                'trabalho_autores.trabalho_id as trabalho_id',
+                'trabalho_autores.autor as autor')
+        .table('trabalho_autores')
+        .where('trabalho_autores.trabalho_id', '=', avaliacoes[index].trabalho_id )
+    }    
+    
+
     return avaliacoes
   }
 

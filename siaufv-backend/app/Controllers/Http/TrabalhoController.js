@@ -10,21 +10,19 @@ class TrabalhoController {
   async index ({ request, response, view }) {
     const trabalhos = 
       await Database
-        .select('trabalhos.id', 
-                'trabalhos.trabalho_id', 
-                'trabalhos.nome', 
-                'trabalhos.orientador', 
-                'trabalhos.modalidade', 
-                'trabalhos.area', 
-                'trabalhos.ano_id', 
-                'anos.ano')
+        .select('*')
         .table('trabalhos')
-        .innerJoin('anos', 'trabalhos.ano_id', 'anos.id')
+        //.innerJoin('anos', 'trabalhos.ano_id', 'anos.id')
 
-    //const trabalhos = await Trabalho.all()
-    const trabalhos_autores = await TrabalhoAutor.all()
+    for(let index in trabalhos){  
+      trabalhos[index].autores = 
+      await Database
+        .select('*')
+        .table('trabalho_autores')
+        .where('trabalho_autores.trabalho_id', '=', trabalhos[index].trabalho_id )
+    }    
 
-    return { 'trabalhos': trabalhos, 'trabalhos_autores':trabalhos_autores }//, trabalhosAutores
+    return trabalhos 
   }
 
   async store ({ request, response }) {
