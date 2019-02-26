@@ -55,9 +55,9 @@
                   <div v-if="submitted && errors.has('email')" style="color: red">{{ errors.first('email') }}</div>
                 </v-flex>
 
-                <v-flex xs12 sm6 md3>
-                  <v-select :items="anos" item-value="id" item-text="ano"  outline v-model="editedItem.ano_id" label="Ano"  data-vv-name="ano" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('ano') }"></v-select>
-                  <div v-if="submitted && errors.has('ano')" style="color: red">{{ errors.first('ano') }}</div>
+                <v-flex xs12 sm6 md5>
+                  <!-- <v-checkbox color="red" v-model="ativo" :label="`Avaliador ativo (Disponível)`"></v-checkbox> -->
+                  <v-switch color="blue" v-model="editedItem.ativo" :label="`Avaliador ativo (Disponível)`"></v-switch>
                 </v-flex>
 
                 <div v-if="submitted && errors.has('defaulterror')" style="color: red" class="container">{{ errors.first('defaulterror') }}</div>
@@ -92,7 +92,10 @@
         <td class="text-xs-right">{{ props.item.curso }}</td>
         <td class="text-xs-right">{{ props.item.instituto }}</td>
         <td class="text-xs-right">{{ props.item.email }}</td>
-        <td class="text-xs-right">{{ props.item.ano }}</td>
+        <!-- Ativo -->
+          <td v-if="props.item.ativo === 1" class="text-xs-right"><b>Ativo</b></td>
+          <td v-else class="text-xs-right">  </td>
+
         <td class="justify-center layout px-0">
           <v-icon
             small
@@ -126,14 +129,13 @@ export default {
       submitted: false,
       dialog: false,
       search: '',
-      anos: [],
       headers: [
         { text: 'Matrícula', value: 'matricula' },
         { text: 'Nome', value: 'nome' },
         { text: 'Curso', value: 'curso' },
         { text: 'instituto', value: 'instituto' },
         { text: 'E-mail', value: 'email' },
-        { text: 'Ano', value: 'ano' },
+        { text: 'Ativo', value: 'ativo' },
         { text: 'Actions', value: 'name', sortable: false }
       ],
       avaliadores: [],
@@ -145,7 +147,7 @@ export default {
         curso: '',
         instituto: '',
         email: '',
-        ano_id: '',
+        ativo: false
       },
       defaultItem: {
         id: '',
@@ -153,8 +155,7 @@ export default {
         nome: '',
         curso: '',
         instituto: '',
-        email: '',
-        ano_id: '',
+        ativo: false
       
       },
       rowsPerPageItems: [10, 20, 50, 100],
@@ -182,9 +183,6 @@ export default {
 
       //Pegando todos avaliadores
       this.getAxiosArrayAvaliadores()
-
-      //Pegando todos os anos
-      this.getAxiosArrayAnos()
     },
 
     //methods
@@ -197,21 +195,6 @@ export default {
         })
         .then(response => {
           this.avaliadores = response.data
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-      },
-
-      getAxiosArrayAnos() {
-        //Pegando todos os anos
-        axios_instance({
-            method:'get',
-            url: '/ano'
-        })
-        .then(response => {
-          for(let i=0; i < response.data.length; i++)
-            this.anos.push({ 'id': response.data[i].id, 'ano': response.data[i].ano })
         })
         .catch((error) => {
             console.log(error);
@@ -278,8 +261,8 @@ export default {
               curso: this.editedItem.curso,
               instituto: this.editedItem.instituto,
               email: this.editedItem.email,
-              ano_id: this.editedItem.ano_id,
-            }
+              ativo: this.editedItem.ativo
+              }
           })
           .then(response => {
             alert('Avaliador editado.');
@@ -306,7 +289,7 @@ export default {
               curso: this.editedItem.curso,
               instituto: this.editedItem.instituto,
               email: this.editedItem.email,
-              ano_id: this.editedItem.ano_id,
+              ativo: this.editedItem.ativo,
             }
           })
           .then(response => {

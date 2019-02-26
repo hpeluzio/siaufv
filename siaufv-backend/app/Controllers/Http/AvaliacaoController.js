@@ -24,11 +24,6 @@ class AvaliacaoController {
     let avaliacoes = 
     await Database
       .select('avaliacoes.*',
-              'salas.id as salas_id',
-              'salas.nome as salas_nome',
-              'salas.descricao as salas_descricao',
-              'anos.id as anos_id',
-              'anos.ano as anos_ano',
               'trabalhos.trabalho_id as trabalhos_trabalho_id',
               'trabalhos.nome as trabalhos_nome',
               'trabalhos.orientador as trabalhos_orientador',
@@ -36,16 +31,14 @@ class AvaliacaoController {
               'trabalhos.area as trabalhos_area',
               'trabalhos.ano_id as trabalhos_ano_id')
       .table('avaliacoes')
-      .innerJoin('salas', 'avaliacoes.sala_id', 'salas.id')
       .innerJoin('trabalhos', 'avaliacoes.trabalho_id', 'trabalhos.trabalho_id')
-      .innerJoin('anos', 'trabalhos.ano_id', 'anos.id')
 
     // async () => { 
     //   avaliacoes.map( (item, index) => { 
-    //   item.avaliadores_nome = 
+    //   item.avaliador_nome = 
     //   await Database
     //     .select('avaliadores.id as avaliadores_id',
-    //             'avaliadores.nome as avaliadores_nome',
+    //             'avaliadores.nome as avaliador_nome',
     //             'avaliadores.curso as avaliadores_curso',
     //             'avaliadores.email as avaliadores_email')
     //     .table('avaliadores')
@@ -56,12 +49,12 @@ class AvaliacaoController {
 
     //Anexando os avaliadores as suas respectivas avaliacoes
     for(let index in avaliacoes){  
-      avaliacoes[index].avaliadores_nome = 
+      avaliacoes[index].avaliadores = 
       await Database
-        .select('avaliadores.id as avaliadores_id',
-                'avaliadores.nome as avaliadores_nome',
-                'avaliadores.curso as avaliadores_curso',
-                'avaliadores.email as avaliadores_email')
+        .select('avaliadores.id as avaliador_id',
+                'avaliadores.nome as avaliador_nome',
+                'avaliadores.curso as avaliador_curso',
+                'avaliadores.email as avaliador_email')
         .table('avaliadores')
         .innerJoin('avaliador_avaliacao', 'avaliadores.id', 'avaliador_avaliacao.avaliador_id')
         .where('avaliador_avaliacao.avaliacao_id', '=', avaliacoes[index].id )
@@ -82,17 +75,17 @@ class AvaliacaoController {
   }
 
   async store ({ request, response }) {
-    console.log(request.only(['data','horario','tipo','trabalho_id','sala_id','avaliadores_nome', 'instituto']))
-    const { data, horario, tipo, trabalho_id, sala_id, avaliadores_nome, instituto} 
+    console.log(request.only(['data','horario','tipo','trabalho_id','sala_id','avaliador_nome', 'instituto']))
+    const { data, horario, tipo, trabalho_id, sala_id, avaliador_nome, instituto} 
         = request.only([
-           'data', 'horario', 'tipo', 'trabalho_id', 'sala_id', 'avaliadores_nome', 'instituto' ])
+           'data', 'horario', 'tipo', 'trabalho_id', 'sala_id', 'avaliador_nome', 'instituto' ])
 
-    //console.log(avaliadores_nome)
+    //console.log(avaliador_nome)
 
     try {
       let avaliacao = await Avaliacao.create({ data, horario, tipo, trabalho_id, sala_id, instituto })
-      for(var i=0; i < avaliadores_nome.length; i++){
-        await AvaliadorAvaliacao.create({ 'avaliador_id': avaliadores_nome[i].avaliadores_id, 'avaliacao_id':  avaliacao.id })
+      for(var i=0; i < avaliador_nome.length; i++){
+        await AvaliadorAvaliacao.create({ 'avaliador_id': avaliador_nome[i].avaliadores_id, 'avaliacao_id':  avaliacao.id })
     }  
     } catch (error) {
       console.log(error)
@@ -103,7 +96,7 @@ class AvaliacaoController {
   }
 
   async update ({ params, request, response }) {
-    const { id, data, horario, tipo, trabalho_id, sala_id, avaliadores_nome, instituto } = request.only([ 'id', 'data', 'horario', 'tipo', 'trabalho_id', 'sala_id', 'avaliadores_nome', 'instituto' ]);
+    const { id, data, horario, tipo, trabalho_id, sala_id, avaliador_nome, instituto } = request.only([ 'id', 'data', 'horario', 'tipo', 'trabalho_id', 'sala_id', 'avaliador_nome', 'instituto' ]);
     console.log( '\nid:' + id,'\ndata:' + data, '\nhorario:' + horario, '\ntipo:' + tipo, '\ntrabalho_id:' + trabalho_id, '\nsala_id:' + sala_id, '\ninstituto' + instituto)
     try {
       //Update de trabalhos
@@ -117,7 +110,7 @@ class AvaliacaoController {
 
       await avaliacao.save()
 
-      console.log('avaliadores_nome: ', avaliadores_nome, '\n')
+      console.log('avaliador_nome: ', avaliador_nome, '\n')
 
       let avaliadores_id_atualizacao = await Database.select('avaliador_id').table('avaliador_avaliacao').where('avaliacao_id','=',id)
 
@@ -127,26 +120,26 @@ class AvaliacaoController {
 
 
       //Update de avaliadores das avaliacoes
-      if(typeof avaliadores_nome !== 'undefined' &&  avaliadores_nome.length > 0){
+      if(typeof avaliador_nome !== 'undefined' &&  avaliador_nome.length > 0){
         //For para percorrer os avaliadores nome
-        for(let i in avaliadores_nome){
+        for(let i in avaliador_nome){
  
           //Se avaliador_id for diferente do avaliador_id para ser atualizado entao pode modificar
-          if (avaliadores_id_atualizacao[i].avaliador_id != avaliadores_nome[i].avaliadores_id){
+          if (avaliadores_id_atualizacao[i].avaliador_id != avaliador_nome[i].avaliadores_id){
             //instanciando objeto AvaliadorAvaliacao do banco
             let avaliador_avaliacao = await AvaliadorAvaliacao.findBy({ 'avaliacao_id': avaliacao.id, 'avaliador_id': avaliadores_id_atualizacao[i].avaliador_id })
             //Setando novo valor de avaliador_id na tabela AvaliadorAvaliacao
-            avaliador_avaliacao.avaliador_id = avaliadores_nome[i].avaliadores_id
+            avaliador_avaliacao.avaliador_id = avaliador_nome[i].avaliadores_id
             await avaliador_avaliacao.save()
           }
 
           //console.log('avaliador_avaliacao: ', JSON.stringify(avaliador_avaliacao))
           // console.log("-=-=-=-=-=-=-")
-          // console.log ('typeof avaliadores_nome[i].avaliadores_id:', typeof avaliadores_nome[i].avaliadores_id  ,' - ', avaliadores_nome[i].avaliadores_id)                                                
-          // avaliador_avaliacao.avaliador_id = avaliadores_nome[i].avaliadores_id
+          // console.log ('typeof avaliador_nome[i].avaliadores_id:', typeof avaliador_nome[i].avaliadores_id  ,' - ', avaliador_nome[i].avaliadores_id)                                                
+          // avaliador_avaliacao.avaliador_id = avaliador_nome[i].avaliadores_id
            
           // console.log("----------")
-          // console.log( 'avaliadores_nome[i].avaliadores_id: ', typeof avaliadores_nome[i].avaliadores_id, ' - ', avaliadores_nome[i].avaliadores_id)
+          // console.log( 'avaliador_nome[i].avaliadores_id: ', typeof avaliador_nome[i].avaliadores_id, ' - ', avaliador_nome[i].avaliadores_id)
           // console.log( 'avaliador_avaliacao.avaliador_id: ', typeof avaliador_avaliacao.avaliador_id, ' - ', avaliador_avaliacao.avaliador_id)
           // console.log( 'avaliador_avaliacao.avaliacao_id: ', typeof avaliador_avaliacao.avaliacao_id, ' - ', avaliador_avaliacao.avaliacao_id)
           // console.log("-=-=-=-=-=-=-")  

@@ -10,9 +10,9 @@ class TrabalhoController {
   async index ({ request, response, view }) {
     const trabalhos = 
       await Database
-        .select('*')
+        .select('trabalhos.*', 'anos.ano as ano')
         .table('trabalhos')
-        //.innerJoin('anos', 'trabalhos.ano_id', 'anos.id')
+        .innerJoin('anos', 'trabalhos.ano_id', 'anos.id')
 
     for(let index in trabalhos){  
       trabalhos[index].autores = 
@@ -26,10 +26,11 @@ class TrabalhoController {
   }
 
   async store ({ request, response }) {
-    const { trabalho_id, nome, autores, orientador, modalidade, area, ano_id } = request.only([ 'trabalho_id', 'nome', 'autores','orientador', 'modalidade', 'area', 'ano_id' ]);
+    const { trabalho_id, nome, autores, orientador, modalidade, area, ano_id, instituto } = 
+      request.only([ 'trabalho_id', 'nome', 'autores','orientador', 'modalidade', 'area', 'ano_id', 'instituto' ]);
     
     try {
-      await Trabalho.create({ trabalho_id, nome, orientador, modalidade, area, ano_id })
+      await Trabalho.create({ trabalho_id, nome, orientador, modalidade, area, ano_id, instituto })
       for(var i=0; i < autores.length; i++){
         await TrabalhoAutor.create({ 'trabalho_id': trabalho_id, 'autor': autores[i].autor })
       }  
@@ -42,7 +43,8 @@ class TrabalhoController {
   }
 
   async update ({ params, request, response }) {
-    const { id, trabalho_id, nome, autores, deletedAutores, orientador, modalidade, area, ano_id } = request.only([ 'id', 'trabalho_id', 'nome', 'autores', 'deletedAutores', 'orientador', 'modalidade', 'area', 'ano_id' ]);
+    const { id, trabalho_id, nome, autores, deletedAutores, orientador, modalidade, area, ano_id, instituto } = 
+      request.only([ 'id', 'trabalho_id', 'nome', 'autores', 'deletedAutores', 'orientador', 'modalidade', 'area', 'ano_id', 'instituto' ]);
     
     try {
       //Update de trabalhos
@@ -53,6 +55,7 @@ class TrabalhoController {
       trabalho.modalidade = modalidade
       trabalho.area = area
       trabalho.ano_id = ano_id
+      trabalho.instituto = instituto
       await trabalho.save()
 
       //Update de autores dos trabalhos

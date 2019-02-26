@@ -12,6 +12,8 @@ const Avaliadores = () => import('@/views/pages/Avaliadores')
 const Avaliacoes = () => import('@/views/pages/Avaliacoes')
 const Trabalhos = () => import('@/views/pages/Trabalhos')
 const Salas = () => import('@/views/pages/Salas')
+const Orais = () => import('@/views/pages/Orais')
+const Paineis = () => import('@/views/pages/Paineis')
 // SIA
 
 
@@ -105,7 +107,17 @@ const router = new Router({
           path: 'avaliacoes',
           name: 'Avaliacoes',
           component: Avaliacoes,
-        },        
+        },
+        {
+          path: 'orais',
+          name: 'Orais',
+          component: Orais,
+        },
+        {
+          path: 'paineis',
+          name: 'Paineis',
+          component: Paineis,
+        },                    
         {
           path: 'trabalhos',
           name: 'Trabalhos',

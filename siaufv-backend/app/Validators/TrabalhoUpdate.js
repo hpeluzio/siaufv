@@ -11,7 +11,8 @@ class TrabalhoUpdate {
       orientador: 'required',
       modalidade: 'required',
       area: 'required',
-      ano_id: 'required'
+      ano_id: 'required',
+      instituto: 'instituto'
     }
   }
 

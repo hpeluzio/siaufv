@@ -7,17 +7,18 @@ class AvaliacaoSchema extends Schema {
   up() {
     this.create('avaliacoes', table => {
       table.increments()
-      table.date('data').notNullable()
-      table.time('horario').notNullable()
-      table.integer('tipo').notNullable()
-      table.string('instituto').notNullable()
-      table.integer('sala_id').notNullable().unsigned()
+      // table.date('data').notNullable()
+      // table.time('horario').notNullable()
+      // table.integer('tipo').notNullable()
+      // table.string('instituto').notNullable()
+      // table.integer('sala_id').notNullable().unsigned()
+      table.integer('sessao_id').notNullable().unsigned()
       table.integer('trabalho_id').notNullable()
       table.timestamps()
       table
-        .foreign('sala_id')
+        .foreign('sessao_id')
         .references('id')
-        .inTable('salas')
+        .inTable('secoes')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
       table

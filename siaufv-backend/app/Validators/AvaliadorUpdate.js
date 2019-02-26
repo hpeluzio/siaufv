@@ -6,12 +6,11 @@ class AvaliadorUpdate {
     const idAvaliador = this.ctx.params.id
 
     return {
-      //matricula: 'required|unique:avaliadors,matricula, id,'+ matriculaAvaliador,
-      nome: 'required|unique:avaliadors,nome, id,'+ idAvaliador,
+      //matricula: 'required|unique:avaliadores,matricula, id,'+ matriculaAvaliador,
+      nome: 'required|unique:avaliadores,nome, id,'+ idAvaliador,
       curso: 'required',
       instituto: 'required',
-      email: 'required|email|unique:avaliadors,email, id,'+ idAvaliador,
-      ano_id: 'required'
+      email: 'required|email|unique:avaliadores,email, id,'+ idAvaliador,
     }
   }
 

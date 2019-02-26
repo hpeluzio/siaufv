@@ -12,6 +12,7 @@ class TrabalhoSchema extends Schema {
       table.string('orientador').notNullable()
       table.string('modalidade').notNullable()
       table.string('area').notNullable()
+      table.string('instituto').notNullable()
       table.integer('ano_id').unsigned().notNullable()
       table.foreign('ano_id').references('anos.id').onUpdate('CASCADE').onDelete('CASCADE')
       table.timestamps()

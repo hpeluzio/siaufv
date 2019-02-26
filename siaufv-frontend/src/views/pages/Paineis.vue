@@ -1,11 +1,11 @@
 <template>
-<div class="animated fadeIn">
+  <div class="animated fadeIn">
 
       
-<div v-if="submitted && errors.has('defaulterror2')" style="color: red" class="container">{{ errors.first('defaulterror2') }}</div>
-
+ <div v-if="submitted && errors.has('defaulterror2')" style="color: red" class="container">{{ errors.first('defaulterror2') }}</div>
+<!-- Data Table -->
 <div data-app="true">
-    <v-toolbar color="grey lighten-3">
+    <v-toolbar flat color="white">
       <i class="icon-people"></i> <strong>Avaliações</strong>
       <v-divider
         class="mx-2"
@@ -24,8 +24,7 @@
         <v-btn slot="activator" class="primary" color="green">Nova Avaliação</v-btn>
         <v-card>
           <v-card-title>
-            <v-icon large color="green darken-2">business</v-icon> 
-            <span class="headline"><h5>{{ formTitle }}</h5></span> 
+            <span class="headline">{{ formTitle }}</span>
           </v-card-title>
 
           <v-card-text>
@@ -35,93 +34,89 @@
                   <v-text-field v-model="editedItem.id" label="id"></v-text-field>
                 </v-flex>-->
 
-                <!-- DATA -->
-                <v-flex xs12 sm6 md3>
-                  <v-menu
-                    v-model="menu" :close-on-content-click="false" full-width max-width="290" 
-                  >
-                    <v-text-field
-                      slot="activator" :value="computedDateFormattedMomentjs" clearable
-                      outline prepend-icon="event" label="Data" 
-                      data-vv-name="data" v-validate="'required'" 
-                      :class="{ 'is-invalid': submitted && errors.has('data') }"
-                      v-on:change="setSalasDisponiveis" 
-                    ></v-text-field>
-                    <v-date-picker color="green lighten-1" locale="pt-br" no-title scrollable
-                      v-model="editedItem.data"
-                      @change="menu = false"
-                    ></v-date-picker>
-                  </v-menu>
+              <!-- -->
+              <v-flex xs12 sm6 md3>
+                <v-menu
+                  ref="menu"
+                  v-model="menu"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  :return-value.sync="editedItem.data"
+                  lazy
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  min-width="290px"
+                >
+                  <v-text-field
+                    outline
+                    slot="activator"
+                    v-model="editedItem.data"
+                    prepend-icon="event"
+                    readonly
+                    label="Data" data-vv-name="data"
+                    v-validate="'required'"
+                    :class="{ 'is-invalid': submitted && errors.has('data') }"
+                  ></v-text-field>
+
+                  <v-date-picker locale="pt-br" v-model="editedItem.data" no-title no-buttons scrollable color="green lighten-1">
+                    <v-spacer></v-spacer>
+                    <v-btn flat color="primary" @click="menu = false">Cancelar</v-btn>
+                    <v-btn flat color="primary" @click="$refs.menu.save(editedItem.data)">OK</v-btn>
+                  </v-date-picker>
+                </v-menu>
+                <div v-if="submitted && errors.has('data')" style="color: red">{{ errors.first('data') }}</div>
                 </v-flex>
-              
-                <!-- Horario -->
+              <!-- -->
+
                 <v-flex xs12 sm6 md3>
-                  <v-select :items="horarios" item-value="horario" item-text="horario"  outline v-model="editedItem.horario" 
-                    label="Horário"  prepend-icon="access_time"
-                    data-vv-name="horario" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('horario') }"
-                    :disabled="horarioIsDisabled" v-on:change="setSalasDisponiveis"></v-select>
+                  <v-select :items="horarios" item-value="horario" item-text="horario"  outline v-model="editedItem.horario" label="Horário"  data-vv-name="horario" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('horario') }"></v-select>
                   <div v-if="submitted && errors.has('horario')" style="color: red">{{ errors.first('horario') }}</div>
                 </v-flex>  
 
-                <!-- Salas -->
-                <v-flex xs12 sm6 md2>
-                  <v-select :items="salas_disponiveis" item-value="id" item-text="nome"  outline v-model="editedItem.sala_id" label="Salas Disponíveis"  
-                    data-vv-name="sala" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('sala') }"
-                    :disabled="salaIsDisabled"
-                    ></v-select>
+                <v-flex xs12 sm6 md3>
+                  <v-select :items="avaliacao_tipos" item-value="id" item-text="nome"  outline v-model="editedItem.tipo" label="Tipos"  data-vv-name="tipo" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('tipo') }"></v-select>
+                  <div v-if="submitted && errors.has('tipo')" style="color: red">{{ errors.first('tipo') }}</div>
+                </v-flex>              
+
+                <v-flex xs12 sm6 md3>
+                  <v-select :items="salas" item-value="id" item-text="nome"  outline v-model="editedItem.sala_id" label="Salas"  data-vv-name="sala" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('sala') }"></v-select>
                   <div v-if="submitted && errors.has('sala')" style="color: red">{{ errors.first('sala') }}</div>
                 </v-flex>
 
-                <!-- Instituto -->
-                <v-flex xs12 sm6 md2>
-                  <v-select :items="institutos" item-value="instituto" item-text="instituto"  outline v-model="editedItem.instituto" label="Instituto"  
-                  data-vv-name="instituto" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('instituto') }"></v-select>
-                  <div v-if="submitted && errors.has('instituto')" style="color: red">{{ errors.first('instituto') }}</div>
-                </v-flex> 
-
-                <!-- Tipos de Avaliação -->
-                <v-flex xs12 sm6 md2>
-                  <v-select :items="avaliacao_tipos" item-value="id" item-text="nome"  outline v-model="editedItem.tipo" label="Tipo"  
-                    data-vv-name="tipo" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('tipo') }"></v-select>
-                  <div v-if="submitted && errors.has('tipo')" style="color: red">{{ errors.first('tipo') }} </div>
-                </v-flex>                     
-
-                <!-- Trabalhos -->
-                <v-flex xs12 sm6 md12><h5>Trabalho</h5></v-flex>
-                <v-flex xs12 sm6 md7>
-                  <v-select :items="trabalhos" v-on:change="changedautor" item-value="trabalho_id" item-text="data"  outline v-model="editedItem.trabalho_id" label="Trabalhos"  
-                    data-vv-name="trabalho" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('trabalho') }">
-                      <template slot="selection" slot-scope="data">
-                        {{ data.item.trabalho_id }} - {{ data.item.nome }}
-                      </template>
-                      <template slot="item" slot-scope="data">
-                        {{ data.item.trabalho_id }} - {{ data.item.nome }}
-                      </template>
-                    </v-select>
+                <v-flex xs12 sm6 md12>
+                  <v-select :items="trabalhos" item-value="trabalho_id" item-text="nome"  outline v-model="editedItem.trabalho_id" label="Trabalhos"  data-vv-name="trabalho" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('trabalho') }"></v-select>
                   <div v-if="submitted && errors.has('trabalho')" style="color: red">{{ errors.first('trabalho') }}</div>
                 </v-flex>
 
-                <!-- Orientadores -->
-                <v-flex xs12 sm6 md5>
-                  <v-select disabled :items="trabalhos" item-value="trabalho_id" item-text="orientador"  outline v-model="editedItem.trabalho_id" label="Orientador" ></v-select>
-                  <div v-if="submitted && errors.has('trabalho')" style="color: red">{{ errors.first('trabalho') }}</div>
-                </v-flex>
 
-                <!-- Autores -->
-                <v-flex xs12 sm6 md5 v-for="(autoress, i) in editedItem.trabalhos_autores" :key="i + '-first'">
-                  <v-select disabled :items="editedItem.trabalhos_autores" item-value="id" item-text="autor" v-model="editedItem.trabalhos_autores[i].id" label="Autor" outline></v-select>
-                </v-flex>
-
-                <!-- Avaliadores -->
-                <v-flex xs12 sm6 md12><h5>Avaliadores</h5></v-flex>
-                
-                <v-flex xs12 sm6 md6 v-for="(avaliadoress, i) in editedItem.avaliadores_nome" :key="i + '-second'">
-                  <v-select  :items="avaliadores" item-value="id" item-text="nome"  outline v-model="editedItem.avaliadores_nome[i].avaliadores_id" label="Avaliador"  
-                    data-vv-name="avaliadores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('avaliadores') }"></v-select>
+                <v-flex v-for="(avaliadoress, index) in editedItem.avaliadores_nome" :key="index" xs12 sm6 md6 >
+                  <v-select :items="avaliadores" item-value="id" item-text="nome"  outline v-model="editedItem.avaliadores_nome[index].avaliadores_id" label="Avaliador"  data-vv-name="avaliadores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('avaliadores') }"></v-select>
                   <div v-if="submitted && errors.has('avaliadores')" style="color: red">{{ errors.first('avaliadores') }}</div>
                 </v-flex>
 
-                <!-- Default Erro -->
+                <!-- <v-flex xs12 sm6 md6>
+                <v-select :items="avaliadores" item-value="id" item-text="nome"  outline v-model="editedItem.avaliadores_nome[0].avaliadores_id" label="Avaliador"  data-vv-name="avaliadores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('avaliadores') }"></v-select>
+                <div v-if="submitted && errors.has('avaliadores')" style="color: red">{{ errors.first('avaliadores') }}</div>
+                </v-flex>
+
+                <v-flex xs12 sm6 md6>
+                <v-select :items="avaliadores" item-value="id" item-text="nome"  outline v-model="editedItem.avaliadores_nome[1].avaliadores_id" label="Avaliador"  data-vv-name="avaliadores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('avaliadores') }"></v-select>
+                <div v-if="submitted && errors.has('avaliadores')" style="color: red">{{ errors.first('avaliadores') }}</div>  
+                </v-flex> -->
+
+                <!--
+                <v-flex v-for="(avaliadores, index) in editedItem.avaliadores_nome" :key="index" xs12 sm6 md6 >
+                  <v-text-field outline v-model="avaliadores.avaliadores_nome"  label="Avaliador " data-vv-name="avaliadores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('avaliadores') }"></v-text-field >
+                  <div v-if="submitted && errors.has('avaliadores')" style="color: red">{{ errors.first('avaliadores') }}</div>
+                </v-flex>
+                -->
+
+                <v-flex xs12 sm6 md3>
+                  <v-select :items="institutos" item-value="instituto" item-text="instituto"  outline v-model="editedItem.instituto" label="Instituto"  data-vv-name="instituto" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('instituto') }"></v-select>
+                  <div v-if="submitted && errors.has('instituto')" style="color: red">{{ errors.first('instituto') }}</div>
+                </v-flex>  
+
                 <div v-if="submitted && errors.has('defaulterror')" style="color: red" class="container">{{ errors.first('defaulterror') }}</div>
 
               </v-layout>
@@ -151,14 +146,14 @@
         <!--<td class="text-xs-right">{{ props.item.id }}</td>-->
         <td class="text-xs-right">{{ props.item.data | formatDate }}</td>
         <td class="text-xs-right">{{ props.item.horario }}</td>
-        <!-- Tipo de avaliacao -->
         <span v-if="props.item.tipo === 0">
           <td class="text-xs-right">Oral</td>
         </span>
-        <span v-else-if="props.item.tipo === 1">
+        <span v-else-if="props.item.tipo === 0">
           <td class="text-xs-right">Painel</td>
         </span>
         <td class="text-xs-right">{{ props.item.salas_nome }}</td>
+        
         <!-- AVALIADORES -->
          <td class="text-xs-right">
             <span v-for="(avaliador, index) in props.item.avaliadores_nome" :key="index"> {{ avaliador.avaliadores_nome }} <br></span>
@@ -187,9 +182,8 @@
         <div style="color: red">Sua procura por <strong>"{{ search }}"</strong> não achou resultados.</div>
       </v-alert>
     </v-data-table>
-    <!-- Data Table -->
   </div>
-  
+  <!-- Data Table -->
   </div>
 </template>
 
@@ -199,10 +193,13 @@ import moment from 'moment'
 
 export default {
     data: () => ({
+      date: new Date().toISOString().substr(0, 10),
       menu: false,
+      modal: false,
       submitted: false,
       dialog: false,
       search: '',
+      trabalhos: [],
       headers: [
         { text: 'Data', value: 'data' },
         { text: 'Horário', value: 'horario' },
@@ -214,11 +211,9 @@ export default {
         { text: 'Trabalho', value: 'trabalho_id' },
         { text: 'Ações', value: 'name', sortable: false }
       ],
-      trabalhos: [],
       avaliacoes: [],
       avaliadores: [],
       salas: [],
-      salas_disponiveis: [],
       horarios: [],
       institutos: [],
       avaliacao_tipos: [],
@@ -229,10 +224,8 @@ export default {
         horario: '',
         tipo: '',
         instituto: '',
-        trabalhos_orientador: '',
         sala_id: '',
         avaliadores_nome: [{ id: '' }, { nome: '' }],
-        trabalhos_autores: [''],
         trabalho_id: '',
       },
       defaultItem: {
@@ -241,10 +234,8 @@ export default {
         horario: '',
         tipo: '',
         instituto: '',
-        trabalhos_orientador: '',
         sala_id: '',
         avaliadores_nome: [{ id: '' }, { nome: '' }],
-        trabalhos_autores: [''],
         trabalho_id: '',      
       },
       rowsPerPageItems: [10, 20, 50, 100],
@@ -257,21 +248,6 @@ export default {
       formTitle () {
         return this.editedIndex === -1 ? 'Nova Avaliação' : 'Editar Avaliação'
       },
-      computedDateFormattedMomentjs () {
-        return this.editedItem.data ? moment(this.editedItem.data).format('DD/MM/YYYY') : ''
-      },
-      horarioIsDisabled(){
-        if (this.editedItem.data === '')
-          return true
-        return false
-      },
-      salaIsDisabled(){
-        if (this.editedItem.data === '')
-          return true
-        if (this.editedItem.horario === '')
-          return true
-        return false
-      }
     },
 
     watch: {
@@ -279,23 +255,31 @@ export default {
         val || this.close()
         this.errors.clear() //Limpar os erros
       },
+
     },
 
     created () {
       //Mudando o locale do Vuetify
       this.changeLocale () 
+
       //Pegando todos avaliacoes
       this.getAxiosArrayAvaliacoes()
+
       //Pegando todos os anos
       this.getAxiosArrayTrabalhos()
+
       //Pegando todas sa salas
       this.getAxiosArraySalas()
+
       //Pegando todos os avaliadores
       this.getAxiosArrayAvaliadores()
+
       //Setando tipos
       this.setArrayTipo()   
+
       //Setando Horários
       this.setArrayHorarios()
+
       //Setando Institutos
       this.setArrayInstitutos() 
     },
@@ -311,36 +295,6 @@ export default {
 
     //Methods
     methods: {
-      changedautor(event){
-        //console.log(event)
-        this.trabalhos.map( (item) => {
-          if(item.trabalho_id === event )
-            this.editedItem.trabalhos_autores = item.autores
-        })
-      },
-      setSalasDisponiveis(event){
-        // console.log('horario event: ', event)
-        // //this.salas_disponiveis = JSON.parse(JSON.stringify(this.salas))
-        // if (this.editedItem.data === '') return
-        // if (this.editedItem.horario === '') return
-
-        // this.avaliacoes.map(avaliacao => {
-        //     this.salas_disponiveis = this.salas.filter( (sala) => {
-        //       if(moment(String(avaliacao.data)).format('DD/MM/YYYY') === 
-        //           moment(String(this.editedItem.data)).format('DD/MM/YYYY'))
-        //         //if()
-        //         //console.log("Igual")
-
-        //       console.log('setSalasDisponiveis:', moment(String(avaliacao.data)).format('DD/MM/YYYY'), this.editedItem.data)
-
-        //     })
-        // })
-      
-
-        console.log('salas_disponiveis: ', this.salas_disponiveis)
-        
-      },      
-
       getAxiosArrayAvaliacoes() {
         //Pegando todos Avaliacoes 
         axios_instance({
@@ -348,13 +302,73 @@ export default {
             url: '/avaliacao'
         })
         .then(response => {
-          //console.log(response.data)
           this.avaliacoes = response.data
-          this.avaliacoes.map( item => {
-            item.horario = item.horario.split(':')[0] + ":" + item.horario.split(':')[1]
-            item.data = moment(String(item.data)).format('YYYY-MM-DD')
+          //console.log(this.avaliacoes) 
+          //////////////////
+          let arrei = JSON.parse(JSON.stringify(this.avaliacoes))
+          let arrei2 = []
+          // Trabalhando os dados brutos do response.data
+          var agrupadoArrei = arrei.reduce( (accumulatedLine, currentLine) => {
+              var hasOwnProperty = Object.prototype.hasOwnProperty;
+              //Funcao que verifica se um array de objetos está vazio
+              function isEmpty(obj) {
+                  // null and undefined are "empty"
+                  if (obj == null) return true;
+                  // Assume if it has a length property with a non-zero value
+                  // that that property is correct.
+                  if (obj.length > 0)    return false;
+                  if (obj.length === 0)  return true;
+                  // If it isn't an object at this point
+                  // it is empty, but it can't be anything *but* empty
+                  // Is it empty?  Depends on your application.
+                  if (typeof obj !== "object") return true;
+                  // Otherwise, does it have any properties of its own?
+                  // Note that this doesn't handle
+                  // toString and valueOf enumeration bugs in IE < 9
+                  for (var key in obj) {
+                      if (hasOwnProperty.call(obj, key)) return false;
+                  }
+                  return true;
+              }
+
+              //Ferifica se o accumulatedLine
+              if(isEmpty(accumulatedLine)) {
+                arrei2.push(currentLine)
+                let av = arrei2[arrei2.length-1].avaliadores_nome  
+                arrei2[arrei2.length-1].avaliadores_nome = []
+                arrei2[arrei2.length-1].avaliadores_nome.push({ 'avaliadores_id': arrei2[arrei2.length-1].avaliadores_id,  
+                                                                'avaliadores_nome': av  })
+                //console.log(arrei2)
+                return currentLine
+              }
+              
+              if(arrei2[arrei2.length-1].id === currentLine.id) {
+                //arrei2[arrei2.length-1].avaliadores_nome = []
+                arrei2[arrei2.length-1].
+                  avaliadores_nome
+                  .push({'avaliadores_id': currentLine.avaliadores_id,  
+                  'avaliadores_nome': currentLine.avaliadores_nome} )
+
+              }
+              else {
+                arrei2.push(currentLine)
+              }
+
+          }, {})
+
+          // arrei2.forEach(function (item) {
+
+          // })
+          arrei2.forEach( item => {
+            //item.data = formatDate(JSON.stringify(item.data))
+            console.log(item.data)
+            //console.log(formatDate(item.data))
+            //item.data = moment(String(item.data)).format('MM/DD/YYYY')
           })
-          console.log('this.avaliacoes: ', this.avaliacoes)
+
+          this.avaliacoes = JSON.parse(JSON.stringify(arrei2))
+          
+          console.log(arrei2)
         })
         .catch((error) => {
             console.log(error);
@@ -368,7 +382,10 @@ export default {
             url: '/trabalho'
         })
         .then(response => {
-          this.trabalhos = response.data
+          for(let i in response.data.trabalhos)
+            this.trabalhos.push({ 'trabalho_id': response.data.trabalhos[i].trabalho_id, 
+                                  'nome': `${response.data.trabalhos[i].trabalho_id} - ${response.data.trabalhos[i].nome}` })
+          
           //console.log(this.trabalhos)
         })
         .catch((error) => {
@@ -383,9 +400,10 @@ export default {
         })
         .then(response => {
           //this.salas = response.data
+          //console.log(response.data)
           for(let i in response.data)
             this.salas.push({ 'id': response.data[i].id, 'nome':  response.data[i].nome })
-          //console.log('Salas', this.salas)
+          //console.log(this.salas)
         })
         .catch((error) => {
             console.log(error);
@@ -399,7 +417,8 @@ export default {
         })
         .then(response => {
           this.avaliadores = response.data
-          //console.log("AVALIADORES", this.avaliadores)
+          //console.log("AVALIADORES")
+          //console.log(this.avaliadores)
         })
         .catch((error) => {
             console.log(error);
@@ -412,8 +431,7 @@ export default {
 
       setArrayHorarios() {
         this.horarios = [{ horario: '08:00' }, { horario: '10:00' }, { horario: '12:00' }, { horario: '14:00' },
-                         { horario: '16:00' }, { horario: '18:00' }, { horario: '19:00' }, { horario: '20:00' }, 
-                         { horario: '21:00' }]
+                         { horario: '16:00' }, { horario: '18:00' }, { horario: '20:00' }, { horario: '22:00' }]
       },
 
       setArrayInstitutos() {
@@ -451,7 +469,7 @@ export default {
             url: '/avaliacao/'+ item.id +'',
           })
           .then(response => {
-            this.getAxiosArrayAvaliacoes()
+            //this.getAxiosArrayAvaliacoes()
           })
           .catch((error) => {
             this.errors.add({ field: 'defaulterror2', msg: 'Erro ao deletar item' })
@@ -487,7 +505,7 @@ export default {
           .then(response => {
             alert('Avaliacao editada.');
             this.getAxiosArrayAvaliacoes()
-            this.close()
+            //this.close()
           })
           .catch((error) => {
             this.errors.clear() //Limpar os erros antes de setar novos erros
@@ -518,7 +536,7 @@ export default {
             //Inclui o item no array de item do front end
             alert('Avaliacoes adicionada.');
             this.getAxiosArrayAvaliacoes()
-            this.close()
+            //this.close()
           })
           .catch((error) => {
             console.log(error)

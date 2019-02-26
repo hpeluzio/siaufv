@@ -107,6 +107,12 @@
                     >{{ errors.first('modalidade') }}</div>
                   </v-flex>
 
+                  <v-flex xs12 sm6 md4>
+                    <v-select :items="institutos" item-value="instituto" item-text="instituto"  outline v-model="editedItem.instituto" label="Instituto"  
+                    data-vv-name="instituto" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('instituto') }"></v-select>
+                    <div v-if="submitted && errors.has('instituto')" style="color: red">{{ errors.first('instituto') }}</div>
+                  </v-flex> 
+
                   <!--<v-flex xs12 sm6 md9>
                   <v-text-field outline v-model="editedItem.autores" label="Autores" data-vv-name="autores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('autores') }"></v-text-field >
                   <div v-if="submitted && errors.has('autores')" style="color: red">{{ errors.first('autores') }}</div>
@@ -169,7 +175,7 @@
         :rows-per-page-items="rowsPerPageItems"
         :pagination.sync="pagination"
         :search="search"
-        
+        :custom-filter="customFilter"
         class="elevation-1"
       >
         <template slot="items" slot-scope="props">
@@ -183,6 +189,7 @@
           <!-- AUTOR -->
           <td class="text-xs-right">{{ props.item.orientador }}</td>
           <td class="text-xs-right">{{ props.item.modalidade }}</td>
+          <td class="text-xs-right">{{ props.item.instituto }}</td>
           <td class="text-xs-right">{{ props.item.area }}</td>
           <td class="text-xs-right">{{ props.item.ano }}</td>
           <td class="justify-center layout px-0">
@@ -217,7 +224,8 @@ export default {
       { text: "Nome", value: "nome" },
       { text: "Autor(es)", value: "autores" },
       { text: "orientador", value: "orientador" },
-      { text: "E-mail", value: "modalidade" },
+      { text: "Modalidade", value: "modalidade" },
+      { text: "Instituto", value: "instituto" },
       { text: "Área", value: "area" },
       { text: "Ano", value: "ano" },
       { text: "Actions", value: "name", sortable: false }
@@ -226,6 +234,7 @@ export default {
     trabalhos_autores: [],
     paraSeremEditadosAutores: [{ id: "", trabalho_id: "", autor: "" }],
     paraSeremDeletadosAutores: [],
+    institutos: [],
     editedIndex: -1,
     editedItem: {
       id: "",
@@ -234,6 +243,7 @@ export default {
       autores: [{ id: "", trabalho_id: "", autor: "" }],
       orientador: "",
       modalidade: "",
+      instituto: "",
       area: "",
       ano_id: ""
     },
@@ -244,6 +254,7 @@ export default {
       autores: [{ id: "", trabalho_id: "", autor: "" }],
       orientador: "",
       modalidade: "",
+      instituto: "",      
       area: "",
       ano_id: ""
     },
@@ -275,12 +286,12 @@ export default {
   created() {
     //Mudando o locale do Vuetify
     this.changeLocale();
-
     //Pegando todos trabalhos... Importa ARRAY TRABALHO do
     this.getAxiosArrayTrabalhos();
-
     //Pegando todos os anos
     this.getAxiosArrayAnos();
+    //Setando Institutos
+    this.setArrayInstitutos() 
   },
 
   methods: {
@@ -293,7 +304,7 @@ export default {
         .then(response => {
           // Pegando os trabalhos e os autores desses trabalhos
           this.trabalhos = response.data//.trabalhos;
-          //console.log(this.trabalhos)
+          console.log(this.trabalhos)
         })
         .catch(error => {
           console.log(error);
@@ -318,6 +329,10 @@ export default {
         });
     },
 
+    setArrayInstitutos() {
+      this.institutos = [{ instituto: 'IAP' }, { instituto: 'IBP' }, { instituto: 'IEP' }, { instituto: 'IHP' } ]
+    },
+
     //Custom filter da datatable
     customFilter(items, search, filter, headers) {
       //Normalizando a search
@@ -332,6 +347,7 @@ export default {
           if (normaliza(autors.autor).includes(search)) return item;
         if (normaliza(item.orientador).includes(search)) return item;
         if (normaliza(item.modalidade).includes(search)) return item;
+        if (normaliza(item.instituto).includes(search)) return item;
         if (normaliza(item.area).includes(search)) return item;
         else return false;
       });
@@ -430,6 +446,7 @@ export default {
             deletedAutores: this.paraSeremDeletadosAutores,
             orientador: this.editedItem.orientador,
             modalidade: this.editedItem.modalidade,
+            instituto: this.editedItem.instituto,
             area: this.editedItem.area,
             ano_id: this.editedItem.ano_id
           }
@@ -468,6 +485,7 @@ export default {
             autores: this.paraSeremEditadosAutores,
             orientador: this.editedItem.orientador,
             modalidade: this.editedItem.modalidade,
+            instituto: this.editedItem.instituto,
             area: this.editedItem.area,
             ano_id: this.editedItem.ano_id
           }

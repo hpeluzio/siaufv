@@ -10,25 +10,17 @@ class AvaliadorController {
     //return await Avaliador.all()
     const avaliadores = 
       await Database
-        .select('avaliadores.id as id', 
-                'avaliadores.matricula', 
-                'avaliadores.nome', 
-                'avaliadores.curso', 
-                'avaliadores.instituto', 
-                'avaliadores.email', 
-                'avaliadores.ano_id', 
-                'anos.ano')
+        .select('*')
         .table('avaliadores')
-        .innerJoin('anos', 'avaliadores.ano_id', 'anos.id')
     return avaliadores
   }
 
   async store ({ request, response }) {
     
-    const { matricula, nome, curso, instituto, email, ano_id } = request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ano_id' ]);
+    const { matricula, nome, curso, instituto, email, ativo } = request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ativo' ]);
     //console.log(matricula, nome,curso, instituto, email, ano)
     try {
-      await Avaliador.create({ matricula, nome, curso, instituto, email, ano_id })
+      await Avaliador.create({ matricula, nome, curso, instituto, email, ativo })
     } catch (error) {
       //console.log(error)
       return response.status(500).send({ "error": error });
@@ -39,7 +31,8 @@ class AvaliadorController {
 
 
   async update ({ params, request, response }) {
-    const { matricula, nome, curso, instituto, email, ano_id } = request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ano_id' ]);
+    const { matricula, nome, curso, instituto, email, ativo } = 
+      request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ativo' ]);
 
     try {
       var avaliador = await Avaliador.findOrFail(params.id)
@@ -48,7 +41,7 @@ class AvaliadorController {
       avaliador.curso = curso
       avaliador.instituto = instituto
       avaliador.email = email
-      avaliador.ano_id = ano_id
+      avaliador.ativo = ativo
       await avaliador.save()
     } catch (error) {
       console.log(error)

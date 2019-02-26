@@ -1,13 +1,13 @@
 'use strict'
 
-class AvaliacaoStore {
+class AvaliacaoUpdate {
   get rules() {
     return {
       secao_id: 'required',
       // data: 'required',
       // horario: 'required',
       // tipo: 'required',
-      trabalho_id: 'required|unique:avaliacoes,trabalho_id',
+      trabalho_id: 'required',
       // sala_id: 'required',
       avaliadores_nome: 'required',
       instituto: 'required'
@@ -27,4 +27,4 @@ class AvaliacaoStore {
   }
 }
 
-module.exports = AvaliacaoStore
+module.exports = AvaliacaoUpdate

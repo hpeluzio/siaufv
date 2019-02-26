@@ -43,11 +43,17 @@ Route.post('/sala', 'SalaController.store').middleware('auth:jwt').validator('Sa
 Route.delete('/sala/:id', 'SalaController.destroy').middleware('auth:jwt')
 Route.put('/sala/:id', 'SalaController.update').middleware('auth:jwt').validator('SalaUpdate')
 
-//Rotas das Avaliacoes Orais
+//Rotas das Avaliacoes
 Route.get('/avaliacao', 'AvaliacaoController.index').middleware('auth:jwt')
 Route.post('/avaliacao', 'AvaliacaoController.store').middleware('auth:jwt').validator('AvaliacaoStore')
-Route.put('/avaliacao/:id', 'AvaliacaoController.update').middleware('auth:jwt')//.validator('AvaliacaoUpdate')
+Route.put('/avaliacao/:id', 'AvaliacaoController.update').middleware('auth:jwt').validator('AvaliacaoUpdate')
 Route.delete('/avaliacao/:id', 'AvaliacaoController.destroy').middleware('auth:jwt')
+
+//Rotas das Secoes Orais
+Route.get('/sessao', 'SessaoController.index').middleware('auth:jwt')
+Route.post('/sessao', 'SessaoController.store').middleware('auth:jwt')//.validator('AvaliacaoStore')
+Route.put('/sessao/:id', 'SessaoController.update').middleware('auth:jwt')//.validator('AvaliacaoUpdate')
+Route.delete('/sessao/:id', 'SessaoController.destroy').middleware('auth:jwt')
 
 //Rotas do Avaliador Resource
 // Route

@@ -3,12 +3,11 @@
 class AvaliadorStore {
   get rules () {
     return {
-      //matricula: 'required|unique:avaliadors',
-      nome: 'required|unique:avaliadors',
+      //matricula: 'required|unique:avaliadores',
+      nome: 'required|unique:avaliadores',
       curso: 'required',
       instituto: 'required',
-      email: 'required|email|unique:avaliadors,email',
-      ano_id: 'required'
+      email: 'required|email|unique:avaliadores,email',
     }
   }
 

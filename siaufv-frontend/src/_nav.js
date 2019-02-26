@@ -1,17 +1,27 @@
 export default {
   items: [
-    {
-      name: 'Home',
-      url: '/home',
-      icon: 'icon-frame',
-      //badge: {
-      //  variant: 'primary',
-      //  text: 'NEW'
-      //}
-    },
+    // {
+    //   name: 'Home',
+    //   url: '/home',
+    //   icon: 'icon-frame',
+    //   //badge: {
+    //   //  variant: 'primary',
+    //   //  text: 'NEW'
+    //   //}
+    // },
+    // {
+    //   title: true,
+    //   name: 'Principal',
+    //   class: '',
+    //   wrapper: {
+    //     element: '',
+    //     attributes: {}
+    //   }
+    // },
+    ///
     {
       title: true,
-      name: 'Principal',
+      name: 'Sistema',
       class: '',
       wrapper: {
         element: '',
@@ -22,39 +32,7 @@ export default {
       name: 'Anos',
       url: '/anos',
       icon: 'icon-calendar'
-    },
-    {
-      name: 'Relatórios',
-      url: '/relatorios',
-      icon: 'icon-note',
-      children: [
-        {
-          name: 'Breadcrumbs',
-          url: '/base/breadcrumbs',
-        },
-        {
-          name: 'Cards',
-          url: '/base/cards',
-        },
-        {
-          name: 'Carousels',
-          url: '/base/carousels',
-        },
-        {
-          name: 'Forms',
-          url: '/base/forms',
-        },
-      ]
-    },
-    {
-      title: true,
-      name: 'Sistema',
-      class: '',
-      wrapper: {
-        element: '',
-        attributes: {}
-      }
-    },
+    },    
     {
       name: 'Avaliadores',
       url: '/avaliadores',
@@ -84,15 +62,51 @@ export default {
       url: '/avaliacoes',
       icon: 'icon-bubbles'
     },
+
     {
-      name: 'Painéis',
-      url: '/5',
-      icon: 'icon-grid'
-    },
+      name: 'Sessões de Avaliação',
+      url: '/',
+      icon: 'icon-note',
+      children: [
+        {
+          name: 'Orais',
+          url: '/orais',
+          //icon: 'icon-bubbles'
+        },
+        {
+          name: 'Paineis',
+          url: 'paineis',
+          //icon: 'icon-bubbles'
+        }
+      ]
+    },  
     {
-      name: 'Minicursos',
-      url: '/6',
-      icon: 'icon-star'
+      name: 'Relatórios',
+      url: '/',
+      icon: 'icon-note',
+      children: [
+        {
+          name: 'Breadcrumbs',
+          url: '/base/breadcrumbs',
+        },
+        {
+          name: 'Cards',
+          url: '/base/cards',
+        },
+        {
+          name: 'Carousels',
+          url: '/base/carousels',
+        },
+        {
+          name: 'Forms',
+          url: '/base/forms',
+        },
+      ]
     },
+    // {
+    //   name: 'Minicursos',
+    //   url: '/6',
+    //   icon: 'icon-star'
+    // },
   ]
 }
