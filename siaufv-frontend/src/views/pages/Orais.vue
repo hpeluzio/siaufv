@@ -62,7 +62,7 @@
       <span v-if="cadastrarSessao">
         <v-layout wrap>
           <v-flex xs12>
-            <v-form ref="form" lazy-validation>
+            <v-form lazy-validation data-vv-scope="form-sessao">
               <v-card>
                 <v-card-title>
                   <v-icon large color="green darken-2">business</v-icon>
@@ -91,7 +91,7 @@
                             label="Data"
                             data-vv-name="data"
                             v-validate="'required'"
-                            :class="{ 'is-invalid': submitted && errors.has('data') }"
+                            :class="{ 'is-invalid': errors.has('form-sessao.data')}"
                             v-on:change="setSalasDisponiveis"
                           ></v-text-field>
                           <v-date-picker
@@ -104,9 +104,9 @@
                           ></v-date-picker>
                         </v-menu>
                         <div
-                          v-if="submitted && errors.has('data')"
+                          v-if="errors.has('form-sessao.data')"
                           style="color: red"
-                        >{{ errors.first('data') }}</div>
+                        >{{ errors.first('form-sessao.data') }}</div>
                       </v-flex>
                       <!-- Horario -->
                       <v-flex xs12 sm6 md2>
@@ -120,14 +120,14 @@
                           prepend-icon="access_time"
                           data-vv-name="horario"
                           v-validate="'required'"
-                          :class="{ 'is-invalid': submitted && errors.has('horario') }"
+                          :class="{ 'is-invalid': errors.has('form-sessao.horario')}"
                           :disabled="horarioIsDisabled"
                           v-on:change="setSalasDisponiveis"
                         ></v-select>
                         <div
-                          v-if="submitted && errors.has('horario')"
+                          v-if="errors.has('form-sessao.sala')"
                           style="color: red"
-                        >{{ errors.first('horario') }}</div>
+                        >{{ errors.first('form-sessao.sala') }}</div>
                       </v-flex>
                       <!-- Salas -->
                       <v-flex xs12 sm6 md3>
@@ -140,13 +140,13 @@
                           label="Salas Disponíveis"
                           data-vv-name="sala"
                           v-validate="'required'"
-                          :class="{ 'is-invalid': submitted && errors.has('sala') }"
+                          :class="{ 'is-invalid': errors.has('form-sessao.sala') }"
                           :disabled="salaIsDisabled"
                         ></v-select>
                         <div
-                          v-if="submitted && errors.has('sala')"
+                          v-if="errors.has('form-sessao.sala')"
                           style="color: red"
-                        >{{ errors.first('sala') }}</div>
+                        >{{ errors.first('form-sessao.sala') }}</div>
                       </v-flex>
                       <!-- Instituto -->
                       <v-flex xs12 sm6 md2>
@@ -159,12 +159,12 @@
                           label="Instituto"
                           data-vv-name="instituto"
                           v-validate="'required'"
-                          :class="{ 'is-invalid': submitted && errors.has('instituto') }"
+                          :class="{ 'is-invalid': errors.has('form-sessao.instituto') }"
                         ></v-select>
                         <div
-                          v-if="submitted && errors.has('instituto')"
+                          v-if="errors.has('form-sessao.instituto')"
                           style="color: red"
-                        >{{ errors.first('instituto') }}</div>
+                        >{{ errors.first('form-sessao.instituto') }}</div>
                       </v-flex>
                       <v-flex xs12 sm6 md2>
                         <v-select
@@ -175,21 +175,46 @@
                           v-model="editedSessao.ano_id"
                           label="Ano"
                           data-vv-name="ano"
-                          v-validate="'required|integer'"
-                          :class="{ 'is-invalid': submitted && errors.has('ano') }"
+                          v-validate="'required'"
+                          :class="{ 'is-invalid': errors.has('form-sessao.ano') }"
                         ></v-select>
                         <div
-                          v-if="submitted && errors.has('ano')"
+                          v-if="errors.has('form-sessao.ano')"
                           style="color: red"
-                        >{{ errors.first('ano') }}</div>
+                        >{{ errors.first('form-sessao.ano') }}</div>
                       </v-flex>
                       <!-- Avaliacoes -->
                       <!-- Avaliacoes -->
                       <!-- Avaliacoes -->
-                             <!-- Avaliadores -->
-                              <v-flex xs12 sm6 md12>
-                                <h5>Avaliação</h5>
-                              </v-flex>                      
+                      <!-- Avaliadores -->
+                    </v-layout>
+                  </v-container>
+
+                  <!-- Data Table Avaliaçoes da sessão-->
+                  <!-- Data Table Avaliaçoes da sessão-->
+                  <!-- Data Table Avaliaçoes da sessão-->
+                  <!-- Data Table Avaliaçoes da sessão-->
+                  <!-- Data Table Avaliaçoes da sessão-->
+                  <!-- Data Table Avaliaçoes da sessão-->
+                </v-card-text>
+              </v-card>
+            </v-form>
+            <!-- Formulario de avaliacoes -->
+            <!-- Formulario de avaliacoes -->
+            <!-- Formulario de avaliacoes -->
+            <v-form lazy-validation data-vv-scope="form-avaliacao">
+              <v-card>
+                <v-card-text>
+                  <!-- DATA -->
+                  <v-container grid-list-md>
+                    <v-layout wrap>
+                      <!-- Avaliacoes -->
+                      <!-- Avaliacoes -->
+                      <!-- Avaliacoes -->
+                      <!-- Avaliadores -->
+                      <v-flex xs12 sm6 md12>
+                        <h5>Avaliação</h5>
+                      </v-flex>
                       <v-card>
                         <v-card-text>
                           <v-container grid-list-md border>
@@ -209,7 +234,7 @@
                                   label="Trabalhos"
                                   data-vv-name="trabalho"
                                   v-validate="'required'"
-                                  :class="{ 'is-invalid': submittedAvaliacao && errors.has('trabalho') }"
+                                  :class="{ 'is-invalid': errors.has('form-avaliacao.trabalho') }"
                                 >
                                   <template
                                     slot="selection"
@@ -221,9 +246,9 @@
                                   >{{ data.item.trabalho_id }} - {{ data.item.nome }}</template>
                                 </v-select>
                                 <div
-                                  v-if="submittedAvaliacao && errors.has('trabalho')"
+                                  v-if="errors.has('form-avaliacao.trabalho')"
                                   style="color: red"
-                                >{{ errors.first('trabalho') }}</div>
+                                >{{ errors.first('form-avaliacao.trabalho') }}</div>
                               </v-flex>
 
                               <!-- Orientadores -->
@@ -275,25 +300,26 @@
                                   item-value="id"
                                   item-text="nome"
                                   outline
-                                  v-model="editedAvaliacao.avaliadores[i].avaliadores_id"
+                                  v-model="editedAvaliacao.avaliadores[i].id"
                                   label="Avaliador"
                                   data-vv-name="avaliadores"
                                   v-validate="'required'"
-                                  :class="{ 'is-invalid': submittedAvaliacao && errors.has('avaliadores') }"
+                                  :class="{ 'is-invalid': errors.has('form-avaliacao.avaliadores') }"
                                 ></v-select>
                                 <div
-                                  v-if="submittedAvaliacao && errors.has('avaliadores')"
+                                  v-if="errors.has('form-avaliacao.avaliadores')"
                                   style="color: red"
-                                >{{ errors.first('avaliadores') }}</div>
+                                >{{ errors.first('form-avaliacao.avaliadores') }}</div>
                               </v-flex>
 
-                            <v-layout>                                <v-spacer></v-spacer>
+                              <v-layout>
+                                <v-spacer></v-spacer>
                                 <v-btn
                                   class="primary"
                                   color="green"
-                                  @click="handleSubmitAvaliacao"
-                                >Adicionar Avaliação</v-btn></v-layout>
-
+                                  @click="validateFormAvaliacao('form-avaliacao')"
+                                >Adicionar Avaliação</v-btn>
+                              </v-layout>
                             </v-layout>
                           </v-container>
                         </v-card-text>
@@ -321,14 +347,12 @@
                       <!-- AVALIADORES -->
                       <td class="text-xs-left">
                         <span v-for="(avaliador, index) in props.item.avaliadores" :key="index">
-                          {{ avaliador.avaliadores }}
+                          {{ avaliador.avaliadores_id }}
                           <br>
                         </span>
                       </td>
                       <!-- AVALIADORES -->
                       <!-- <td v-for="(avaliador, index) in props.item.avaliador_nome" :key="index" class="text-xs-left">{{ avaliador.nome }}</td> -->
-                      <td class="text-xs-left">{{ props.item.avaliadores[0].nome }}</td>
-                      <td class="text-xs-left">{{ props.item.avaliadores[1].nome }}</td>
                       <td class="text-xs-left">{{ props.item.trabalho_id }}</td>
                       <td class="justify-center layout px-0">
                         <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -345,7 +369,11 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn class="primary" color="red" @click="cadastrarSessaoOnOf(false)">Cancelar</v-btn>
-                  <v-btn class="primary" color="blue" @click="handleSubmit">Salvar Sessão</v-btn>
+                  <v-btn
+                    class="primary"
+                    color="blue"
+                    @click="validateFormSessao('form-sessao')"
+                  >Salvar Sessão</v-btn>
                 </v-card-actions>
               </v-card>
             </v-form>
@@ -364,9 +392,6 @@ export default {
     data: () => ({
         cadastrarSessao: false,
         menu: false,
-        submitted: false,
-        submittedAvaliacao: false,
-        //dialog: false,
         search: '',
         trabalhos: [],
         sessoes: [],
@@ -498,6 +523,9 @@ export default {
             this.cadastrarSessao = value
         },
         adicionarAvaliacao() {
+            // avaliadores.map( item => {
+            //   if(item.id)
+            // })
             this.avaliacoesParaSeremAdicionadas.push(this.editedAvaliacao)
             console.log(
                 'avaliacoesParaSeremAdicionadas:',
@@ -616,7 +644,7 @@ export default {
             })
                 .then(response => {
                     this.avaliadores = response.data
-                    //console.log("AVALIADORES", this.avaliadores)
+                    console.log('AVALIADORES', this.avaliadores)
                 })
                 .catch(error => {
                     console.log(error)
@@ -660,24 +688,25 @@ export default {
                     console.log(error)
                 })
         },
+
         //Checar o formulário em busca de erros
-        handleSubmit(e) {
-            this.submitted = true
-            this.$validator.validate().then(valid => {
-                if (valid) {
-                    this.save()
+        validateFormSessao(scope) {
+            console.log('SCOPE: ', scope)
+            console.log('errors: ', this.errors)
+            this.$validator.validateAll(scope).then(result => {
+                if (result) {
+                    alert('Form Submitted!')
                 }
             })
         },
-
         //Checar o formulário em busca de erros
-        handleSubmitAvaliacao(e) {
-            this.submittedAvaliacao = true
-            //this.adicionarAvaliacao()
-            this.$validator.validate().then(valid => {
-                if (valid) {
-                    console.log('oi')
+        validateFormAvaliacao(scope) {
+            console.log('SCOPE: ', scope)
+            console.log('errors: ', this.errors)
+            this.$validator.validateAll(scope).then(result => {
+                if (result) {
                     this.adicionarAvaliacao()
+                    alert('Form Submitted!')
                 }
             })
         },

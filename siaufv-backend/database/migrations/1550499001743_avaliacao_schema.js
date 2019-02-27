@@ -18,7 +18,7 @@ class AvaliacaoSchema extends Schema {
       table
         .foreign('sessao_id')
         .references('id')
-        .inTable('secoes')
+        .inTable('sessoes')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
       table
