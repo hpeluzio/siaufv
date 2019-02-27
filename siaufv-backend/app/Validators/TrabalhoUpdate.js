@@ -12,7 +12,7 @@ class TrabalhoUpdate {
       modalidade: 'required',
       area: 'required',
       ano_id: 'required',
-      instituto: 'instituto'
+      instituto: 'required'
     }
   }
 

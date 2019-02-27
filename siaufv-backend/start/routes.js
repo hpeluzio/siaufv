@@ -18,14 +18,12 @@ Route.delete('/ano/:id', 'AnoController.destroy').middleware('auth:jwt')
 Route.put('/ano/:id', 'AnoController.update').middleware('auth:jwt').validator('AnoUpdate')
 
 //Rotas do Avaliador
-Route
-    .resource('/avaliador', 'AvaliadorController')
-    .apiOnly()
-    .validator(new Map([
-        [['store'], ['AvaliadorStore']],
-        [['update'], ['AvaliadorUpdate']]
-      ]))
-    .middleware('auth:jwt')
+Route.get('/avaliador', 'AvaliadorController.index').middleware('auth:jwt')
+Route.get('/avaliador_ativo', 'AvaliadorController.avaliador_ativo').middleware('auth:jwt')
+Route.post('/avaliador', 'AvaliadorController.store').middleware('auth:jwt').validator('AvaliadorStore')
+Route.put('/avaliador/:id', 'AvaliadorController.update').middleware('auth:jwt').validator('AvaliadorUpdate')
+Route.delete('/avaliador/:id', 'AvaliadorController.destroy').middleware('auth:jwt')
+
 
 //Rotas dos trabalhos
 Route.get('/trabalho', 'TrabalhoController.index').middleware('auth:jwt')

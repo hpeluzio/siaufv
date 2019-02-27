@@ -23,136 +23,70 @@ class AvaliacaoController {
     //return await Avaliacao.all()
     let avaliacoes = 
     await Database
-      .select('avaliacoes.*',
-              'trabalhos.trabalho_id as trabalhos_trabalho_id',
-              'trabalhos.nome as trabalhos_nome',
-              'trabalhos.orientador as trabalhos_orientador',
-              'trabalhos.modalidade as trabalhos_modalidade',
-              'trabalhos.area as trabalhos_area',
-              'trabalhos.ano_id as trabalhos_ano_id')
+      .select('avaliacoes.*')
       .table('avaliacoes')
-      .innerJoin('trabalhos', 'avaliacoes.trabalho_id', 'trabalhos.trabalho_id')
-
-    // async () => { 
-    //   avaliacoes.map( (item, index) => { 
-    //   item.avaliador_nome = 
-    //   await Database
-    //     .select('avaliadores.id as avaliadores_id',
-    //             'avaliadores.nome as avaliador_nome',
-    //             'avaliadores.curso as avaliadores_curso',
-    //             'avaliadores.email as avaliadores_email')
-    //     .table('avaliadores')
-    //     .innerJoin('avaliador_avaliacao', 'avaliadores.id', 'avaliador_avaliacao.avaliador_id')
-    //     .where('avaliador_avaliacao.avaliacao_id', '=', avaliacoes[index].id )
-    //   })
-    // }
 
     //Anexando os avaliadores as suas respectivas avaliacoes
     for(let index in avaliacoes){  
       avaliacoes[index].avaliadores = 
       await Database
-        .select('avaliadores.id as avaliador_id',
-                'avaliadores.nome as avaliador_nome',
-                'avaliadores.curso as avaliador_curso',
-                'avaliadores.email as avaliador_email')
+        .select('*')
         .table('avaliadores')
         .innerJoin('avaliador_avaliacao', 'avaliadores.id', 'avaliador_avaliacao.avaliador_id')
         .where('avaliador_avaliacao.avaliacao_id', '=', avaliacoes[index].id )
     }
+
     //Anexando os trabalho_autores as suas respectivas avaliacoes
     for(let index in avaliacoes){  
-      avaliacoes[index].trabalhos_autores = 
+      avaliacoes[index].trabalho = 
       await Database
-        .select('trabalho_autores.id as id',
-                'trabalho_autores.trabalho_id as trabalho_id',
-                'trabalho_autores.autor as autor')
+        .select('trabalhos.*')
+        .table('trabalhos')
+        .where('trabalhos.trabalho_id', '=', avaliacoes[index].trabalho_id )
+    }    
+
+    for(let index in avaliacoes){  
+      avaliacoes[index].trabalho = 
+      await Database
+        .select('trabalhos.*')
+        .table('trabalhos')
+        .where('trabalhos.trabalho_id', '=', avaliacoes[index].trabalho_id )
+    }     
+
+    for(let index in avaliacoes){  
+      avaliacoes[index].trabalho.autores = 
+      await Database
+        .select('trabalho_autores.*')
         .table('trabalho_autores')
         .where('trabalho_autores.trabalho_id', '=', avaliacoes[index].trabalho_id )
     }    
-    
 
     return avaliacoes
   }
 
   async store ({ request, response }) {
-    console.log(request.only(['data','horario','tipo','trabalho_id','sala_id','avaliador_nome', 'instituto']))
-    const { data, horario, tipo, trabalho_id, sala_id, avaliador_nome, instituto} 
+    console.log(request.only([ 'sessao_id','trabalho_id','avaliadores' ]))
+    const { sessao_id, trabalho_id, avaliadores } 
         = request.only([
-           'data', 'horario', 'tipo', 'trabalho_id', 'sala_id', 'avaliador_nome', 'instituto' ])
+           'sessao_id', 'trabalho_id', 'avaliadores' ])
 
-    //console.log(avaliador_nome)
+    console.log('sessao_id:', sessao_id, '\ntrabalho_id: ', '\ntrabalho_id: ', avaliadores)
 
+    //TRY
     try {
-      let avaliacao = await Avaliacao.create({ data, horario, tipo, trabalho_id, sala_id, instituto })
-      for(var i=0; i < avaliador_nome.length; i++){
-        await AvaliadorAvaliacao.create({ 'avaliador_id': avaliador_nome[i].avaliadores_id, 'avaliacao_id':  avaliacao.id })
-    }  
+      
+      const avaliacao = await Avaliacao.create({ sessao_id, trabalho_id })
+
+      //Inserindo os avaliadores na avaliação
+      for(let avaliador of avaliadores){
+        await AvaliadorAvaliacao.create({ 'avaliador_id': avaliador.avaliadores_id, 'avaliacao_id':  avaliacao.id })
+      }  
     } catch (error) {
       console.log(error)
       return response.status(500).send({ "error": error });
     }
     //Se chegou até aqui então o Trabalho foi adicionado com sucesso
     return response.status(200).send({ "success": "Avaliação registrada com sucesso" });
-  }
-
-  async update ({ params, request, response }) {
-    const { id, data, horario, tipo, trabalho_id, sala_id, avaliador_nome, instituto } = request.only([ 'id', 'data', 'horario', 'tipo', 'trabalho_id', 'sala_id', 'avaliador_nome', 'instituto' ]);
-    console.log( '\nid:' + id,'\ndata:' + data, '\nhorario:' + horario, '\ntipo:' + tipo, '\ntrabalho_id:' + trabalho_id, '\nsala_id:' + sala_id, '\ninstituto' + instituto)
-    try {
-      //Update de trabalhos
-      var avaliacao = await Avaliacao.findOrFail(id)
-      avaliacao.data = data
-      avaliacao.horario = horario
-      avaliacao.tipo = tipo
-      avaliacao.trabalho_id = trabalho_id
-      avaliacao.instituto = instituto
-      avaliacao.sala_id = sala_id
-
-      await avaliacao.save()
-
-      console.log('avaliador_nome: ', avaliador_nome, '\n')
-
-      let avaliadores_id_atualizacao = await Database.select('avaliador_id').table('avaliador_avaliacao').where('avaliacao_id','=',id)
-
-      //console.log('avaliadores_id_atualizacao: ', avaliadores_id_atualizacao)
-      console.log('avaliadores_id_atualizacao[0]: ', avaliadores_id_atualizacao[0].avaliador_id)
-      console.log('avaliadores_id_atualizacao[1]: ', avaliadores_id_atualizacao[1].avaliador_id)
-
-
-      //Update de avaliadores das avaliacoes
-      if(typeof avaliador_nome !== 'undefined' &&  avaliador_nome.length > 0){
-        //For para percorrer os avaliadores nome
-        for(let i in avaliador_nome){
- 
-          //Se avaliador_id for diferente do avaliador_id para ser atualizado entao pode modificar
-          if (avaliadores_id_atualizacao[i].avaliador_id != avaliador_nome[i].avaliadores_id){
-            //instanciando objeto AvaliadorAvaliacao do banco
-            let avaliador_avaliacao = await AvaliadorAvaliacao.findBy({ 'avaliacao_id': avaliacao.id, 'avaliador_id': avaliadores_id_atualizacao[i].avaliador_id })
-            //Setando novo valor de avaliador_id na tabela AvaliadorAvaliacao
-            avaliador_avaliacao.avaliador_id = avaliador_nome[i].avaliadores_id
-            await avaliador_avaliacao.save()
-          }
-
-          //console.log('avaliador_avaliacao: ', JSON.stringify(avaliador_avaliacao))
-          // console.log("-=-=-=-=-=-=-")
-          // console.log ('typeof avaliador_nome[i].avaliadores_id:', typeof avaliador_nome[i].avaliadores_id  ,' - ', avaliador_nome[i].avaliadores_id)                                                
-          // avaliador_avaliacao.avaliador_id = avaliador_nome[i].avaliadores_id
-           
-          // console.log("----------")
-          // console.log( 'avaliador_nome[i].avaliadores_id: ', typeof avaliador_nome[i].avaliadores_id, ' - ', avaliador_nome[i].avaliadores_id)
-          // console.log( 'avaliador_avaliacao.avaliador_id: ', typeof avaliador_avaliacao.avaliador_id, ' - ', avaliador_avaliacao.avaliador_id)
-          // console.log( 'avaliador_avaliacao.avaliacao_id: ', typeof avaliador_avaliacao.avaliacao_id, ' - ', avaliador_avaliacao.avaliacao_id)
-          // console.log("-=-=-=-=-=-=-")  
-          // await avaliador_avaliacao.save()          
-        }
-      }
-    } catch (error) {
-      console.log(error)
-      return response.status(500).send({ "error": error });
-    }
-    //Se chegou até aqui então o Avaliação foi adicionado com sucesso
-    return response.status(200).send({ "success": "Avaliação atualizada com sucesso" });
-
   }
 
   async destroy ({ params, request, response }) {

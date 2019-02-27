@@ -15,6 +15,16 @@ class AvaliadorController {
     return avaliadores
   }
 
+  async avaliador_ativo ({ request, response, view }) {
+    //return await Avaliador.all()
+    const avaliadores = 
+      await Database
+        .select('*')
+        .table('avaliadores')
+        .where('avaliadores.ativo', '=', 1)
+    return avaliadores
+  }  
+
   async store ({ request, response }) {
     
     const { matricula, nome, curso, instituto, email, ativo } = request.only([ 'matricula', 'nome', 'curso', 'instituto', 'email', 'ativo' ]);
