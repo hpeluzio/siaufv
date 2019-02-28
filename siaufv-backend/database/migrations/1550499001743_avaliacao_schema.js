@@ -13,7 +13,7 @@ class AvaliacaoSchema extends Schema {
       // table.string('instituto').notNullable()
       // table.integer('sala_id').notNullable().unsigned()
       table.integer('sessao_id').notNullable().unsigned()
-      table.integer('trabalho_id').notNullable()
+      table.integer('trabalho_id').notNullable().unique()
       table.timestamps()
       table
         .foreign('sessao_id')

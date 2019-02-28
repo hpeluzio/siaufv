@@ -27,6 +27,7 @@ Route.delete('/avaliador/:id', 'AvaliadorController.destroy').middleware('auth:j
 
 //Rotas dos trabalhos
 Route.get('/trabalho', 'TrabalhoController.index').middleware('auth:jwt')
+Route.get('/trabalhos_nao_cadastrados', 'TrabalhoController.trabalhos_nao_cadastrados').middleware('auth:jwt')
 Route.post('/trabalho', 'TrabalhoController.store').middleware('auth:jwt').validator('TrabalhoStore')
 Route.put('/trabalho/:id', 'TrabalhoController.update').middleware('auth:jwt').validator('TrabalhoUpdate')
 Route.delete('/trabalho/:id', 'TrabalhoController.destroy').middleware('auth:jwt')

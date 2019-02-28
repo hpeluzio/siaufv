@@ -92,7 +92,6 @@
                             data-vv-name="data"
                             v-validate="'required'"
                             :class="{ 'is-invalid': errors.has('form-sessao.data')}"
-                            v-on:change="setSalasDisponiveis"
                           ></v-text-field>
                           <v-date-picker
                             color="green lighten-1"
@@ -108,7 +107,7 @@
                           style="color: red"
                         >{{ errors.first('form-sessao.data') }}</div>
                       </v-flex>
-                      <!-- Horario :disabled="horarioIsDisabled"-->
+                      <!-- Horario -->
                       <v-flex xs12 sm6 md2>
                         <v-select
                           :items="horarios"
@@ -121,18 +120,16 @@
                           data-vv-name="horario"
                           v-validate="'required'"
                           :class="{ 'is-invalid': errors.has('form-sessao.horario')}"
-                          
-                          v-on:change="setSalasDisponiveis"
                         ></v-select>
                         <div
                           v-if="errors.has('form-sessao.sala')"
                           style="color: red"
                         >{{ errors.first('form-sessao.sala') }}</div>
                       </v-flex>
-                      <!-- Salas :disabled="salaIsDisabled"-->
+                      <!-- Salas -->
                       <v-flex xs12 sm6 md3>
                         <v-select
-                          :items="salas_disponiveis"
+                          :items="salas"
                           item-value="id"
                           item-text="nome"
                           outline
@@ -141,7 +138,6 @@
                           data-vv-name="sala"
                           v-validate="'required'"
                           :class="{ 'is-invalid': errors.has('form-sessao.sala') }"
-                          
                         ></v-select>
                         <div
                           v-if="errors.has('form-sessao.sala')"
@@ -202,7 +198,7 @@
             <!-- Formulario de avaliacoes -->
             <!-- Formulario de avaliacoes -->
             <!-- Formulario de avaliacoes -->
-            <v-form lazy-validation data-vv-scope="form-avaliacao">
+            <v-form lazy-validation data-vv-scope="form-avaliacao" v-if="avaliacaoFormEnable">
               <v-card>
                 <v-card-text>
                   <!-- DATA -->
@@ -223,7 +219,7 @@
                               <v-flex xs12 sm6 md12>
                                 <h5>Trabalho</h5>
                               </v-flex>                              
-                              <!-- Instituto -->
+                              <!-- Filtro Instituto Trabalho -->
                               <v-flex xs12 sm6 md2>
                                 <v-select
                                   :items="institutos"
@@ -299,9 +295,20 @@
                                 <h5>Avaliadores</h5>
                               </v-flex>
 
-                              <v-flex xs12 sm6 md6>
+                              <!-- Filtro Instituto Avaliador1 -->
+                              <v-flex xs12 sm6 md1>
                                 <v-select
-                                  :items="avaliadores"
+                                  :items="institutos"
+                                  item-value="instituto"
+                                  item-text="instituto"
+                                  outline
+                                  v-model="filtroInstitutoAvaliador1"
+                                  label="Instituto"
+                                ></v-select>
+                              </v-flex> 
+                              <v-flex xs12 sm6 md5>
+                                <v-select
+                                  :items="avaliadores | filterAvaliadorInstituto1(filtroInstitutoAvaliador1)"
                                   item-value="id"
                                   item-text="data"
                                   outline
@@ -326,9 +333,20 @@
                                 >{{ errors.first('form-avaliacao.avaliador1') }}</div>
                               </v-flex>
 
-                              <v-flex xs12 sm6 md6>
+                              <!-- Filtro Instituto Avaliador2 -->
+                              <v-flex xs12 sm6 md1>
                                 <v-select
-                                  :items="avaliadores | filterAvaliadores(editedAvaliacao.avaliador1)"
+                                  :items="institutos"
+                                  item-value="instituto"
+                                  item-text="instituto"
+                                  outline
+                                  v-model="filtroInstitutoAvaliador2"
+                                  label="Instituto"
+                                ></v-select>
+                              </v-flex> 
+                              <v-flex xs12 sm6 md5>
+                                <v-select
+                                  :items="avaliadores | filterAvaliadores(editedAvaliacao.avaliador1)  | filterAvaliadorInstituto1(filtroInstitutoAvaliador2)"
                                   item-value="id"
                                   item-text="data"
                                   outline
@@ -337,7 +355,7 @@
                                   label="Avaliador 2"
                                   data-vv-name="avaliador2"
                                   v-validate="'required'"
-                                  :class="{ 'is-invalid': submittedAvaliacao && errors.has('form-avaliacao.avaliador2') }"
+                                  :class="{ 'is-invalid': errors.has('form-avaliacao.avaliador2') }"
                                 >
                                   <template
                                     slot="selection"
@@ -405,16 +423,20 @@
                   </v-data-table>
                 </v-card-text>
                 <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn class="primary" color="red" @click="cadastrarSessaoOnOf(false)">Cancelar</v-btn>
+                  
+
+                </v-card-actions>
+              </v-card>
+            </v-form>
+            <v-layout>
+            <v-spacer></v-spacer>
+                  <v-btn class="primary justify-right" color="red" @click="cadastrarSessaoOnOf(false)">Cancelar</v-btn>
                   <v-btn
                     class="primary"
                     color="blue"
                     @click="validateForm('form-sessao')"
                   >Salvar Sessão</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-form>
+                  </v-layout>     
           </v-flex>
         </v-layout>
       </span>
@@ -429,21 +451,23 @@ import moment from 'moment'
 export default {
     data: () => ({
         cadastrarSessao: false,
-        submittedAvaliacao: false,
         filtroInstitutoTrabalho: '',
+        filtroInstitutoAvaliador1: '',
+        filtroInstitutoAvaliador2: '',
         menu: false,
         search: '',
         trabalhos: [],
+        trabalhos_nao_cadastrados: [],
         sessoes: [],
         avaliacoes: [],
         avaliadores: [],
         salas: [],
-        salas_disponiveis: [],
         horarios: [],
         institutos: [],
         anos: [],
         avaliacoesDatatable: [],
         editedSessaoIndex: -1,
+        //avaliacaoFormEnable: false,
         sessaoHeaders: [
             { text: 'Data', value: 'data' },
             { text: 'Horário', value: 'horario' },
@@ -505,21 +529,21 @@ export default {
         //Mudando o locale do Vuetify
         this.changeLocale()
         //Pegando todos sessoes
-        this.getAxiosArraySessoes()
+        this.getArrayAxiosSessoes()
         //Pegando todos avaliacoes
-        this.getAxiosArrayAvaliacoes()
+        this.getArrayAxiosAvaliacoes()
         //Pegando todos os Trabalhos
-        this.getAxiosArrayTrabalhos()
+        this.getArrayAxiosTrabalhos()
         //Pegando todas sa salas
-        this.getAxiosArraySalas()
+        this.getArrayAxiosSalas()
         //Pegando todos os avaliadores
-        this.getAxiosArrayAvaliadoresAtivos()
+        this.getArrayAxiosAvaliadoresAtivos()
         //Setando Horarios
         this.setArrayHorarios()
         //Setando Institutos
         this.setArrayInstitutos()
         //Pegando todos os anos
-        this.getAxiosArrayAnos()
+        this.getArrayAxiosAnos()
     },
 
     computed: {
@@ -540,17 +564,33 @@ export default {
         avaliadorIsDisabled() {
             if (typeof this.editedAvaliacao.avaliador1 !== 'number') return true
             return false
-        },        
+        },
+        avaliacaoFormEnable() {
+            //console.log('avaliacaoFormEnable ', avaliacaoFormEnable)
+            console.log('this.editedSessaoIndex', this.editedSessaoIndex)
+            if (this.editedSessaoIndex > -1 ) return true
+            return false
+        },             
     },
 
     watch: {
         cadastrarSessao(val) {
+            this.editedAvaliacao = Object.assign({}, this.defaultAvaliacao)
             if (val === false) {
-                this.editedAvaliacao = Object.assign({}, this.defaultAvaliacao)
+                this.getArrayAxiosAvaliacoes()
+                this.getArrayAxiosSessoes()
+                this.getArrayAxiosTrabalhos()
+
                 this.editedSessao = Object.assign({}, this.defaultSessao)
                 this.avaliacoesDatatable = []
             }
-        }
+        },
+        // editedSessaoIndex(val){
+        //   if(val > -1)
+        //     this.avaliacaoFormEnable = true
+        //   if (val = -1)
+        //     this.avaliacaoFormEnable = false
+        // }
     },
 
     filters: {
@@ -573,12 +613,36 @@ export default {
             if(avaliador.id !== id_avaliador1)
               return avaliador
           })          
-        }     
+        },
+        filterAvaliadorInstituto1(avaliadores1, instituto) {
+          if (instituto === '')
+            return avaliadores1
+          else
+            return avaliadores1.filter((avaliador1) => {
+              if(instituto === avaliador1.instituto)
+                return avaliador1
+            })
+        },
+        filterAvaliadorInstituto1(avaliadores2, instituto) {
+          if (instituto === '')
+            return avaliadores2
+          else
+            return avaliadores2.filter((avaliador2) => {
+              if(instituto === avaliador2.instituto)
+                return avaliador2
+            })
+        },                 
     },
 
     methods: {
+        updateComponent() {
+          this.getArrayAxiosSessoes()
+          this.getArrayAxiosAvaliacoes()
+          cadastrarSessaoOnOf(false)
+        },
         cadastrarSessaoOnOf(value) {
             this.cadastrarSessao = value
+            this.editedSessaoIndex = -1
         },
         adicionarAvaliacao() {
           let id = this.avaliacoesDatatable.length
@@ -612,6 +676,8 @@ export default {
               avaliador2_nome: avaliador2_nome,
               trabalho_autores: autores
             })
+
+            //console.log(this.avaliacoesDatatable)
         },
         changedautor(event) {
             this.trabalhos.map(item => {
@@ -619,28 +685,7 @@ export default {
                     this.editedAvaliacao.trabalhos_autores = item.autores
             })
         },
-        setSalasDisponiveis(event) {
-            this.salas_disponiveis = JSON.parse(JSON.stringify(this.salas))
-            // console.log('horario event: ', event)
-            // //this.salas_disponiveis = JSON.parse(JSON.stringify(this.salas))
-            // if (this.editedAvaliacao.data === '') return
-            // if (this.editedAvaliacao.horario === '') return
-
-            // this.avaliacoes.map(avaliacao => {
-            //     this.salas_disponiveis = this.salas.filter( (sala) => {
-            //       if(moment(String(avaliacao.data)).format('DD/MM/YYYY') ===
-            //           moment(String(this.editedAvaliacao.data)).format('DD/MM/YYYY'))
-            //         //if()
-            //         //console.log("Igual")
-
-            //       console.log('setSalasDisponiveis:', moment(String(avaliacao.data)).format('DD/MM/YYYY'), this.editedAvaliacao.data)
-
-            //     })
-            // })
-
-            console.log('salas_disponiveis: ', this.salas_disponiveis)
-        },
-        getAxiosArrayAvaliacoes() {
+        getArrayAxiosAvaliacoes() {
             //Pegando todos Avaliacoes
             axios_instance({
                 method: 'get',
@@ -648,7 +693,7 @@ export default {
             })
                 .then(response => {
                     this.avaliacoes = response.data
-                    console.log('AVALIACOES: ', this.avaliacoes)
+                    //console.log('AVALIACOES: ', this.avaliacoes)
                     // this.avaliacoes.map(item => {
                     //     item.horario =
                     //         item.horario.split(':')[0] +
@@ -663,15 +708,15 @@ export default {
                     console.log(error)
                 })
         },
-        getAxiosArraySessoes() {
+        getArrayAxiosSessoes() {
             //Pegando todos Avaliacoes
             axios_instance({
                 method: 'get',
                 url: '/sessao'
             })
                 .then(response => {
-                    //console.log(response.data)
                     this.sessoes = response.data
+                    //console.log('SESSOES: ', this.sessoes)
                     this.sessoes.map(item => {
                         item.horario =
                             item.horario.split(':')[0] +
@@ -686,7 +731,7 @@ export default {
                     console.log(error)
                 })
         },
-        getAxiosArrayTrabalhos() {
+        getArrayAxiosTrabalhos() {
             //Pegando todos os anos
             axios_instance({
                 method: 'get',
@@ -700,25 +745,25 @@ export default {
                     console.log(error)
                 })
         },
-        getAxiosArraySalas() {
+        getArrayAxiosSalas() {
             axios_instance({
                 method: 'get',
                 url: '/sala'
             })
                 .then(response => {
-                    //this.salas = response.data
-                    for (let i in response.data)
-                        this.salas.push({
-                            id: response.data[i].id,
-                            nome: response.data[i].nome
-                        })
-                    //console.log('Salas', this.salas)
+                    this.salas = response.data
+                    // for (let i in response.data)
+                    //     this.salas.push({
+                    //         id: response.data[i].id,
+                    //         nome: response.data[i].nome
+                    //     })
+                    // //console.log('Salas', this.salas)
                 })
                 .catch(error => {
                     console.log(error)
                 })
         },
-        getAxiosArrayAvaliadoresAtivos() {
+        getArrayAxiosAvaliadoresAtivos() {
             axios_instance({
                 method: 'get',
                 url: '/avaliador_ativo'
@@ -753,7 +798,7 @@ export default {
                 { instituto: 'IHP' }
             ]
         },
-        getAxiosArrayAnos() {
+        getArrayAxiosAnos() {
             //Pegando todos os anos
             axios_instance({
                 method: 'get',
@@ -779,7 +824,6 @@ export default {
               this.$validator.validateAll(scope).then(result => {
                   if (result) {
                       this.save()
-                      alert('Sessão adicionada.')
                       this.$validator.reset()
                       this.cadastrarSessao = false                 
                   }
@@ -804,21 +848,25 @@ export default {
             this.editedSessaoIndex = this.sessoes.indexOf(item)
             this.editedSessao = Object.assign({}, item)
             this.avaliacoes.filter(avaliacao => {
-              console.log(avaliacao)
-              if(this.editedSessao.id === avaliacao.sessao_id)
-              this.avaliacoesDatatable.push({
-                id: avaliacao.id,
-                trabalho_id: avaliacao.trabalho_id,              
-                avaliador1_id: avaliacao.avaliadores[0].id,
-                avaliador2_id: avaliacao.avaliadores[1].id,
-                trabalho_nome: avaliacao.trabalho[0].nome,
-                orientador: avaliacao.trabalho[0].orientador,
-                avaliador1_nome: avaliacao.avaliadores[0].nome,
-                avaliador2_nome: avaliacao.avaliadores[1].nome,
-                trabalho_autores: avaliacao.avaliadores[1].autores,
-              })
+              //console.log('AVALIACAO:', avaliacao)
+              if(avaliacao.id){
+                if(this.editedSessao.id === avaliacao.sessao_id){
+                  this.avaliacoesDatatable.push({
+                    id: avaliacao.id,
+                    trabalho_id: avaliacao.trabalho_id,              
+                    avaliador1_id: avaliacao.avaliadores[0].id,
+                    avaliador2_id: avaliacao.avaliadores[1].id,
+                    trabalho_nome: avaliacao.trabalho[0].nome,
+                    orientador: avaliacao.trabalho[0].orientador,
+                    avaliador1_nome: avaliacao.avaliadores[0].nome,
+                    avaliador2_nome: avaliacao.avaliadores[1].nome,
+                    trabalho_autores: avaliacao.avaliadores[1].autores,
+                  })
+                }
+              }
+
             })
-            console.log('avaliacoesDatatable: ', this.avaliacoesDatatable)
+            //console.log('avaliacoesDatatable: ', this.avaliacoesDatatable)
             // console.log('item: ', item)
             // console.log('editedSessao: ', this.editedSessao)
             this.cadastrarSessao = true
@@ -827,9 +875,9 @@ export default {
         deleteAvaliacao(item) {
             this.avaliacoesDatatable.map((avaliacao, index) => {
               if(avaliacao.id === item.id)
-                this.avaliacoesDatatable.splice(index)
+                this.avaliacoesDatatable.splice(index, index+1)
             })
-            console.log('avaliacoesDatatable: ', this.avaliacoesDatatable)
+            //console.log('avaliacoesDatatable: ', this.avaliacoesDatatable)
         },
 
         deleteSessao(item) {
@@ -838,13 +886,12 @@ export default {
 
             // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
             confirm('Está certo que deseja deletar este item?') &&
-            axios_instance({
-                method: 'delete',
-                url: '/sessao/' + item.id + ''
-            })
+                axios_instance({
+                    method: 'delete',
+                    url: '/sessao/' + item.id + ''
+                })
                 .then(response => {
-                  this.getAxiosArraySessoes()
-                  this.getAxiosArrayAvaliacoes()
+                    this.updateComponent()
                 })
                 .catch(error => {
                     this.errors.add({
@@ -852,18 +899,7 @@ export default {
                         msg: 'Erro ao deletar item'
                     })
                 })
-            this.getAxiosArraySessoes()
-            this.getAxiosArrayAvaliacoes()
-        },
 
-        close() {
-            // this.dialog = false
-            this.cadastrarSessao = false
-            setTimeout(() => {
-                this.editedSessao = Object.assign({}, this.defaultSessao)
-                this.editedAvaliacao = Object.assign({}, this.defaultAvaliacao)
-                this.editedSessaoIndex = -1
-            }, 300)
         },
 
         save() {
@@ -891,9 +927,7 @@ export default {
                 })
                     .then(response => {
                         alert('Sessão editada.')
-                        this.getAxiosArraySessoes()
-                        this.getAxiosArrayAvaliacoes()
-                        this.close()
+                        this.updateComponent()
                     })
                     .catch(error => {
                         this.errors.clear() //Limpar os erros antes de setar novos erros
@@ -930,23 +964,13 @@ export default {
                 })
                     .then(response => {
                         //Inclui o item no array de item do front end
-                        alert('Avaliacoes adicionada.')
-                        this.getAxiosArraySessoes()
-                        this.getAxiosArrayAvaliacoes()
-                        //this.close()
+                        alert('Sessão adicionada.')
+                        this.updateComponent()
                     })
                     .catch(error => {
                         console.log(error)
-
-                        // this.errors.clear()
-                        // if(error.response.data.error[0].message)
-                        //   this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })
-                        // else
-                        //   this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
                     })
             }
-
-            //this.close()
         }
     }
 }

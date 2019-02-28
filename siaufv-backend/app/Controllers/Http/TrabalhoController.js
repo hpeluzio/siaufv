@@ -25,6 +25,36 @@ class TrabalhoController {
     return trabalhos 
   }
 
+  async trabalhos_nao_cadastrados ({ request, response, view }) {
+
+    var avaliacoes = await Database
+      .select('avaliacoes.trabalho_id')
+      .table('avaliacoes')
+    
+    avaliacoes = avaliacoes.map( item => {
+      return item.trabalho_id
+    })
+
+    //return avaliacoes
+
+    const trabalhos = 
+      await Database
+        .select('trabalhos.*', 'anos.ano as ano')
+        .table('trabalhos')
+        .innerJoin('anos', 'trabalhos.ano_id', 'anos.id')
+        .whereNotIn('trabalho_id', avaliacoes)
+
+    for(let index in trabalhos){  
+      trabalhos[index].autores = 
+      await Database
+        .select('*')
+        .table('trabalho_autores')
+        .where('trabalho_autores.trabalho_id', '=', trabalhos[index].trabalho_id )
+    }    
+
+    return trabalhos 
+  }
+
   async store ({ request, response }) {
     const { trabalho_id, nome, autores, orientador, modalidade, area, ano_id, instituto } = 
       request.only([ 'trabalho_id', 'nome', 'autores','orientador', 'modalidade', 'area', 'ano_id', 'instituto' ]);

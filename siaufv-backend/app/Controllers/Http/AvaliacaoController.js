@@ -46,14 +46,6 @@ class AvaliacaoController {
     }    
 
     for(let index in avaliacoes){  
-      avaliacoes[index].trabalho = 
-      await Database
-        .select('trabalhos.*')
-        .table('trabalhos')
-        .where('trabalhos.trabalho_id', '=', avaliacoes[index].trabalho_id )
-    }     
-
-    for(let index in avaliacoes){  
       avaliacoes[index].trabalho.autores = 
       await Database
         .select('trabalho_autores.*')
