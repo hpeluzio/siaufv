@@ -7,6 +7,7 @@ class SecaoSchema extends Schema {
   up () {
     this.create('sessoes', (table) => {
       table.increments()
+      table.string('nome').notNullable()
       table.date('data').notNullable()
       table.time('horario').notNullable()
       table.integer('tipo').notNullable()

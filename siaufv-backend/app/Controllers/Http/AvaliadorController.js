@@ -72,6 +72,22 @@ class AvaliadorController {
     //Se chegou até aqui então o avaliador foi adicionado com sucesso
     return response.status(200).send({ "success": "Avaliador deletado com sucesso" });
   }
+
+  async avaliador_ativar ({ params, request, response }) {
+    const { ativo } = 
+      request.only([ 'ativo' ]);
+
+    try {
+      var avaliador = await Avaliador.findOrFail(params.id)
+      avaliador.ativo = ativo
+      await avaliador.save()
+    } catch (error) {
+      console.log(error)
+      return response.status(500).send({ "error": error });
+    }
+    //Se chegou até aqui então o avaliador foi adicionado com sucesso
+    return response.status(200).send({ "success": "Avaliador ativado com sucesso" });
+  }  
 }
 
 module.exports = AvaliadorController

@@ -20,7 +20,16 @@ class TrabalhoController {
         .select('*')
         .table('trabalho_autores')
         .where('trabalho_autores.trabalho_id', '=', trabalhos[index].trabalho_id )
-    }    
+    }
+
+    for(let index in trabalhos){  
+      trabalhos[index].sessao = 
+      await Database
+        .select('*')
+        .from('sessoes')
+        .innerJoin('avaliacoes')
+        .where('avaliacoes.trabalho_id', '=', trabalhos[index].trabalho_id)
+    }
 
     return trabalhos 
   }

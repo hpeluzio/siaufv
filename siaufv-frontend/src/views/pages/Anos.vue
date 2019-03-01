@@ -61,8 +61,8 @@
     >
       <template slot="items" slot-scope="props">
 
-        <td class="text-xs-right"><strong>{{ props.item.ano }}</strong></td>
-        <td class="justify-center layout px-0">
+        <td class="text-xs-right"><b><h3>{{ props.item.ano }}</h3></b></td>
+        <td class="justify-center layout px-0"><h3>
           <v-icon
             small
             class="mr-2"
@@ -75,7 +75,7 @@
             @click="deleteItem(props.item)"
           >
             delete
-          </v-icon>
+          </v-icon></h3>
         </td>
       </template>
       <v-alert slot="no-results" :value="true" color="error" icon="warning">

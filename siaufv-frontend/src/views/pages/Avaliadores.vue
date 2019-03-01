@@ -87,13 +87,13 @@
       <template slot="items" slot-scope="props">
         <!--<td>{{ props.item.name }}</td>-->
         <!--<td class="text-xs-right">{{ props.item.id }}</td>-->
-        <td class="text-xs-right">{{ props.item.matricula }}</td>
-        <td class="text-xs-right">{{ props.item.nome }}</td>
-        <td class="text-xs-right">{{ props.item.curso }}</td>
-        <td class="text-xs-right">{{ props.item.instituto }}</td>
-        <td class="text-xs-right">{{ props.item.email }}</td>
+        <td class="text-xs-left">{{ props.item.matricula }}</td>
+        <td class="text-xs-left">{{ props.item.nome }}</td>
+        <td class="text-xs-left">{{ props.item.curso }}</td>
+        <td class="text-xs-left">{{ props.item.instituto }}</td>
+        <td class="text-xs-left">{{ props.item.email }}</td>
         <!-- Ativo -->
-          <td v-if="props.item.ativo === 1" class="text-xs-right"><b>Ativo</b></td>
+          <td v-if="props.item.ativo === 1" class="text-xs-left" style="color: green"><b>Ativo</b></td>
           <td v-else class="text-xs-right">  </td>
 
         <td class="justify-center layout px-0">
@@ -110,6 +110,12 @@
           >
             delete
           </v-icon>
+          <v-icon
+            small
+            @click="ativarAvaliador(props.item)"
+          >
+            done_outline
+          </v-icon>          
         </td>
       </template>
       <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -310,7 +316,34 @@ export default {
         }
         
         //this.close()
-      }
+      },
+      ativarAvaliador (item) {
+        //Setando algumas variaveis para uso
+        var ativar = 1
+        if(item.ativo === 1)
+          ativar = 0
+
+        //Ativando ou desativando o avaliador
+        axios_instance({
+          method: 'put',
+          url: '/avaliador_ativar/'+ item.id +'',
+          data: {
+            ativo: ativar
+          }
+        })
+        .then(response => {
+          //alert('Avaliador ativado.')
+          this.getAxiosArrayAvaliadores()
+          this.close()
+        })
+        .catch((error) => {
+          this.errors.clear() //Limpar os erros antes de setar novos erros
+          if(error.response.data.error[0].message)
+            this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })
+          else
+            this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
+        })
+    }
     }
   }
 </script>

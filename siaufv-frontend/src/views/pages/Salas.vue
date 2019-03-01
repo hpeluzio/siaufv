@@ -71,9 +71,9 @@
     >
       <template slot="items" slot-scope="props">
 
-        <td class="text-xs-right">{{ props.item.nome }}</td>
-        <td class="text-xs-right">{{ props.item.descricao }}</td>
-        <td class="text-xs-right">{{ props.item.capacidade }}</td>
+        <td class="text-xs-left">{{ props.item.nome }}</td>
+        <td class="text-xs-left">{{ props.item.descricao }}</td>
+        <td class="text-xs-left">{{ props.item.capacidade }}</td>
         <td class="justify-center layout px-0">
           <v-icon
             small

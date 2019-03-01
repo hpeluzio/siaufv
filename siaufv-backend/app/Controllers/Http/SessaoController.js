@@ -36,34 +36,24 @@ class SessaoController {
     //STORE
     async store({ request, response }) {
         console.log(
-            request.only([ 'data', 'horario', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
+            request.only([ 'nome', 'data', 'horario', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
         )
         const {
-            data, horario, tipo, sala_id, instituto, ano_id, avaliacoes
-        } = request.only([ 'data', 'horario', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
+            nome, data, horario, tipo, sala_id, instituto, ano_id, avaliacoes
+        } = request.only([ 'nome', 'data', 'horario', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
 
         //return
 
         try {
             //const trx = await Database.beginTransaction()
             const sessao = await Sessao.create({
-                data, horario, tipo, sala_id, instituto, ano_id
+                nome, data, horario, tipo, sala_id, instituto, ano_id
             }/*, trx*/)
-            // for (let item of avaliacoes) {
-            //     const avaliacao = await Avaliacao.create({
-            //         sessao_id: sessao.id,
-            //         trabalho_id: item.trabalho_id,
-            //     }, trx)
-            //     await AvaliadorAvaliacao.create({
-            //         avaliador_id: item.avaliador1_id,
-            //         avaliacao_id: avaliacao.id,
-            //     }, trx)
-            //     await AvaliadorAvaliacao.create({
-            //         avaliador_id: item.avaliador2_id,
-            //         avaliacao_id: avaliacao.id,
-            //     }, trx)
-            // }
-            await trx.commit()
+
+            //await trx.commit()
+            return response
+            .status(200)
+            .send({ success: 'Sessão registrada com sucesso', sessao_id: sessao.id  })
 
         } catch (error) {
             //await trx.rollback()
@@ -71,30 +61,29 @@ class SessaoController {
             return response.status(500).send({ error: error })
         }
         //Se chegou até aqui então o Trabalho foi adicionado com sucesso
-        return response
-            .status(200)
-            .send({ success: 'Sessão registrada com sucesso' })
+
     }
 
     //UPDATE
     async update({ params, request, response }) {
         console.log('|********************************|\n\n')
         console.log(
-            request.only([ 'data', 'horario', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
+            request.only([ 'nome', 'data', 'horario', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
         )
         const {
-            data, horario, tipo, sala_id, instituto, ano_id, avaliacoes
-        } = request.only([ 'data', 'horario', 'tipo', 'sala_id', 'instituto', 'ano_id'])
+            nome, instituto, ano_id
+        } = request.only([ 'nome', 'instituto', 'ano_id'])
 
         
         try {
             //beginTransaction
             //const trx = await Database.beginTransaction()
             var sessao = await Sessao.findOrFail(params.id)
-            sessao.data = data
-            sessao.horario = horario
-            sessao.tipo = tipo
-            sessao.sala_id = sala_id
+            sessao.nome = nome
+            //sessao.data = data
+            //sessao.horario = horario
+            //sessao.tipo = tipo
+            //sessao.sala_id = sala_id
             sessao.instituto = instituto
             sessao.ano_id = ano_id
             sessao.save(/*trx*/)

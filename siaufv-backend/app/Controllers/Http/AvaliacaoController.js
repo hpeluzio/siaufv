@@ -46,7 +46,7 @@ class AvaliacaoController {
     }    
 
     for(let index in avaliacoes){  
-      avaliacoes[index].trabalho.autores = 
+      avaliacoes[index].trabalho[0].autores = 
       await Database
         .select('trabalho_autores.*')
         .table('trabalho_autores')

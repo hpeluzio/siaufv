@@ -179,19 +179,42 @@
         class="elevation-1"
       >
         <template slot="items" slot-scope="props">
-          <td class="text-xs-right">{{ props.item.trabalho_id }}</td>
-          <td class="text-xs-right">{{ props.item.nome }}</td>
+          <td class="text-xs-left">{{ props.item.trabalho_id }}</td>
+          <td class="text-xs-left">{{ props.item.nome }}</td>
 
           <!-- AUTOR -->
-          <td class="text-xs-right">
+          <td class="text-xs-left">
             <span v-for="(autor, index) in props.item.autores" :key="index">{{ autor.autor }}</span>
           </td>
           <!-- AUTOR -->
-          <td class="text-xs-right">{{ props.item.orientador }}</td>
-          <td class="text-xs-right">{{ props.item.modalidade }}</td>
-          <td class="text-xs-right">{{ props.item.instituto }}</td>
-          <td class="text-xs-right">{{ props.item.area }}</td>
-          <td class="text-xs-right">{{ props.item.ano }}</td>
+          <td class="text-xs-left">{{ props.item.orientador }}</td>
+          <td class="text-xs-left">{{ props.item.modalidade }}</td>
+          <td class="text-xs-left">{{ props.item.instituto }}</td>
+          <td class="text-xs-left">{{ props.item.area }}</td>
+          <td class="text-xs-left">{{ props.item.ano }}</td>
+          <!-- <td class="text-xs-left">{{ props.item.sessao.id }}</td> -->
+          <!-- <span           
+            v-for="(sessoes, i) in props.item.sessao"
+            v-bind:key="i">
+            <td class="text-xs-left" v-if="sessoes.id.length === 0">
+              <div>{{ sem_sessao }}</div>
+            </td>
+            <td class="text-xs-left" v-else>
+              {{ sessoes.id }}
+            </td>
+          </span> -->
+
+          <td
+            class="text-xs-left"
+            v-for="(sessoes, i) in props.item.sessao"
+            v-bind:key="i"
+          ><span v-if="sessoes.id.length === 0">
+             {{ sem_sessao }}
+          </span>
+          <span v-else>
+            {{ sessoes.data }} 
+          </span>
+          </td>          
           <td class="justify-center layout px-0">
             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
             <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -217,6 +240,7 @@ export default {
     submitted: false,
     dialog: false,
     search: "",
+    sem_sessao: 'Sem sessão',
     anos: [],
     find: [],
     headers: [
@@ -228,6 +252,7 @@ export default {
       { text: "Instituto", value: "instituto" },
       { text: "Área", value: "area" },
       { text: "Ano", value: "ano" },
+      { text: "Sessão", value: "sessao" },
       { text: "Actions", value: "name", sortable: false }
     ],
     trabalhos: [],
@@ -304,7 +329,14 @@ export default {
         .then(response => {
           // Pegando os trabalhos e os autores desses trabalhos
           this.trabalhos = response.data//.trabalhos;
-          console.log(this.trabalhos)
+          // this.trabalhos.map((item, index) => {
+          //   if(item === [])
+          //     this.trabalhos[index].sessao = { data: 'Sem sessão'}
+
+          //   //return item
+          // })
+
+          console.log('this.trabalhos: ',this.trabalhos)
         })
         .catch(error => {
           console.log(error);
