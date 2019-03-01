@@ -3,14 +3,10 @@
 class AvaliacaoStore {
   get rules() {
     return {
-      secao_id: 'required',
-      // data: 'required',
-      // horario: 'required',
-      // tipo: 'required',
+      sessao_id: 'required',
       trabalho_id: 'required|unique:avaliacoes,trabalho_id',
-      // sala_id: 'required',
-      avaliadores_nome: 'required',
-      instituto: 'required'
+      avaliador1_id: 'required',
+      avaliador2_id: 'required',
     }
   }
 

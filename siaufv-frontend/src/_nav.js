@@ -57,16 +57,16 @@ export default {
         attributes: {}
       }
     },
-    {
-      name: 'Avaliações',
-      url: '/avaliacoes',
-      icon: 'icon-bubbles'
-    },
+    // {
+    //   name: 'Avaliações',
+    //   url: '/avaliacoes',
+    //   icon: 'icon-bubbles'
+    // },
 
     {
       name: 'Sessões de Avaliação',
       url: '/',
-      icon: 'icon-note',
+      icon: 'icon-bubbles',
       children: [
         {
           name: 'Orais',

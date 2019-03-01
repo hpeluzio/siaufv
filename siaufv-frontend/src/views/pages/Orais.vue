@@ -15,7 +15,7 @@
             single-line
             hide-details
           ></v-text-field>
-          <v-btn class="primary" color="green" @click="cadastrarSessaoOnOf(true)">Adicionar Seção</v-btn>
+          <v-btn class="primary" color="green" @click="estadoCadastroDeSessao()">Adicionar Seção</v-btn>
         </v-toolbar>
 
         <!-- Data Table de seções-->
@@ -430,7 +430,7 @@
             </v-form>
             <v-layout>
             <v-spacer></v-spacer>
-                  <v-btn class="primary justify-right" color="red" @click="cadastrarSessaoOnOf(false)">Cancelar</v-btn>
+                  <v-btn class="primary justify-right" color="red" @click="estadoListagemSessao()">Cancelar</v-btn>
                   <v-btn
                     class="primary"
                     color="blue"
@@ -467,7 +467,6 @@ export default {
         anos: [],
         avaliacoesDatatable: [],
         editedSessaoIndex: -1,
-        //avaliacaoFormEnable: false,
         sessaoHeaders: [
             { text: 'Data', value: 'data' },
             { text: 'Horário', value: 'horario' },
@@ -544,6 +543,8 @@ export default {
         this.setArrayInstitutos()
         //Pegando todos os anos
         this.getArrayAxiosAnos()
+        //Atualizando avaliacaoDatatable
+        this.setArrayAvaliacaoDatatable()
     },
 
     computed: {
@@ -566,8 +567,6 @@ export default {
             return false
         },
         avaliacaoFormEnable() {
-            //console.log('avaliacaoFormEnable ', avaliacaoFormEnable)
-            console.log('this.editedSessaoIndex', this.editedSessaoIndex)
             if (this.editedSessaoIndex > -1 ) return true
             return false
         },             
@@ -580,17 +579,13 @@ export default {
                 this.getArrayAxiosAvaliacoes()
                 this.getArrayAxiosSessoes()
                 this.getArrayAxiosTrabalhos()
-
                 this.editedSessao = Object.assign({}, this.defaultSessao)
+                this.editedAvaliacao = Object.assign({}, this.defaultSessao)
                 this.avaliacoesDatatable = []
-            }
+            } 
+            if (val === true)
+              this.setArrayAvaliacaoDatatable()
         },
-        // editedSessaoIndex(val){
-        //   if(val > -1)
-        //     this.avaliacaoFormEnable = true
-        //   if (val = -1)
-        //     this.avaliacaoFormEnable = false
-        // }
     },
 
     filters: {
@@ -638,13 +633,44 @@ export default {
         updateComponent() {
           this.getArrayAxiosSessoes()
           this.getArrayAxiosAvaliacoes()
-          cadastrarSessaoOnOf(false)
+          this.setArrayAvaliacaoDatatable()
         },
-        cadastrarSessaoOnOf(value) {
-            this.cadastrarSessao = value
-            this.editedSessaoIndex = -1
+        estadoListagemSessao() {
+          this.cadastrarSessao = false
+          this.editedSessaoIndex = -1
+        },
+        estadoCadastroDeSessao() {
+          this.cadastrarSessao = true
+          this.editedSessaoIndex = -1
+        },
+        setArrayAvaliacaoDatatable() {
+          if (this.editedSessaoIndex > -1){
+            //Populando os campos na avaliacoesDatatable
+            this.avaliacoes.map(avaliacao => {
+              if(avaliacao.sessao_id === this.editedSessao.id) {
+                console.log('avaliacao_id:', avaliacao.id, 'this.editedSessao.id: ', this.editedSessao.id )
+                this.avaliacoesDatatable.push({
+                  id: avaliacao.id,
+                  trabalho_id: avaliacao.trabalho_id,              
+                  avaliador1_id: avaliacao.avaliador1,
+                  avaliador2_id: avaliacao.avaliador2,
+                  trabalho_nome: avaliacao.trabalho_nome,
+                  orientador: avaliacao.orientador,
+                  avaliador1_nome: avaliacao.avaliadores[0].nome,
+                  avaliador2_nome: avaliacao.avaliadores[1].nome,
+                  trabalho_autores: avaliacao.autores
+                })
+              }
+            })            
+          }
+          else{
+            this.getArrayAxiosAvaliacoes()
+            this.avaliacoesDatatable = []
+          }
+          //console.log('avaliacoesDatatable: ', this.avaliacoesDatatable)
         },
         adicionarAvaliacao() {
+
           let id = this.avaliacoesDatatable.length
           let avaliador1_nome, avaliador2_nome, trabalho_nome, orientador, autores = ''
 
@@ -818,25 +844,21 @@ export default {
 
         //Checar o formulário em busca de erros
         validateForm(scope) {
-            // console.log('SCOPE: ', scope)
-            // console.log('errors: ', this.errors)
             if( scope === 'form-sessao' ){
               this.$validator.validateAll(scope).then(result => {
                   if (result) {
-                      this.save()
+                      this.saveSessao()
                       this.$validator.reset()
-                      this.cadastrarSessao = false                 
                   }
               })
             }
             else if ( scope === 'form-avaliacao' ){
               this.$validator.validateAll(scope).then(result => {
                 if (result) {
-                    this.adicionarAvaliacao()
-                    this.editedAvaliacao = this.defaultAvaliacao
+                    this.saveAvaliacao()
                     this.$validator.reset()
                 }
-            })
+              })
             }
         },
 
@@ -847,131 +869,138 @@ export default {
         editSessao(item) {
             this.editedSessaoIndex = this.sessoes.indexOf(item)
             this.editedSessao = Object.assign({}, item)
-            this.avaliacoes.filter(avaliacao => {
-              //console.log('AVALIACAO:', avaliacao)
-              if(avaliacao.id){
-                if(this.editedSessao.id === avaliacao.sessao_id){
-                  this.avaliacoesDatatable.push({
-                    id: avaliacao.id,
-                    trabalho_id: avaliacao.trabalho_id,              
-                    avaliador1_id: avaliacao.avaliadores[0].id,
-                    avaliador2_id: avaliacao.avaliadores[1].id,
-                    trabalho_nome: avaliacao.trabalho[0].nome,
-                    orientador: avaliacao.trabalho[0].orientador,
-                    avaliador1_nome: avaliacao.avaliadores[0].nome,
-                    avaliador2_nome: avaliacao.avaliadores[1].nome,
-                    trabalho_autores: avaliacao.avaliadores[1].autores,
-                  })
-                }
-              }
-
-            })
-            //console.log('avaliacoesDatatable: ', this.avaliacoesDatatable)
-            // console.log('item: ', item)
-            // console.log('editedSessao: ', this.editedSessao)
             this.cadastrarSessao = true
         },
 
-        deleteAvaliacao(item) {
-            this.avaliacoesDatatable.map((avaliacao, index) => {
-              if(avaliacao.id === item.id)
-                this.avaliacoesDatatable.splice(index, index+1)
-            })
-            //console.log('avaliacoesDatatable: ', this.avaliacoesDatatable)
-        },
-
         deleteSessao(item) {
-            //Setando algumas variaveis para uso do delete
-            const index = this.sessoes.indexOf(item)
+          //Setando algumas variaveis para uso do delete
+          const index = this.sessoes.indexOf(item)
 
-            // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
-            confirm('Está certo que deseja deletar este item?') &&
-                axios_instance({
-                    method: 'delete',
-                    url: '/sessao/' + item.id + ''
-                })
-                .then(response => {
-                    this.updateComponent()
-                })
-                .catch(error => {
-                    this.errors.add({
-                        field: 'defaulterror2',
-                        msg: 'Erro ao deletar item'
-                    })
-                })
-
+          // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
+          confirm('Está certo que deseja deletar este item?') &&
+          axios_instance({
+              method: 'delete',
+              url: '/sessao/' + item.id + ''
+          })
+          .then(response => {
+              //alert('Sessão deletada.')
+              this.updateComponent()
+              this.estadoListagemSessao()
+          })
+          .catch(error => {
+              alert('Algum erro aconteceu! \n' + error)
+              this.updateComponent()
+              this.estadoListagemSessao()
+          })
         },
 
-        save() {
-            if (this.editedSessaoIndex > -1 && this.cadastrarSessao == true) {
-                // Se this.editedSessaoIndex  > -1 entao estamos na edição
-                //Editando item chama-se o metodo put na rota avaliacoes e irá para update
-                axios_instance({
-                    method: 'put',
-                    url: '/sessao/' + this.editedSessao.id + '',
-                    data: {
-                        id: this.editedSessao.id,
-                        data: moment(String(this.editedSessao.data)).format(
-                            'YYYY-MM-DD'
-                        ),
-                        horario: this.editedSessao.horario,
-                        sala_id: this.editedSessao.sala_id,
-                        instituto: this.editedSessao.instituto,
-                        ano_id: this.editedSessao.ano_id,
-                        tipo: 0,
+        saveSessao() {
+          if (this.editedSessaoIndex > -1 && this.cadastrarSessao == true) {
+              // Se this.editedSessaoIndex  > -1 entao estamos na edição
+              //Editando item chama-se o metodo put na rota avaliacoes e irá para update
+            axios_instance({
+              method: 'put',
+              url: '/sessao/' + this.editedSessao.id + '',
+              data: {
+                  id: this.editedSessao.id,
+                  data: moment(String(this.editedSessao.data)).format(
+                      'YYYY-MM-DD'
+                  ),
+                  horario: this.editedSessao.horario,
+                  sala_id: this.editedSessao.sala_id,
+                  instituto: this.editedSessao.instituto,
+                  ano_id: this.editedSessao.ano_id,
+                  tipo: 0,
+              }
+            })
+            .then(response => {
+                //alert('Sessão editada.')
+                this.updateComponent()
+                this.estadoCadastroDeSessao()
+            })
+            .catch(error => {
+                console.log(error)
+                alert('Algum erro aconteceu! \n' + error)
+                this.updateComponent()
+                this.estadoCadastroDeSessao()
+            })
+          } else {
+              // Se this.editedSessaoIndex  == -1 entao estamos na inserção
+            axios_instance({
+              method: 'post',
+              url: '/sessao',
+              data: {
+                  id: this.editedSessao.id,
+                  data: moment(String(this.editedSessao.data)).format(
+                      'YYYY-MM-DD'
+                  ),
+                  horario: this.editedSessao.horario,
+                  sala_id: this.editedSessao.sala_id,
+                  instituto: this.editedSessao.instituto,
+                  ano_id: this.editedSessao.ano_id,
+                  tipo: 0,
+              }
+            })
+            .then(response => {
+                //alert('Sessão adicionada.')
+                this.updateComponent()
+                this.estadoListagemSessao()
+            })
+            .catch(error => {
+                console.log(error)
+                alert('Algum erro aconteceu! \n' + error)
+                this.updateComponent()
+                this.estadoListagemSessao()
+            })
+          }
+        },
 
-                        //Avaliacoes
-                        avaliacoes: this.avaliacoesDatatable,
+        saveAvaliacao() {
+          axios_instance({
+              method: 'post',
+              url: '/avaliacao',
+              data: {
+                  //id: this.editedAvaliacao.id,
+                  trabalho_id: this.editedAvaliacao.trabalho_id,              
+                  sessao_id: this.editedSessao.id,
+                  avaliador1_id: this.editedAvaliacao.avaliador1,
+                  avaliador2_id: this.editedAvaliacao.avaliador2
+              }
+          })
+          .then(response => {
+              //alert('Avaliação adicionada.')
+              this.updateComponent()
+              this.estadoCadastroDeSessao()
+          })
+          .catch(error => {
+              console.log(error)
+              alert('Algum erro aconteceu! \n' + error)
+              this.updateComponent()
+              this.estadoCadastroDeSessao()
+          })
+        },
 
-                    }
-                })
-                    .then(response => {
-                        alert('Sessão editada.')
-                        this.updateComponent()
-                    })
-                    .catch(error => {
-                        this.errors.clear() //Limpar os erros antes de setar novos erros
-                        if (error.response.data.error[0].message)
-                            this.errors.add({
-                                field: 'defaulterror',
-                                msg: error.response.data.error[0].message
-                            })
-                        else
-                            this.errors.add({
-                                field: 'defaulterror',
-                                msg: error.response.data.error.message
-                            })
-                    })
-            } else {
-                // Se this.editedSessaoIndex  == -1 entao estamos na inserção
-                axios_instance({
-                    method: 'post',
-                    url: '/sessao',
-                    data: {
-                        id: this.editedSessao.id,
-                        data: moment(String(this.editedSessao.data)).format(
-                            'YYYY-MM-DD'
-                        ),
-                        horario: this.editedSessao.horario,
-                        sala_id: this.editedSessao.sala_id,
-                        instituto: this.editedSessao.instituto,
-                        ano_id: this.editedSessao.ano_id,
-                        tipo: 0,
+        deleteAvaliacao(item) {
+          //Setando algumas variaveis para uso do delete
+          const index = this.avaliacoesDatatable.indexOf(item)
 
-                        //Avaliacoes
-                        avaliacoes: this.avaliacoesDatatable
-                    }
-                })
-                    .then(response => {
-                        //Inclui o item no array de item do front end
-                        alert('Sessão adicionada.')
-                        this.updateComponent()
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            }
-        }
+          // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
+          confirm('Está certo que deseja deletar este item?') &&
+          axios_instance({
+              method: 'delete',
+              url: '/avaliacao/' + item.id + ''
+          })
+          .then(response => {
+              //alert('Avaliação deletada.')
+              this.updateComponent()
+              this.estadoCadastroDeSessao()
+          })
+          .catch(error => {
+              alert('Algum erro aconteceu! \n' + error)
+              this.updateComponent()
+              this.estadoCadastroDeSessao()
+          })
+        },        
     }
 }
 </script>

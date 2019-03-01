@@ -57,22 +57,19 @@ class AvaliacaoController {
   }
 
   async store ({ request, response }) {
-    console.log(request.only([ 'sessao_id','trabalho_id','avaliadores' ]))
-    const { sessao_id, trabalho_id, avaliadores } 
+    console.log(request.only([ 'sessao_id', 'trabalho_id', 'avaliador1_id', 'avaliador2_id' ]))
+    const { sessao_id, trabalho_id, avaliador1_id, avaliador2_id } 
         = request.only([
-           'sessao_id', 'trabalho_id', 'avaliadores' ])
+           'sessao_id', 'trabalho_id', 'avaliador1_id', 'avaliador2_id' ])
 
-    console.log('sessao_id:', sessao_id, '\ntrabalho_id: ', '\ntrabalho_id: ', avaliadores)
-
-    //TRY
     try {
-      
+      //Criando avaliacao
       const avaliacao = await Avaliacao.create({ sessao_id, trabalho_id })
 
-      //Inserindo os avaliadores na avaliação
-      for(let avaliador of avaliadores){
-        await AvaliadorAvaliacao.create({ 'avaliador_id': avaliador.avaliadores_id, 'avaliacao_id':  avaliacao.id })
-      }  
+      //Adicionando os avaliadores
+      await AvaliadorAvaliacao.create({ 'avaliador_id': avaliador1_id, 'avaliacao_id':  avaliacao.id })
+      await AvaliadorAvaliacao.create({ 'avaliador_id': avaliador2_id, 'avaliacao_id':  avaliacao.id })
+  
     } catch (error) {
       console.log(error)
       return response.status(500).send({ "error": error });
