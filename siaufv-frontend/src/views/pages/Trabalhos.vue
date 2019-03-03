@@ -192,29 +192,9 @@
           <td class="text-xs-left">{{ props.item.instituto }}</td>
           <td class="text-xs-left">{{ props.item.area }}</td>
           <td class="text-xs-left">{{ props.item.ano }}</td>
-          <!-- <td class="text-xs-left">{{ props.item.sessao.id }}</td> -->
-          <!-- <span           
-            v-for="(sessoes, i) in props.item.sessao"
-            v-bind:key="i">
-            <td class="text-xs-left" v-if="sessoes.id.length === 0">
-              <div>{{ sem_sessao }}</div>
-            </td>
-            <td class="text-xs-left" v-else>
-              {{ sessoes.id }}
-            </td>
-          </span> -->
-
-          <td
-            class="text-xs-left"
-            v-for="(sessoes, i) in props.item.sessao"
-            v-bind:key="i"
-          ><span v-if="sessoes.id.length === 0">
-             {{ sem_sessao }}
-          </span>
-          <span v-else>
-            {{ sessoes.data }} 
-          </span>
-          </td>          
+          <td class="text-xs-left">
+            <span style="color: blue" v-for="(sessao, index) in props.item.sessao" :key="index">{{ sessao.instituto }} {{ sessao.nome }} </span>
+          </td>
           <td class="justify-center layout px-0">
             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
             <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -233,7 +213,7 @@
 
 <script>
 import axios_instance from "../../axios";
-import normaliza from "../../normaliza";
+const helpers = require('../../helpers')
 
 export default {
   data: () => ({
@@ -336,7 +316,7 @@ export default {
           //   //return item
           // })
 
-          console.log('this.trabalhos: ',this.trabalhos)
+          //console.log('this.trabalhos: ',this.trabalhos)
         })
         .catch(error => {
           console.log(error);
@@ -369,18 +349,18 @@ export default {
     customFilter(items, search, filter, headers) {
       //Normalizando a search
       if (search.trim() === "") return items;
-      search = normaliza(search).trim();
+      search = helpers.normaliza(search).trim();
 
       return items.filter(item => {
-        if (normaliza(item.trabalho_id).includes(search)) return item;
-        if (normaliza(item.ano).includes(search)) return item;
-        if (normaliza(item.nome).includes(search)) return item;
+        if (helpers.normaliza(item.trabalho_id).includes(search)) return item;
+        if (helpers.normaliza(item.ano).includes(search)) return item;
+        if (helpers.normaliza(item.nome).includes(search)) return item;
         for (var autors of item.autores)
-          if (normaliza(autors.autor).includes(search)) return item;
-        if (normaliza(item.orientador).includes(search)) return item;
-        if (normaliza(item.modalidade).includes(search)) return item;
-        if (normaliza(item.instituto).includes(search)) return item;
-        if (normaliza(item.area).includes(search)) return item;
+          if (helpers.normaliza(autors.autor).includes(search)) return item;
+        if (helpers.normaliza(item.orientador).includes(search)) return item;
+        if (helpers.normaliza(item.modalidade).includes(search)) return item;
+        if (helpers.normaliza(item.instituto).includes(search)) return item;
+        if (helpers.normaliza(item.area).includes(search)) return item;
         else return false;
       });
     },

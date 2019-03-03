@@ -68,18 +68,18 @@
                 <v-card-title>
                   <v-icon large color="green darken-2">business</v-icon>
                   <span class="headline">
-                    <h5>- SESSÃO DE AVALIAÇÃO ORAL</h5>
+                    <h5> Cadastro de sessão de avaliação oral</h5>
                   </span>
                 </v-card-title>
 
                 <v-card-text>
                   <!-- DATA -->
-                  <v-container grid-list-xs>
+                  <v-container grid-list-md border>
                     <v-layout wrap>
  
-                      <v-flex xs12 sm6 md4>
+                      <v-flex xs12 sm6 md3>
                         <v-menu
-                          v-model="menu"
+                          v-model="menudata"
                           :disabled="avaliacaoCadastroForm"
                           :close-on-content-click="false"
                           full-width
@@ -103,7 +103,7 @@
                             no-title
                             scrollable
                             v-model="editedSessao.data"
-                            @change="menu = false"
+                            @change="menudata = false"
                           ></v-date-picker>
                         </v-menu>
                         <div
@@ -112,7 +112,7 @@
                         >{{ errors.first('form-sessao.data') }}</div>
                       </v-flex>
                       <!-- Horario -->
-                      <v-flex xs12 sm6 md4>
+                      <v-flex xs12 sm6 md3>
                         <v-select
                           :disabled="avaliacaoCadastroForm"
                           :items="horarios"
@@ -127,15 +127,35 @@
                           :class="{ 'is-invalid': errors.has('form-sessao.horario')}"
                         ></v-select>
                         <div
-                          v-if="errors.has('form-sessao.sala')"
+                          v-if="errors.has('form-sessao.horario')"
                           style="color: red"
-                        >{{ errors.first('form-sessao.sala') }}</div>
+                        >{{ errors.first('form-sessao.horario') }}</div>                   
                       </v-flex>
-                      <!-- Salas -->
-                      <v-flex xs12 sm6 md4>
+                      <!-- Horario Final -->
+                      <v-flex xs12 sm6 md3>
                         <v-select
                           :disabled="avaliacaoCadastroForm"
-                          :items="salas"
+                          :items="horariosFimDisponiveis"
+                          item-value="horario"
+                          item-text="horario"
+                          outline
+                          v-model="editedSessao.horariofim"
+                          label="Horário de Término"
+                          prepend-icon="access_time"
+                          data-vv-name="horariofim"
+                          v-validate="'required'"
+                          :class="{ 'is-invalid': errors.has('form-sessao.horariofim')}"
+                        ></v-select>                       
+                        <div
+                          v-if="errors.has('form-sessao.horariofim')"
+                          style="color: red"
+                        >{{ errors.first('form-sessao.horariofim') }}</div>
+                      </v-flex>                      
+                      <!-- Salas -->
+                      <v-flex xs12 sm6 md3>
+                        <v-select
+                          :disabled="avaliacaoCadastroForm"
+                          :items="salasPorDataHorario"
                           item-value="id"
                           item-text="nome"
                           outline
@@ -470,6 +490,7 @@
 <script>
 import axios_instance from '../../axios'
 import moment from 'moment'
+const helpers = require('../../helpers')
 
 export default {
     data: () => ({
@@ -478,7 +499,9 @@ export default {
         filtroInstitutoTrabalho: '',
         filtroInstitutoAvaliador1: '',
         filtroInstitutoAvaliador2: '',
-        menu: false,
+        menudata: false,
+        menuhorarioinicio: false,
+        menuhorariofim: false,
         search: '',
         trabalhos: [],
         trabalhos_nao_cadastrados: [],
@@ -529,6 +552,7 @@ export default {
             nome: '',
             data: '',
             horario: '',
+            horariofim: '',
             tipo: '',
             instituto: '',
             ano_id: '',
@@ -539,6 +563,7 @@ export default {
             nome: '',
             data: '',
             horario: '',
+            horariofim: '',
             tipo: '',
             instituto: '',
             ano_id: '',
@@ -551,27 +576,72 @@ export default {
     }),
 
     created() {
-        //Mudando o locale do Vuetify
-        this.changeLocale()
-        //Pegando todos sessoes
-        this.getArrayAxiosSessoes()
-        //Pegando todos avaliacoes
-        this.getArrayAxiosAvaliacoes()
-        //Pegando todos os Trabalhos
-        this.getArrayAxiosTrabalhos()
-        //Pegando todas sa salas
-        this.getArrayAxiosSalas()
-        //Pegando todos os avaliadores
-        this.getArrayAxiosAvaliadoresAtivos()
-        //Setando Horarios
-        this.setArrayHorarios()
-        //Setando Institutos
-        this.setArrayInstitutos()
-        //Pegando todos os anos
-        this.getArrayAxiosAnos()
+
+      var timeini1 = '08:00:00'
+      var timeend1 = '09:00:00'
+      var timeini2 = '07:00:00'
+      var timeend2 = '08:00:00' 
+      
+      //console.log('checkRangeIntervalHorario : ', helpers.checkRangeIntervalHorario(timeini1, timeend1, timeini2, timeend2))
+      //console.log('normaliza : ', helpers.normaliza('timeini1, timeend1, %$¨# timeini2, timeend2'))
+      //console.log('CHECK INTERVAL', helpers.checkRangeIntervalHorario(timeini1, timeend1, timeini2, timeend2))
+
+      //console.log('Soma dois horarios: ','08:00:00' + '01:40:00')
+      // var d = new Date()
+      // console.log('Date: ',d.getFullYear())
+      
+      var d = new Date(0, 0, 0, 10, 33, 30);
+      console.log('Date: ', d.getMinutes())
+      d.setMinutes(d.getMinutes() + 2)
+      console.log('Date: ', d.getMinutes())
+      //var e = new Date(1, 0, 0, 10, 33, 30);
+      //console.log('d < e', d < e)
+
+
+      //Mudando o locale do Vuetify
+      this.changeLocale()
+      //Pegando todos sessoes
+      this.getArrayAxiosSessoes()
+      //Pegando todos avaliacoes
+      this.getArrayAxiosAvaliacoes()
+      //Pegando todos os Trabalhos
+      this.getArrayAxiosTrabalhos()
+      //Pegando todas sa salas
+      this.getArrayAxiosSalas()
+      //Pegando todos os avaliadores
+      this.getArrayAxiosAvaliadoresAtivos()
+      //Setando Horarios
+      this.setArrayHorarios()
+      //Setando Institutos
+      this.setArrayInstitutos()
+      //Pegando todos os anos
+      this.getArrayAxiosAnos()
     },
 
     computed: {
+        salasPorDataHorario(){
+          //Se nao existe sessao entao retornar todas as salas
+          if(this.sessoes.length === 0)
+            return this.salas
+
+          var filtrarEstaSala = false
+
+          var salasVazias = this.salas.filter( sala => {
+            filtrarEstaSala = false
+            this.sessoes.map( sessao => {
+              if(moment(sessao.data).format('DD/MM/YYYY') === moment(this.editedSessao.data).format('DD/MM/YYYY') 
+                  && helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim)//sessao.horario === this.editedSessao.horario
+                    && sessao.sala_nome === sala.nome)
+                      filtrarEstaSala = true
+            })
+            if(filtrarEstaSala === false)
+              return sala
+          })
+
+          console.log('salas:', this.salas)
+          console.log('salasVazias:', salasVazias)
+          return salasVazias
+        },
         computedDateFormattedMomentjs() {
             return this.editedSessao.data
                 ? moment(this.editedSessao.data).format('DD/MM/YYYY')
@@ -605,16 +675,13 @@ export default {
         },
         avaliacoesDaSessao() {
             var avaliacoesDaSessaoAtual = []
-
             //Populando avaliacoes datatable com seus respectivos atributos
             this.avaliacoes.map(avaliacao => {
                 if (avaliacao.sessao_id === this.editedSessao.id) {
                     //console.log('avaliacao_id:', avaliacao.id, 'this.editedSessao.id: ', this.editedSessao.id )
-
                     var autores = avaliacao.trabalho[0].autores.map(item => {
                         return item.autor
                     })
-
                     avaliacoesDaSessaoAtual.push({
                         id: avaliacao.id,
                         trabalho_id: avaliacao.trabalho_id,
@@ -628,8 +695,15 @@ export default {
                     })
                 }
             })
-
+            //Retornando as avaliacoes da sessão a ser editada
             return avaliacoesDaSessaoAtual
+        },
+        horariosFimDisponiveis() {
+          var horariosFim = this.horarios.filter( item => {
+            if( item.horario > this.editedSessao.horario)
+              return item.horario
+          })
+          return horariosFim
         }
     },
 
@@ -717,7 +791,7 @@ export default {
             })
                 .then(response => {
                     this.avaliacoes = response.data
-                    console.log('AVALIACOES: ', this.avaliacoes)
+                    //console.log('AVALIACOES: ', this.avaliacoes)
                     // this.avaliacoes.map(item => {
                     //     item.horario =
                     //         item.horario.split(':')[0] +
@@ -741,15 +815,15 @@ export default {
                 .then(response => {
                     this.sessoes = response.data
                     //console.log('SESSOES: ', this.sessoes)
-                    this.sessoes.map(item => {
-                        item.horario =
-                            item.horario.split(':')[0] +
-                            ':' +
-                            item.horario.split(':')[1]
-                        item.data = moment(String(item.data)).format(
-                            'YYYY-MM-DD'
-                        )
-                    })
+                    // this.sessoes.map(item => {
+                    //     item.horario =
+                    //         item.horario.split(':')[0] +
+                    //         ':' +
+                    //         item.horario.split(':')[1]
+                    //     item.data = moment(String(item.data)).format(
+                    //         'YYYY-MM-DD'
+                    //     )
+                    // })
                 })
                 .catch(error => {
                     console.log(error)
@@ -802,25 +876,37 @@ export default {
         },
         setArrayHorarios() {
             this.horarios = [
-                { horario: '08:00' },
-                { horario: '10:00' },
-                { horario: '12:00' },
-                { horario: '14:00' },
-                { horario: '16:00' },
-                { horario: '18:00' },
-                { horario: '19:00' },
-                { horario: '20:00' },
-                { horario: '21:00' }
+                { horario: '08:00:00' },
+                { horario: '10:00:00' },
+                { horario: '12:00:00' },
+                { horario: '14:00:00' },
+                { horario: '16:00:00' },
+                { horario: '18:00:00' },
+                { horario: '19:00:00' },
+                { horario: '20:00:00' },
+                { horario: '21:00:00' }
             ]
         },
         setArrayInstitutos() {
-            this.institutos = [
-                { instituto: '' },
-                { instituto: 'IAP' },
-                { instituto: 'IBP' },
-                { instituto: 'IEP' },
-                { instituto: 'IHP' }
-            ]
+            //Inicializando instituto com '' para zerar o filtro das selections
+            this.institutos.push(
+                { instituto: '' }
+            )
+
+            //Pegando todos os anos
+            axios_instance({
+                method: 'get',
+                url: '/instituto'
+            })
+                .then(response => {
+                    for (let i in response.data)
+                        this.institutos.push({
+                            instituto: response.data[i].instituto
+                        })
+                })
+                .catch(error => {
+                    console.log(error)
+                })            
         },
         getArrayAxiosAnos() {
             //Pegando todos os anos
@@ -914,6 +1000,7 @@ export default {
                             'YYYY-MM-DD'
                         ),
                         horario: this.editedSessao.horario,
+                        horariofim: this.editedSessao.horariofim,
                         sala_id: this.editedSessao.sala_id,
                         instituto: this.editedSessao.instituto,
                         ano_id: this.editedSessao.ano_id,
@@ -943,6 +1030,7 @@ export default {
                             'YYYY-MM-DD'
                         ),
                         horario: this.editedSessao.horario,
+                        horariofim: this.editedSessao.horariofim,
                         sala_id: this.editedSessao.sala_id,
                         instituto: this.editedSessao.instituto,
                         ano_id: this.editedSessao.ano_id,
@@ -951,6 +1039,10 @@ export default {
                 })
                     .then(response => {
                         console.log("response :", response)
+                        console.log("this.editedSessaoIndex: ", this.editedSessaoIndex)
+                        console.log("sessao.lenght: ", this.sessoes.length)
+                        this.editedSessaoIndex = this.sessoes.length
+                        
                         this.editedSessao.id = response.data.sessao_id
                         alert('Sessão criada.')
                         this.updateComponentData()

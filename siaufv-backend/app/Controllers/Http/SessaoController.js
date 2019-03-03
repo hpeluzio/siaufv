@@ -36,18 +36,18 @@ class SessaoController {
     //STORE
     async store({ request, response }) {
         console.log(
-            request.only([ 'nome', 'data', 'horario', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
+            request.only([ 'nome', 'data', 'horario', 'horariofim', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
         )
         const {
-            nome, data, horario, tipo, sala_id, instituto, ano_id, avaliacoes
-        } = request.only([ 'nome', 'data', 'horario', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
+            nome, data, horario, horariofim, tipo, sala_id, instituto, ano_id, avaliacoes
+        } = request.only([ 'nome', 'data', 'horario', 'horariofim', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
 
         //return
 
         try {
             //const trx = await Database.beginTransaction()
             const sessao = await Sessao.create({
-                nome, data, horario, tipo, sala_id, instituto, ano_id
+                nome, data, horario, horariofim, tipo, sala_id, instituto, ano_id
             }/*, trx*/)
 
             //await trx.commit()
@@ -82,6 +82,7 @@ class SessaoController {
             sessao.nome = nome
             //sessao.data = data
             //sessao.horario = horario
+            //sessao.horariofim = horariofim
             //sessao.tipo = tipo
             //sessao.sala_id = sala_id
             sessao.instituto = instituto

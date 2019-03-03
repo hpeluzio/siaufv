@@ -6,6 +6,7 @@ class SessaoUpdate {
       nome: 'required',
       //data: 'required',
       //horario: 'required',
+      //horariofim: 'required',
       //tipo: 'required',
       instituto: 'required',
       ano_id: 'required',

@@ -22,13 +22,16 @@ class TrabalhoController {
         .where('trabalho_autores.trabalho_id', '=', trabalhos[index].trabalho_id )
     }
 
-    for(let index in trabalhos){  
-      trabalhos[index].sessao = 
+    for(let trabalho of trabalhos){  
+      trabalho.sessao = 
       await Database
         .select('*')
         .from('sessoes')
-        .innerJoin('avaliacoes')
-        .where('avaliacoes.trabalho_id', '=', trabalhos[index].trabalho_id)
+        .innerJoin('avaliacoes', function () {
+            this
+              .on('sessoes.id', 'avaliacoes.sessao_id')
+              .andOn('avaliacoes.trabalho_id', trabalho.trabalho_id)
+          })
     }
 
     return trabalhos 

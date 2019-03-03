@@ -29,9 +29,19 @@ export default {
       }
     },
     {
+      name: 'Institutos',
+      url: '/institutos',
+      icon: 'cui-cog'
+    },     
+    {
       name: 'Anos',
       url: '/anos',
       icon: 'icon-calendar'
+    },
+    {
+      name: 'Salas',
+      url: '/salas',
+      icon: 'cui-location-pin'
     },    
     {
       name: 'Avaliadores',
@@ -42,11 +52,6 @@ export default {
       name: 'Trabalhos',
       url: '/trabalhos',
       icon: 'icon-pencil'
-    },
-    {
-      name: 'Salas',
-      url: '/salas',
-      icon: 'icon-star'
     },
     {
       title: true,
@@ -63,23 +68,27 @@ export default {
     //   icon: 'icon-bubbles'
     // },
 
+
     {
-      name: 'Sessões de Avaliação',
-      url: '/',
-      icon: 'icon-bubbles',
-      children: [
-        {
-          name: 'Orais',
-          url: '/orais',
-          //icon: 'icon-bubbles'
-        },
-        {
-          name: 'Paineis',
-          url: 'paineis',
-          //icon: 'icon-bubbles'
-        }
-      ]
-    },  
+      name: 'Orais',
+      url: '/orais',
+      icon: 'cui-speech'
+    },
+    {
+      name: 'Painéis',
+      url: 'paineis',
+      icon: 'cui-dashboard'
+    },
+
+    {
+      title: true,
+      name: 'Consultas',
+      class: '',
+      wrapper: {
+        element: '',
+        attributes: {}
+      }
+    }, 
     {
       name: 'Relatórios',
       url: '/',

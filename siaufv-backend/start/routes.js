@@ -11,6 +11,12 @@ Route.get('/', () => {  return { greeting: 'Hello world in JSON' }})
 Route.post('/register', 'Auth/AuthController.register').validator('UserRegister')
 Route.post('/login', 'Auth/AuthController.login').validator('UserLogin')
 
+//Rotas do Instituto
+Route.get('/instituto', 'InstitutoController.index').middleware('auth:jwt')
+Route.post('/instituto', 'InstitutoController.store').middleware('auth:jwt').validator('InstitutoStore')
+Route.delete('/instituto/:id', 'InstitutoController.destroy').middleware('auth:jwt')
+Route.put('/instituto/:id', 'InstitutoController.update').middleware('auth:jwt').validator('InstitutoUpdate')
+
 //Rotas do Ano
 Route.get('/ano', 'AnoController.index').middleware('auth:jwt')
 Route.post('/ano', 'AnoController.store').middleware('auth:jwt').validator('AnoStore')

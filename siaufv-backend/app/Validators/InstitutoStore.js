@@ -1,22 +1,16 @@
 'use strict'
 
-class SessaoStore {
+class InstitutoStore {
   get rules () {
     return {
-      nome: 'required',
-      data: 'required',
-      horario: 'required',
-      horariofim: 'required',
-      tipo: 'required',
-      instituto: 'required',
-      ano_id: 'required',
-      sala_id: 'required',
+      instituto: 'required|unique:institutos'
     }
   }
 
   get messages() {
     return {
       'required': 'O campo {{ field }} é obrigatório.',
+      'unique': 'O campo {{ field }} já está cadastrado(a).',
     }
   }
 
@@ -26,4 +20,4 @@ class SessaoStore {
   }
 }
 
-module.exports = SessaoStore
+module.exports = InstitutoStore

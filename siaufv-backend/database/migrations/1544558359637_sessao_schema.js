@@ -10,6 +10,7 @@ class SecaoSchema extends Schema {
       table.string('nome').notNullable()
       table.date('data').notNullable()
       table.time('horario').notNullable()
+      table.time('horariofim').notNullable()
       table.integer('tipo').notNullable()
       table.string('instituto').notNullable()
       table.integer('ano_id').unsigned().notNullable()

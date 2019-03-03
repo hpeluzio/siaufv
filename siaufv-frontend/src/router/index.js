@@ -8,6 +8,7 @@ const DefaultContainerNotLogged = () => import('@/containers/DefaultContainerNot
 
 // SIA
 const Anos = () => import('@/views/pages/Anos')
+const Institutos = () => import('@/views/pages/Institutos')
 const Avaliadores = () => import('@/views/pages/Avaliadores')
 const Avaliacoes = () => import('@/views/pages/Avaliacoes')
 const Trabalhos = () => import('@/views/pages/Trabalhos')
@@ -94,10 +95,15 @@ const router = new Router({
           component: Painel,
         },
         {
+          path: 'institutos',
+          name: 'Institutos',
+          component: Institutos,
+        }, 
+        {
           path: 'anos',
           name: 'Anos',
           component: Anos,
-        },        
+        },
         {
           path: 'avaliadores',
           name: 'Avaliadores',

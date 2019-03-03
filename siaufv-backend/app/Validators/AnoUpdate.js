@@ -6,7 +6,7 @@ class AnoUpdate {
     const id = this.ctx.params.id
 
     return {
-      ano: 'required|unique:anos,ano,id,'+ id,
+      ano: 'required|integer|unique:anos,ano,id,'+ id,
     }
   }
 
