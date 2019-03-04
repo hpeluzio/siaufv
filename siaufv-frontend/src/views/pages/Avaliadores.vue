@@ -82,6 +82,7 @@
       :rows-per-page-items="rowsPerPageItems"
       :pagination.sync="pagination"
       :search="search"
+      :custom-filter="customFilter"
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
@@ -129,6 +130,7 @@
 
 <script>
 import axios_instance from '../../axios';
+const helpers = require('../../helpers')
 
 export default {
     data: () => ({
@@ -206,6 +208,23 @@ export default {
             console.log(error);
         });
       },
+
+    //Custom filter da datatable
+    customFilter(items, search, filter, headers) {
+      //Normalizando a search
+      if (search.trim() === "") return items;
+      search = helpers.normaliza(search).trim();
+
+      return items.filter(item => {
+        if (helpers.normaliza(item.matricula).includes(search)) return item;
+        if (helpers.normaliza(item.nome).includes(search)) return item;
+        if (helpers.normaliza(item.curso).includes(search)) return item;
+        if (helpers.normaliza(item.instituto).includes(search)) return item;
+        if (helpers.normaliza(item.email).includes(search)) return item;
+        if(search.includes('ativo') && item.ativo !== null)
+          return item
+      });
+    },
 
       //Checar o formulário em busca de erros
       handleSubmit(e) {

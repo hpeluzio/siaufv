@@ -1,556 +1,1061 @@
 <template>
   <div class="animated fadeIn">
+    <div data-app="true">
+      <!-- Exibição das seções -->
+      <span v-if="!cadastrarSessaoForm">
+        <v-toolbar color="grey lighten-3">
+          <i class="icon-people"></i>
+          <strong>Seções</strong>
+          <v-divider class="mx-2" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="search"
+            label="Procurar"
+            single-line
+            hide-details
+          ></v-text-field>
+          <v-btn class="primary" color="green" @click="estadoCadastroDeSessao()">Adicionar Sessão</v-btn>
+        </v-toolbar>
 
-      
- <div v-if="submitted && errors.has('defaulterror2')" style="color: red" class="container">{{ errors.first('defaulterror2') }}</div>
-<!-- Data Table -->
-<div data-app="true">
-    <v-toolbar flat color="white">
-      <i class="icon-people"></i> <strong>Avaliações</strong>
-      <v-divider
-        class="mx-2"
-        inset
-        vertical
-      ></v-divider>
-      <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        append-icon="search"
-        label="Procurar"
-        single-line
-        hide-details
-      ></v-text-field>
-      <v-dialog v-model="dialog" max-width="800px">
-        <v-btn slot="activator" class="primary" color="green">Nova Avaliação</v-btn>
-        <v-card>
-          <v-card-title>
-            <span class="headline">{{ formTitle }}</span>
-          </v-card-title>
+        <!-- Data Table de seções-->
+        <v-data-table
+          :headers="sessaoHeaders"
+          :items="sessoes"
+          :rows-per-page-items="rowsPerPageItems"
+          :pagination.sync="pagination"
+          :search="search"
+          class="elevation-1"
+        >
+          <template slot="items" slot-scope="props">
+            <!--<td>{{ props.item.name }}</td>-->
+            <!--<td class="text-xs-right">{{ props.item.id }}</td>-->
+            <td class="text-xs-left">{{ props.item.nome }}</td>
+            <td class="text-xs-left">{{ props.item.data | formatDate }}</td>
+            <td class="text-xs-left">{{ props.item.horario }}</td>
+            <td class="text-xs-left">{{ props.item.sala_nome }}</td>
+            <td class="text-xs-left">{{ props.item.instituto }}</td>
+            <td class="text-xs-left">{{ props.item.anos_ano }}</td>
+            <td class="justify-center layout px-0">
+              <v-icon small class="mr-2" @click="editSessao(props.item)">edit</v-icon>
+              <v-icon small @click="deleteSessao(props.item)">delete</v-icon>
+            </td>
+          </template>
+          <v-alert slot="no-results" :value="true" color="error" icon="warning">
+            <div style="color: red">
+              Sua procura por
+              <strong>"{{ search }}"</strong> não achou resultados.
+            </div>
+          </v-alert>
+        </v-data-table>
+      </span>
+      <!-- Data Table de seções-->
+      <!-- Cadastro de seção -->
+      <!-- Cadastro de seção -->
+      <!-- Cadastro de seção -->
+      <!-- Cadastro de seção -->
+      <!-- Cadastro de seção -->
+      <span v-if="cadastrarSessaoForm">
+        <v-layout wrap>
+          <v-flex xs12>
+            <v-form lazy-validation data-vv-scope="form-sessao">
+              <v-card>
+                <v-card-title>
+                  <v-icon large color="green darken-2">business</v-icon>
+                  <span class="headline">
+                    <h5>Cadastro de sessão de avaliação oral</h5>
+                  </span>
+                </v-card-title>
 
-          <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <!--<v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.id" label="id"></v-text-field>
-                </v-flex>-->
+                <v-card-text>
+                  <!-- DATA -->
+                  <v-container grid-list-md border>
+                    <v-layout wrap>
+                      <v-flex xs12 sm6 md3>
+                        <v-menu
+                          v-model="menudata"
+                          :close-on-content-click="false"
+                          full-width
+                          max-width="290"
+                        >
+                          <v-text-field
+                            slot="activator"
+                            :value="computedDateFormattedMomentjs"
+                            clearable
+                            outline
+                            prepend-icon="event"
+                            label="Data"
+                            data-vv-name="data"
+                            v-validate="'required'"
+                            :class="{ 'is-invalid': errors.has('form-sessao.data')}"
+                          ></v-text-field>
+                          <v-date-picker
+                            color="green lighten-1"
+                            locale="pt-br"
+                            no-title
+                            scrollable
+                            v-model="editedSessao.data"
+                            @change="menudata = false"
+                          ></v-date-picker>
+                        </v-menu>
+                        <div
+                          v-if="errors.has('form-sessao.data')"
+                          style="color: red"
+                        >{{ errors.first('form-sessao.data') }}</div>
+                      </v-flex>
+                      <!-- Horario -->
+                      <v-flex xs12 sm6 md3>
+                        <v-select
+                          :items="horarios"
+                          item-value="horario"
+                          item-text="horario"
+                          outline
+                          v-model="editedSessao.horario"
+                          label="Horário"
+                          prepend-icon="access_time"
+                          data-vv-name="horario"
+                          v-validate="'required'"
+                          :class="{ 'is-invalid': errors.has('form-sessao.horario')}"
+                        >
+                          <template
+                            slot="selection"
+                            slot-scope="data"
+                          >{{ data.item.horario.split(":")[0] }}:{{ data.item.horario.split(":")[1] }}</template>
+                          <template
+                            slot="item"
+                            slot-scope="data"
+                          >{{ data.item.horario.split(":")[0] }}:{{ data.item.horario.split(":")[1] }}</template>
+                        </v-select>
+                        <div
+                          v-if="errors.has('form-sessao.horario')"
+                          style="color: red"
+                        >{{ errors.first('form-sessao.horario') }}</div>
+                      </v-flex>
+                      <!-- Horario Final -->
+                      <v-flex xs12 sm6 md3>
+                        <v-select
+                          :items="horariosFimDisponiveis"
+                          item-value="horario"
+                          item-text="horario"
+                          outline
+                          v-model="editedSessao.horariofim"
+                          label="Horário de Término"
+                          prepend-icon="access_time"
+                          data-vv-name="horariofim"
+                          v-validate="'required'"
+                          :class="{ 'is-invalid': errors.has('form-sessao.horariofim')}"
+                        >
+                          <template
+                            slot="selection"
+                            slot-scope="data"
+                          >{{ data.item.horario.split(":")[0] }}:{{ data.item.horario.split(":")[1] }}</template>
+                          <template
+                            slot="item"
+                            slot-scope="data"
+                          >{{ data.item.horario.split(":")[0] }}:{{ data.item.horario.split(":")[1] }}</template>
+                        </v-select>
+                        <div
+                          v-if="errors.has('form-sessao.horariofim')"
+                          style="color: red"
+                        >{{ errors.first('form-sessao.horariofim') }}</div>
+                      </v-flex>
+                      <!-- Salas -->
+                      <v-flex xs12 sm6 md3>
+                        <v-select
+                          :items="salas"
+                          item-value="id"
+                          item-text="nome"
+                          outline
+                          v-model="editedSessao.sala_id"
+                          label="Salas Disponíveis"
+                          data-vv-name="sala"
+                          v-validate="'required'"
+                          :class="{ 'is-invalid': errors.has('form-sessao.sala') }"
+                        ></v-select>
+                        <div
+                          v-if="errors.has('form-sessao.sala')"
+                          style="color: red"
+                        >{{ errors.first('form-sessao.sala') }}</div>
+                      </v-flex>
+                      <!-- Nome -->
+                      <v-flex xs12 sm6 md8>
+                        <v-text-field
+                          outline
+                          v-model="editedSessao.nome"
+                          label="Nome da Sessão"
+                          data-vv-name="nome"
+                          v-validate="'required'"
+                          :class="{ 'is-invalid': errors.has('form-sessao.nome') }"
+                        ></v-text-field>
+                        <div
+                          v-if="errors.has('form-sessao.nome')"
+                          style="color: red"
+                        >{{ errors.first('form-sessao.nome') }}</div>
+                      </v-flex>
+                      <!-- Instituto -->
+                      <v-flex xs12 sm6 md2>
+                        <v-select
+                          :items="institutos"
+                          item-value="instituto"
+                          item-text="instituto"
+                          outline
+                          v-model="editedSessao.instituto"
+                          label="Instituto"
+                          data-vv-name="instituto"
+                          v-validate="'required'"
+                          :class="{ 'is-invalid': errors.has('form-sessao.instituto') }"
+                        ></v-select>
+                        <div
+                          v-if="errors.has('form-sessao.instituto')"
+                          style="color: red"
+                        >{{ errors.first('form-sessao.instituto') }}</div>
+                      </v-flex>
+                      <v-flex xs12 sm6 md2>
+                        <v-select
+                          :items="anos"
+                          item-value="id"
+                          item-text="ano"
+                          outline
+                          v-model="editedSessao.ano_id"
+                          label="Ano"
+                          data-vv-name="ano"
+                          v-validate="'required'"
+                          :class="{ 'is-invalid': errors.has('form-sessao.ano') }"
+                        ></v-select>
+                        <div
+                          v-if="errors.has('form-sessao.ano')"
+                          style="color: red"
+                        >{{ errors.first('form-sessao.ano') }}</div>
+                      </v-flex>
+                      <!-- Avaliacoes -->
+                      <!-- Avaliacoes -->
+                      <!-- Avaliacoes -->
+                      <!-- Avaliadores -->
+                    </v-layout>
+                  </v-container>
 
-              <!-- -->
-              <v-flex xs12 sm6 md3>
-                <v-menu
-                  ref="menu"
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="editedItem.data"
-                  lazy
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  min-width="290px"
+                  <!-- Data Table Avaliaçoes da sessão-->
+                  <!-- Data Table Avaliaçoes da sessão-->
+                </v-card-text>
+              </v-card>
+            </v-form>
+
+            <!-- Formulario de avaliacoes -->
+            <!-- Formulario de avaliacoes -->
+            <!-- Formulario de avaliacoes -->
+            <v-form lazy-validation data-vv-scope="form-avaliacao" v-if="avaliacaoCadastroForm">
+              <v-card>
+                <v-card-text>
+                  <!-- DATA -->
+                  <v-container grid-list-md>
+                    <v-layout wrap>
+                      <!-- Avaliacoes -->
+                      <!-- Avaliacoes -->
+                      <!-- Avaliacoes -->
+                      <!-- Avaliadores -->
+                      <v-flex xs12 sm6 md12>
+                        <h5>Avaliação</h5>
+                      </v-flex>
+                      <v-card>
+                        <v-card-text>
+                          <v-container grid-list-md border>
+                            <v-layout wrap>
+                              <!-- Trabalhos -->
+                              <v-flex xs12 sm6 md12>
+                                <h5>Trabalho</h5>
+                              </v-flex>
+                              <!-- Filtro Instituto Trabalho -->
+                              <v-flex xs12 sm6 md2>
+                                <v-select
+                                  :items="institutos"
+                                  item-value="instituto"
+                                  item-text="instituto"
+                                  outline
+                                  v-model="filtroInstitutoTrabalho"
+                                  label="Instituto"
+                                ></v-select>
+                              </v-flex>
+                              <v-flex xs12 sm6 md10>
+                                <v-select
+                                  :items="trabalhosNaoCadastrados | filterTrabalhos(filtroInstitutoTrabalho)"
+                                  v-on:change="changedautor"
+                                  item-value="trabalho_id"
+                                  item-text="data"
+                                  outline
+                                  v-model="editedAvaliacao.trabalho_id"
+                                  label="Trabalhos"
+                                  data-vv-name="trabalho"
+                                  v-validate="'required'"
+                                  :class="{ 'is-invalid': errors.has('form-avaliacao.trabalho') }"
+                                >
+                                  <template
+                                    slot="selection"
+                                    slot-scope="data"
+                                  >{{ data.item.trabalho_id }} - {{ data.item.instituto }} - {{ data.item.nome }}</template>
+                                  <template
+                                    slot="item"
+                                    slot-scope="data"
+                                  >{{ data.item.trabalho_id }} - {{ data.item.instituto }} - {{ data.item.nome }}</template>
+                                </v-select>
+                                <div
+                                  v-if="errors.has('form-avaliacao.trabalho')"
+                                  style="color: red"
+                                >{{ errors.first('form-avaliacao.trabalho') }}</div>
+                              </v-flex>
+
+                              <!-- Orientadores -->
+                              <v-flex xs12 sm6 md5>
+                                <v-select
+                                  disabled
+                                  :items="trabalhos"
+                                  item-value="trabalho_id"
+                                  item-text="orientador"
+                                  outline
+                                  v-model="editedAvaliacao.trabalho_id"
+                                  label="Orientador"
+                                ></v-select>
+                              </v-flex>
+
+                              <!-- Autores -->
+                              <v-flex
+                                xs12
+                                sm6
+                                md5
+                                v-for="(autoress, i) in editedAvaliacao.trabalhos_autores"
+                                :key="i + '-first'"
+                              >
+                                <v-select
+                                  disabled
+                                  :items="editedAvaliacao.trabalhos_autores"
+                                  item-value="id"
+                                  item-text="autor"
+                                  v-model="editedAvaliacao.trabalhos_autores[i].id"
+                                  label="Autor"
+                                  outline
+                                ></v-select>
+                              </v-flex>
+
+                              <!-- Avaliadores -->
+                              <v-flex xs12 sm6 md12>
+                                <h5>Avaliadores</h5>
+                              </v-flex>
+
+                              <!-- Filtro Instituto Avaliador1 -->
+                              <v-flex xs12 sm6 md1>
+                                <v-select
+                                  :items="institutos"
+                                  item-value="instituto"
+                                  item-text="instituto"
+                                  outline
+                                  v-model="filtroInstitutoAvaliador1"
+                                  label="Instituto"
+                                ></v-select>
+                              </v-flex>
+                              <v-flex xs12 sm6 md5>
+                                <v-select
+                                  :items="avaliadores | filterAvaliadorInstituto1(filtroInstitutoAvaliador1)"
+                                  item-value="id"
+                                  item-text="data"
+                                  outline
+                                  v-model="editedAvaliacao.avaliador1"
+                                  label="Avaliador 1"
+                                  data-vv-name="avaliador1"
+                                  v-validate="'required'"
+                                  :class="{ 'is-invalid': errors.has('form-avaliacao.avaliador1') }"
+                                >
+                                  <template
+                                    slot="selection"
+                                    slot-scope="data"
+                                  >{{ data.item.instituto }} - {{ data.item.nome }}</template>
+                                  <template
+                                    slot="item"
+                                    slot-scope="data"
+                                  >{{ data.item.instituto }} - {{ data.item.nome }}</template>
+                                </v-select>
+                                <div
+                                  v-if="errors.has('form-avaliacao.avaliador1')"
+                                  style="color: red"
+                                >{{ errors.first('form-avaliacao.avaliador1') }}</div>
+                              </v-flex>
+
+                              <!-- Filtro Instituto Avaliador2 -->
+                              <v-flex xs12 sm6 md1>
+                                <v-select
+                                  :items="institutos"
+                                  item-value="instituto"
+                                  item-text="instituto"
+                                  outline
+                                  v-model="filtroInstitutoAvaliador2"
+                                  label="Instituto"
+                                ></v-select>
+                              </v-flex>
+                              <v-flex xs12 sm6 md5>
+                                <v-select
+                                  :items="avaliadores | filterAvaliadores(editedAvaliacao.avaliador1)  | filterAvaliadorInstituto1(filtroInstitutoAvaliador2)"
+                                  item-value="id"
+                                  item-text="data"
+                                  outline
+                                  :disabled="avaliadorIsDisabled"
+                                  v-model="editedAvaliacao.avaliador2"
+                                  label="Avaliador 2"
+                                  data-vv-name="avaliador2"
+                                  v-validate="'required'"
+                                  :class="{ 'is-invalid': errors.has('form-avaliacao.avaliador2') }"
+                                >
+                                  <template
+                                    slot="selection"
+                                    slot-scope="data"
+                                  >{{ data.item.instituto }} - {{ data.item.nome }}</template>
+                                  <template
+                                    slot="item"
+                                    slot-scope="data"
+                                  >{{ data.item.instituto }} - {{ data.item.nome }}</template>
+                                </v-select>
+                                <div
+                                  v-if="errors.has('form-avaliacao.avaliador2')"
+                                  style="color: red"
+                                >{{ errors.first('form-avaliacao.avaliador2') }}</div>
+                              </v-flex>
+
+                              <v-layout>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                  class="primary"
+                                  color="green"
+                                  @click="validateForm('form-avaliacao')"
+                                >Adicionar Avaliação</v-btn>
+                              </v-layout>
+                            </v-layout>
+                          </v-container>
+                        </v-card-text>
+                      </v-card>
+                    </v-layout>
+                  </v-container>
+                </v-card-text>
+                <v-card-actions></v-card-actions>
+              </v-card>
+            </v-form>
+            <v-card v-if="avaliacaoCadastroForm">
+              <v-card-text>
+                <!-- Data Table Avaliaçoes da sessão-->
+                <!-- Data Table Avaliaçoes da sessão-->
+                <v-data-table
+                  :headers="avaliacaoHeaders"
+                  :items="avaliacoesDaSessao"
+                  :rows-per-page-items="rowsPerPageItems"
+                  :pagination.sync="pagination"
+                  :search="search"
+                  class="elevation-1"
                 >
-                  <v-text-field
-                    outline
-                    slot="activator"
-                    v-model="editedItem.data"
-                    prepend-icon="event"
-                    readonly
-                    label="Data" data-vv-name="data"
-                    v-validate="'required'"
-                    :class="{ 'is-invalid': submitted && errors.has('data') }"
-                  ></v-text-field>
+                  <template slot="items" slot-scope="props">
+                    <td class="text-xs-left">{{ props.item.trabalho_id }}</td>
+                    <td class="text-xs-left">{{ props.item.avaliador1_nome }}</td>
+                    <td class="text-xs-left">{{ props.item.avaliador2_nome }}</td>
+                    <td class="text-xs-left">{{ props.item.trabalho_nome }}</td>
+                    <td class="text-xs-left">{{ props.item.orientador }}</td>
+                    <td
+                      class="text-xs-left"
+                      v-for="(autores, i) in props.item.trabalho_autores"
+                      v-bind:key="i"
+                    >{{ autores }}</td>
+                    <td class="justify-center layout px-0">
+                      <v-icon small @click="deleteAvaliacao(props.item)">delete</v-icon>
+                    </td>
+                  </template>
+                  <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                    <div style="color: red">
+                      Sua procura por
+                      <strong>"{{ search }}"</strong> não achou resultados.
+                    </div>
+                  </v-alert>
+                </v-data-table>
+              </v-card-text>
+              <v-card-actions></v-card-actions>
+            </v-card>
 
-                  <v-date-picker locale="pt-br" v-model="editedItem.data" no-title no-buttons scrollable color="green lighten-1">
-                    <v-spacer></v-spacer>
-                    <v-btn flat color="primary" @click="menu = false">Cancelar</v-btn>
-                    <v-btn flat color="primary" @click="$refs.menu.save(editedItem.data)">OK</v-btn>
-                  </v-date-picker>
-                </v-menu>
-                <div v-if="submitted && errors.has('data')" style="color: red">{{ errors.first('data') }}</div>
-                </v-flex>
-              <!-- -->
+            <v-layout>
+              <v-btn
+                class="primary justify-right"
+                color="red"
+                @click="estadoListagemSessao()"
+              >Voltar</v-btn>
+              <v-spacer></v-spacer>
 
-                <v-flex xs12 sm6 md3>
-                  <v-select :items="horarios" item-value="horario" item-text="horario"  outline v-model="editedItem.horario" label="Horário"  data-vv-name="horario" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('horario') }"></v-select>
-                  <div v-if="submitted && errors.has('horario')" style="color: red">{{ errors.first('horario') }}</div>
-                </v-flex>  
-
-                <v-flex xs12 sm6 md3>
-                  <v-select :items="avaliacao_tipos" item-value="id" item-text="nome"  outline v-model="editedItem.tipo" label="Tipos"  data-vv-name="tipo" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('tipo') }"></v-select>
-                  <div v-if="submitted && errors.has('tipo')" style="color: red">{{ errors.first('tipo') }}</div>
-                </v-flex>              
-
-                <v-flex xs12 sm6 md3>
-                  <v-select :items="salas" item-value="id" item-text="nome"  outline v-model="editedItem.sala_id" label="Salas"  data-vv-name="sala" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('sala') }"></v-select>
-                  <div v-if="submitted && errors.has('sala')" style="color: red">{{ errors.first('sala') }}</div>
-                </v-flex>
-
-                <v-flex xs12 sm6 md12>
-                  <v-select :items="trabalhos" item-value="trabalho_id" item-text="nome"  outline v-model="editedItem.trabalho_id" label="Trabalhos"  data-vv-name="trabalho" v-validate="'required|integer'" :class="{ 'is-invalid': submitted && errors.has('trabalho') }"></v-select>
-                  <div v-if="submitted && errors.has('trabalho')" style="color: red">{{ errors.first('trabalho') }}</div>
-                </v-flex>
-
-
-                <v-flex v-for="(avaliadoress, index) in editedItem.avaliadores_nome" :key="index" xs12 sm6 md6 >
-                  <v-select :items="avaliadores" item-value="id" item-text="nome"  outline v-model="editedItem.avaliadores_nome[index].avaliadores_id" label="Avaliador"  data-vv-name="avaliadores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('avaliadores') }"></v-select>
-                  <div v-if="submitted && errors.has('avaliadores')" style="color: red">{{ errors.first('avaliadores') }}</div>
-                </v-flex>
-
-                <!-- <v-flex xs12 sm6 md6>
-                <v-select :items="avaliadores" item-value="id" item-text="nome"  outline v-model="editedItem.avaliadores_nome[0].avaliadores_id" label="Avaliador"  data-vv-name="avaliadores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('avaliadores') }"></v-select>
-                <div v-if="submitted && errors.has('avaliadores')" style="color: red">{{ errors.first('avaliadores') }}</div>
-                </v-flex>
-
-                <v-flex xs12 sm6 md6>
-                <v-select :items="avaliadores" item-value="id" item-text="nome"  outline v-model="editedItem.avaliadores_nome[1].avaliadores_id" label="Avaliador"  data-vv-name="avaliadores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('avaliadores') }"></v-select>
-                <div v-if="submitted && errors.has('avaliadores')" style="color: red">{{ errors.first('avaliadores') }}</div>  
-                </v-flex> -->
-
-                <!--
-                <v-flex v-for="(avaliadores, index) in editedItem.avaliadores_nome" :key="index" xs12 sm6 md6 >
-                  <v-text-field outline v-model="avaliadores.avaliadores_nome"  label="Avaliador " data-vv-name="avaliadores" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('avaliadores') }"></v-text-field >
-                  <div v-if="submitted && errors.has('avaliadores')" style="color: red">{{ errors.first('avaliadores') }}</div>
-                </v-flex>
-                -->
-
-                <v-flex xs12 sm6 md3>
-                  <v-select :items="institutos" item-value="instituto" item-text="instituto"  outline v-model="editedItem.instituto" label="Instituto"  data-vv-name="instituto" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('instituto') }"></v-select>
-                  <div v-if="submitted && errors.has('instituto')" style="color: red">{{ errors.first('instituto') }}</div>
-                </v-flex>  
-
-                <div v-if="submitted && errors.has('defaulterror')" style="color: red" class="container">{{ errors.first('defaulterror') }}</div>
-
-              </v-layout>
-            </v-container>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn class="primary" color="orange" @click="close">Cancelar</v-btn>
-            <v-btn class="primary" color="blue" @click="handleSubmit">Salvar</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-toolbar>
-
-    <!-- Data Table -->
-    <v-data-table
-      :headers="headers"
-      :items="avaliacoes"
-      :rows-per-page-items="rowsPerPageItems"
-      :pagination.sync="pagination"
-      :search="search"
-      class="elevation-1"
-    >
-      <template slot="items" slot-scope="props">
-        <!--<td>{{ props.item.name }}</td>-->
-        <!--<td class="text-xs-right">{{ props.item.id }}</td>-->
-        <td class="text-xs-right">{{ props.item.data | formatDate }}</td>
-        <td class="text-xs-right">{{ props.item.horario }}</td>
-        <span v-if="props.item.tipo === 0">
-          <td class="text-xs-right">Oral</td>
-        </span>
-        <span v-else-if="props.item.tipo === 0">
-          <td class="text-xs-right">Painel</td>
-        </span>
-        <td class="text-xs-right">{{ props.item.salas_nome }}</td>
-        
-        <!-- AVALIADORES -->
-         <td class="text-xs-right">
-            <span v-for="(avaliador, index) in props.item.avaliadores_nome" :key="index"> {{ avaliador.avaliadores_nome }} <br></span>
-         </td>
-        <!-- AVALIADORES -->
-        <td class="text-xs-right">{{ props.item.instituto }}</td>
-        <td class="text-xs-right">{{ props.item.anos_ano }}</td>
-        <td class="text-xs-right">{{ props.item.trabalho_id }}</td>
-        <td class="justify-center layout px-0">
-          <v-icon
-            small
-            class="mr-2"
-            @click="editItem(props.item)"
-          >
-            edit
-          </v-icon>
-          <v-icon
-            small
-            @click="deleteItem(props.item)"
-          >
-            delete
-          </v-icon>
-        </td>
-      </template>
-      <v-alert slot="no-results" :value="true" color="error" icon="warning">
-        <div style="color: red">Sua procura por <strong>"{{ search }}"</strong> não achou resultados.</div>
-      </v-alert>
-    </v-data-table>
-  </div>
-  <!-- Data Table -->
+              <v-btn class="primary" color="blue" @click="validateForm('form-sessao')">Salvar Sessão</v-btn>
+            </v-layout>
+          </v-flex>
+        </v-layout>
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
-import axios_instance from '../../axios';
+import axios_instance from '../../axios'
 import moment from 'moment'
+const helpers = require('../../helpers')
 
 export default {
-    data: () => ({
-      date: new Date().toISOString().substr(0, 10),
-      menu: false,
-      modal: false,
-      submitted: false,
-      dialog: false,
-      search: '',
-      trabalhos: [],
-      headers: [
-        { text: 'Data', value: 'data' },
-        { text: 'Horário', value: 'horario' },
-        { text: 'Tipo', value: 'tipo' },
-        { text: 'Sala', value: 'sala_id' },
-        { text: 'Avaliadores', value: 'avaliadores_nome' },
-        { text: 'Instituto', value: 'instituto' },
-        { text: 'Ano', value: 'anos_ano' },
-        { text: 'Trabalho', value: 'trabalho_id' },
-        { text: 'Ações', value: 'name', sortable: false }
-      ],
-      avaliacoes: [],
-      avaliadores: [],
-      salas: [],
-      horarios: [],
-      institutos: [],
-      avaliacao_tipos: [],
-      editedIndex: -1,
-      editedItem: {
-        id: '',
-        data: '',
-        horario: '',
-        tipo: '',
-        instituto: '',
-        sala_id: '',
-        avaliadores_nome: [{ id: '' }, { nome: '' }],
-        trabalho_id: '',
-      },
-      defaultItem: {
-        id: '',
-        data: '',
-        horario: '',
-        tipo: '',
-        instituto: '',
-        sala_id: '',
-        avaliadores_nome: [{ id: '' }, { nome: '' }],
-        trabalho_id: '',      
-      },
-      rowsPerPageItems: [10, 20, 50, 100],
-      pagination: {
-          rowsPerPage: 10
-      },
-    }),
-
-    computed: {
-      formTitle () {
-        return this.editedIndex === -1 ? 'Nova Avaliação' : 'Editar Avaliação'
-      },
+  data: () => ({
+    cadastrarSessaoForm: false,
+    avaliacaoCadastroForm: false,
+    filtroInstitutoTrabalho: '',
+    filtroInstitutoAvaliador1: '',
+    filtroInstitutoAvaliador2: '',
+    menudata: false,
+    menuhorarioinicio: false,
+    menuhorariofim: false,
+    search: '',
+    trabalhos: [],
+    trabalhos_nao_cadastrados: [],
+    sessoes: [],
+    avaliacoes: [],
+    avaliadores: [],
+    salas: [],
+    horarios: [],
+    institutos: [],
+    anos: [],
+    editedSessaoIndex: -1,
+    sessaoHeaders: [
+      { text: 'Nome', value: 'nome' },
+      { text: 'Data', value: 'data' },
+      { text: 'Horário', value: 'horario' },
+      { text: 'Sala', value: 'sala_id' },
+      { text: 'Instituto', value: 'instituto' },
+      { text: 'Ano', value: 'anos_ano' },
+      { text: 'Ações', value: 'name', sortable: false }
+    ],
+    avaliacaoHeaders: [
+      { text: 'Trabalho ID', value: 'trabalho_id' },
+      { text: 'Avaliador 1', value: 'avaliadores' },
+      { text: 'Avaliador 2', value: 'avaliadores' },
+      { text: 'Trabalho', value: 'trabalho_nome' },
+      { text: 'Orientador', value: 'trabalho_orientador' },
+      { text: 'Autores', value: 'trabalho_autores' },
+      { text: 'Ações', value: 'name', sortable: false }
+    ],
+    editedAvaliacao: {
+      id: '',
+      trabalhos_orientador: '',
+      avaliador1: [],
+      avaliador2: [],
+      trabalhos_autores: [''],
+      trabalho_id: ''
     },
-
-    watch: {
-      dialog (val) {
-        val || this.close()
-        this.errors.clear() //Limpar os erros
-      },
-
+    defaultAvaliacao: {
+      id: '',
+      trabalhos_orientador: '',
+      avaliador1: [],
+      avaliador2: [],
+      trabalhos_autores: [''],
+      trabalho_id: ''
     },
-
-    created () {
-      //Mudando o locale do Vuetify
-      this.changeLocale () 
-
-      //Pegando todos avaliacoes
-      this.getAxiosArrayAvaliacoes()
-
-      //Pegando todos os anos
-      this.getAxiosArrayTrabalhos()
-
-      //Pegando todas sa salas
-      this.getAxiosArraySalas()
-
-      //Pegando todos os avaliadores
-      this.getAxiosArrayAvaliadores()
-
-      //Setando tipos
-      this.setArrayTipo()   
-
-      //Setando Horários
-      this.setArrayHorarios()
-
-      //Setando Institutos
-      this.setArrayInstitutos() 
+    editedSessao: {
+      id: '',
+      nome: '',
+      data: '',
+      horario: '',
+      horariofim: '',
+      tipo: '',
+      instituto: '',
+      ano_id: '',
+      sala_id: ''
     },
-
-    //filters
-    filters: {
-      formatDate(date) {
-        if (date) {
-          return moment(String(date)).format('DD/MM/YYYY')
-        }
-      },
+    defaultSessao: {
+      id: '',
+      nome: '',
+      data: '',
+      horario: '',
+      horariofim: '',
+      tipo: '',
+      instituto: '',
+      ano_id: '',
+      sala_id: ''
     },
+    rowsPerPageItems: [10, 20, 50, 100],
+    pagination: {
+      rowsPerPage: 10
+    }
+  }),
 
-    //Methods
-    methods: {
-      getAxiosArrayAvaliacoes() {
-        //Pegando todos Avaliacoes 
-        axios_instance({
-            method:'get',
-            url: '/avaliacao'
+  created() {
+    //Mudando o locale do Vuetify
+    this.changeLocale()
+    //Pegando todos sessoes
+    this.getArrayAxiosSessoes()
+    //Pegando todos avaliacoes
+    this.getArrayAxiosAvaliacoes()
+    //Pegando todos os Trabalhos
+    this.getArrayAxiosTrabalhos()
+    //Pegando todas sa salas
+    this.getArrayAxiosSalas()
+    //Pegando todos os avaliadores
+    this.getArrayAxiosAvaliadoresAtivos()
+    //Setando Horarios
+    this.setArrayHorarios()
+    //Setando Institutos
+    this.setArrayInstitutos()
+    //Pegando todos os anos
+    this.getArrayAxiosAnos()
+  },
+
+  computed: {
+    salasPorDataHorario() {
+      //Se nao existe sessao entao retornar todas as salas
+      if (this.sessoes.length === 0) return this.salas
+
+      var filtrarEstaSala = false
+
+      var salasVazias = this.salas.filter(sala => {
+        filtrarEstaSala = false
+        this.sessoes.map(sessao => {
+          //Filtro das salas que já estao cadastrados na mesma data e mesmo horário
+          if (moment(sessao.data).format('DD/MM/YYYY') === moment(this.editedSessao.data).format('DD/MM/YYYY') &&
+              helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim) && 
+                sessao.sala_nome === sala.nome)
+            filtrarEstaSala = true
+          //Se a sala já pertece a sessao editada entao inclui-se ela também
+          if (this.editedSessaoIndex > -1 && sala.id === this.editedSessao.sala_id)
+            filtrarEstaSala = false
         })
+        if (filtrarEstaSala === false) return sala
+      })
+
+      // console.log('salas:', this.salas)
+      // console.log('salasVazias:', salasVazias)
+      return salasVazias
+    },
+    computedDateFormattedMomentjs() {
+      return this.editedSessao.data
+        ? moment(this.editedSessao.data).format('DD/MM/YYYY')
+        : ''
+    },
+    horarioIsDisabled() {
+      if (this.editedSessao.data === '') return true
+      return false
+    },
+    salaIsDisabled() {
+      if (this.editedSessao.data === '') return true
+      if (this.editedSessao.horario === '') return true
+      return false
+    },
+    avaliadorIsDisabled() {
+      if (typeof this.editedAvaliacao.avaliador1 !== 'number') return true
+      return false
+    },
+    trabalhosNaoCadastrados() {
+      return this.trabalhos.filter(trabalho => {
+        //Filtro
+        var filterTrabalho = false
+
+        this.avaliacoes.map(avaliacao => {
+          if (trabalho.trabalho_id === avaliacao.trabalho_id)
+            filterTrabalho = true
+        })
+
+        if (filterTrabalho === false) return trabalho
+      })
+    },
+    avaliacoesDaSessao() {
+      var avaliacoesDaSessaoAtual = []
+      //Populando avaliacoes datatable com seus respectivos atributos
+      this.avaliacoes.map(avaliacao => {
+        if (avaliacao.sessao_id === this.editedSessao.id) {
+          //console.log('avaliacao_id:', avaliacao.id, 'this.editedSessao.id: ', this.editedSessao.id )
+          var autores = avaliacao.trabalho[0].autores.map(item => {
+            return item.autor
+          })
+          avaliacoesDaSessaoAtual.push({
+            id: avaliacao.id,
+            trabalho_id: avaliacao.trabalho_id,
+            avaliador1_id: avaliacao.avaliador1,
+            avaliador2_id: avaliacao.avaliador2,
+            trabalho_nome: avaliacao.trabalho[0].nome,
+            orientador: avaliacao.trabalho[0].orientador,
+            avaliador1_nome: avaliacao.avaliadores[0].nome,
+            avaliador2_nome: avaliacao.avaliadores[1].nome,
+            trabalho_autores: autores
+          })
+        }
+      })
+      //Retornando as avaliacoes da sessão a ser editada
+      return avaliacoesDaSessaoAtual
+    },
+    horariosFimDisponiveis() {
+      var horariosFim = this.horarios.filter(item => {
+        if (item.horario > this.editedSessao.horario) return item.horario
+      })
+      return horariosFim
+    }
+  },
+
+  watch: {
+    cadastrarSessaoForm(val) {
+      //this.editedAvaliacao = Object.assign({}, this.defaultAvaliacao)
+      if (val === false) {
+        this.getArrayAxiosSessoes()
+        this.editedSessao = Object.assign({}, this.defaultSessao)
+        this.editedAvaliacao = Object.assign({}, this.defaultSessao)
+      }
+    },
+    avaliacaoCadastroForm(val) {
+      if (val === true) {
+        this.getArrayAxiosAvaliacoes()
+      }
+    }
+  },
+
+  filters: {
+    formatDate(date) {
+      if (date) {
+        return moment(String(date)).format('DD/MM/YYYY')
+      }
+    },
+    filterTrabalhos(trabalhos, filtroInstitutoTrabalho) {
+      if (filtroInstitutoTrabalho === '') return trabalhos
+      else
+        return trabalhos.filter(trabalho => {
+          if (filtroInstitutoTrabalho === trabalho.instituto) return trabalho
+        })
+    },
+    filterAvaliadores(avaliadores, id_avaliador1) {
+      return avaliadores.filter(avaliador => {
+        if (avaliador.id !== id_avaliador1) return avaliador
+      })
+    },
+    filterAvaliadorInstituto1(avaliadores1, instituto) {
+      if (instituto === '') return avaliadores1
+      else
+        return avaliadores1.filter(avaliador1 => {
+          if (instituto === avaliador1.instituto) return avaliador1
+        })
+    },
+    filterAvaliadorInstituto2(avaliadores2, instituto) {
+      if (instituto === '') return avaliadores2
+      else
+        return avaliadores2.filter(avaliador2 => {
+          if (instituto === avaliador2.instituto) return avaliador2
+        })
+    }
+  },
+
+  methods: {
+    updateComponentData() {
+      this.getArrayAxiosSessoes()
+      this.getArrayAxiosAvaliacoes()
+    },
+    estadoListagemSessao() {
+      this.cadastrarSessaoForm = false
+      this.editedSessaoIndex = -1
+      this.avaliacaoCadastroForm = false
+    },
+    estadoCadastroDeSessao() {
+      this.cadastrarSessaoForm = true
+      this.editedSessaoIndex = -1
+      this.avaliacaoCadastroForm = false
+    },
+    estadoEditSessao() {
+      this.cadastrarSessaoForm = true
+      this.avaliacaoCadastroForm = true
+    },
+    changedautor(event) {
+      this.trabalhos.map(item => {
+        if (item.trabalho_id === event)
+          this.editedAvaliacao.trabalhos_autores = item.autores
+      })
+    },
+    getArrayAxiosAvaliacoes() {
+      //Pegando todos Avaliacoes
+      axios_instance({
+        method: 'get',
+        url: '/avaliacao'
+      })
         .then(response => {
           this.avaliacoes = response.data
-          //console.log(this.avaliacoes) 
-          //////////////////
-          let arrei = JSON.parse(JSON.stringify(this.avaliacoes))
-          let arrei2 = []
-          // Trabalhando os dados brutos do response.data
-          var agrupadoArrei = arrei.reduce( (accumulatedLine, currentLine) => {
-              var hasOwnProperty = Object.prototype.hasOwnProperty;
-              //Funcao que verifica se um array de objetos está vazio
-              function isEmpty(obj) {
-                  // null and undefined are "empty"
-                  if (obj == null) return true;
-                  // Assume if it has a length property with a non-zero value
-                  // that that property is correct.
-                  if (obj.length > 0)    return false;
-                  if (obj.length === 0)  return true;
-                  // If it isn't an object at this point
-                  // it is empty, but it can't be anything *but* empty
-                  // Is it empty?  Depends on your application.
-                  if (typeof obj !== "object") return true;
-                  // Otherwise, does it have any properties of its own?
-                  // Note that this doesn't handle
-                  // toString and valueOf enumeration bugs in IE < 9
-                  for (var key in obj) {
-                      if (hasOwnProperty.call(obj, key)) return false;
-                  }
-                  return true;
-              }
-
-              //Ferifica se o accumulatedLine
-              if(isEmpty(accumulatedLine)) {
-                arrei2.push(currentLine)
-                let av = arrei2[arrei2.length-1].avaliadores_nome  
-                arrei2[arrei2.length-1].avaliadores_nome = []
-                arrei2[arrei2.length-1].avaliadores_nome.push({ 'avaliadores_id': arrei2[arrei2.length-1].avaliadores_id,  
-                                                                'avaliadores_nome': av  })
-                //console.log(arrei2)
-                return currentLine
-              }
-              
-              if(arrei2[arrei2.length-1].id === currentLine.id) {
-                //arrei2[arrei2.length-1].avaliadores_nome = []
-                arrei2[arrei2.length-1].
-                  avaliadores_nome
-                  .push({'avaliadores_id': currentLine.avaliadores_id,  
-                  'avaliadores_nome': currentLine.avaliadores_nome} )
-
-              }
-              else {
-                arrei2.push(currentLine)
-              }
-
-          }, {})
-
-          // arrei2.forEach(function (item) {
-
-          // })
-          arrei2.forEach( item => {
-            //item.data = formatDate(JSON.stringify(item.data))
-            console.log(item.data)
-            //console.log(formatDate(item.data))
-            //item.data = moment(String(item.data)).format('MM/DD/YYYY')
+          //console.log('AVALIACOES: ', this.avaliacoes)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getArrayAxiosSessoes() {
+      //Pegando todos Avaliacoes
+      axios_instance({
+        method: 'get',
+        url: '/sessao'
+      })
+        .then(response => {
+          this.sessoes = response.data.filter(sessao => {
+            if(sessao.tipo === 1)
+              return sessao
           })
+          //console.log('SESSOES: ', this.sessoes)
 
-          this.avaliacoes = JSON.parse(JSON.stringify(arrei2))
-          
-          console.log(arrei2)
         })
-        .catch((error) => {
-            console.log(error);
-        });
-      },
-
-      getAxiosArrayTrabalhos() {
-        //Pegando todos os anos
-        axios_instance({
-            method:'get',
-            url: '/trabalho'
+        .catch(error => {
+          console.log(error)
         })
+    },
+    getArrayAxiosTrabalhos() {
+      //Pegando todos os anos
+      axios_instance({
+        method: 'get',
+        url: '/trabalho'
+      })
         .then(response => {
-          for(let i in response.data.trabalhos)
-            this.trabalhos.push({ 'trabalho_id': response.data.trabalhos[i].trabalho_id, 
-                                  'nome': `${response.data.trabalhos[i].trabalho_id} - ${response.data.trabalhos[i].nome}` })
-          
-          //console.log(this.trabalhos)
+          this.trabalhos = response.data
+          //console.log('TRABALHOS: ', this.trabalhos)
         })
-        .catch((error) => {
-            console.log(error);
-        });
-      },
-
-      getAxiosArraySalas() {
-        axios_instance({
-            method:'get',
-            url: '/sala'
+        .catch(error => {
+          console.log(error)
         })
+    },
+    getArrayAxiosSalas() {
+      axios_instance({
+        method: 'get',
+        url: '/sala'
+      })
         .then(response => {
-          //this.salas = response.data
-          //console.log(response.data)
-          for(let i in response.data)
-            this.salas.push({ 'id': response.data[i].id, 'nome':  response.data[i].nome })
-          //console.log(this.salas)
+          this.salas = response.data.filter( sala => {
+            if(sala.tipo === 1)
+              return sala
+          })
+          //console.log('Salas', this.salas)
         })
-        .catch((error) => {
-            console.log(error);
-        });
-      },
-
-      getAxiosArrayAvaliadores() {
-        axios_instance({
-            method:'get',
-            url: '/avaliador'
+        .catch(error => {
+          console.log(error)
         })
+    },
+    getArrayAxiosAvaliadoresAtivos() {
+      axios_instance({
+        method: 'get',
+        url: '/avaliador_ativo'
+      })
         .then(response => {
           this.avaliadores = response.data
-          //console.log("AVALIADORES")
-          //console.log(this.avaliadores)
+          //console.log('AVALIADORES', this.avaliadores)
         })
-        .catch((error) => {
-            console.log(error);
-        });
-      },
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    setArrayHorarios() {
+      this.horarios = [
+        { horario: '08:00:00' },
+        { horario: '09:00:00' },
+        { horario: '10:00:00' },
+        { horario: '11:00:00' },
+        { horario: '12:00:00' },
+        { horario: '13:00:00' },
+        { horario: '14:00:00' },
+        { horario: '15:00:00' },
+        { horario: '16:00:00' },
+        { horario: '17:00:00' },
+        { horario: '18:00:00' },
+        { horario: '19:00:00' },
+        { horario: '20:00:00' },
+        { horario: '21:00:00' }
+      ]
+    },
+    setArrayInstitutos() {
+      //Inicializando instituto com '' para zerar o filtro das selections
+      this.institutos.push({ instituto: '' })
 
-      setArrayTipo() {
-        this.avaliacao_tipos = [{ id: 0, nome: 'Oral'}, { id: 1, nome: 'Painel'}]
-      },
+      //Pegando todos os anos
+      axios_instance({
+        method: 'get',
+        url: '/instituto'
+      })
+        .then(response => {
+          for (let i in response.data)
+            this.institutos.push({
+              instituto: response.data[i].instituto
+            })
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getArrayAxiosAnos() {
+      //Pegando todos os anos
+      axios_instance({
+        method: 'get',
+        url: '/ano'
+      })
+        .then(response => {
+          for (let i in response.data)
+            this.anos.push({
+              id: response.data[i].id,
+              ano: response.data[i].ano
+            })
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
 
-      setArrayHorarios() {
-        this.horarios = [{ horario: '08:00' }, { horario: '10:00' }, { horario: '12:00' }, { horario: '14:00' },
-                         { horario: '16:00' }, { horario: '18:00' }, { horario: '20:00' }, { horario: '22:00' }]
-      },
+    //Checar o formulário em busca de erros
+    validateForm(scope) {
+      if (scope === 'form-sessao') {
+        this.$validator.validateAll(scope).then(result => {
+          if (result) {
+            this.saveSessao()
+            this.editedSessao = Object.assign({}, this.editedSessao)
+            this.$validator.reset()
+          }
+        })
+      } else if (scope === 'form-avaliacao') {
+        this.$validator.validateAll(scope).then(result => {
+          if (result) {
+            this.saveAvaliacao()
+            this.editedAvaliacao = Object.assign({}, this.defaultSessao)
+            this.$validator.reset()
+          }
+        })
+      }
+    },
 
-      setArrayInstitutos() {
-        this.institutos = [{ instituto: 'IAP' }, { instituto: 'IBP' }, { instituto: 'IEP' }, { instituto: 'IHP' } ]
-      },
+    changeLocale() {
+      this.$vuetify.lang.current = 'pt'
+    },
 
-      //Checar o formulário em busca de erros
-      handleSubmit(e) {
-        this.submitted = true;
-        this.$validator.validate().then(valid => {
-            if (valid) {
-                this.save()
-            }
-        });
-      },
-      
-      changeLocale () {
-        this.$vuetify.lang.current = 'pt'
-      },
+    editSessao(item) {
+      this.editedSessaoIndex = this.sessoes.indexOf(item)
+      this.editedSessao = Object.assign({}, item)
+      this.estadoEditSessao()
+      this.updateComponentData()
+    },
 
-      editItem (item) {
-        this.editedIndex = this.avaliacoes.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialog = true
-      },
+    deleteSessao(item) {
+      //Setando algumas variaveis para uso do delete
+      const index = this.sessoes.indexOf(item)
 
-      deleteItem (item) {
-        //Setando algumas variaveis para uso do delete
-        const index = this.avaliacoes.indexOf(item)
-
-        // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
-        confirm('Está certo que deseja deletar este item?') &&
+      // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
+      confirm('Está certo que deseja deletar este item?') &&
         axios_instance({
-            method: 'delete',
-            url: '/avaliacao/'+ item.id +'',
-          })
+          method: 'delete',
+          url: '/sessao/' + item.id + ''
+        })
           .then(response => {
-            //this.getAxiosArrayAvaliacoes()
+            //alert('Sessão deletada.')
+            this.updateComponentData()
+            this.estadoListagemSessao()
           })
-          .catch((error) => {
-            this.errors.add({ field: 'defaulterror2', msg: 'Erro ao deletar item' })
+          .catch(error => {
+            alert('Algum erro aconteceu! \n' + error)
+            this.updateComponentData()
+            this.estadoListagemSessao()
           })
-          this.getAxiosArrayAvaliacoes()
-      },
+    },
 
-      close () {
-        this.dialog = false
-        setTimeout(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        }, 300)
-      },
-
-      save () {
-        if (this.editedIndex > -1) { // Se this.editedIndex  > -1 entao estamos na edição
-          //Editando item chama-se o metodo put na rota avaliacoes e irá para update
-          axios_instance({
-            method: 'put',
-            url: '/avaliacao/'+ this.editedItem.id +'',
-            data: {
-              id: this.editedItem.id,
-              data: moment(String(this.editedItem.data)).format('YYYY/MM/DD'),
-              horario: this.editedItem.horario,
-              tipo: this.editedItem.tipo,
-              sala_id: this.editedItem.sala_id,
-              trabalho_id: this.editedItem.trabalho_id,
-              avaliadores_nome: this.editedItem.avaliadores_nome,
-              instituto: this.editedItem.instituto
-            }
-          })
+    saveSessao() {
+      if (this.editedSessaoIndex > -1 && this.cadastrarSessaoForm == true) {
+        // Se this.editedSessaoIndex  > -1 entao estamos na edição
+        //Editando item chama-se o metodo put na rota avaliacoes e irá para update
+        axios_instance({
+          method: 'put',
+          url: '/sessao/' + this.editedSessao.id + '',
+          data: {
+            id: this.editedSessao.id,
+            nome: this.editedSessao.nome,
+            data: moment(String(this.editedSessao.data)).format('YYYY-MM-DD'),
+            horario: this.editedSessao.horario,
+            horariofim: this.editedSessao.horariofim,
+            sala_id: this.editedSessao.sala_id,
+            instituto: this.editedSessao.instituto,
+            ano_id: this.editedSessao.ano_id,
+            tipo: 1
+          }
+        })
           .then(response => {
-            alert('Avaliacao editada.');
-            this.getAxiosArrayAvaliacoes()
-            //this.close()
+            alert('Sessão editada.')
+            this.updateComponentData()
+            this.estadoEditSessao()
           })
-          .catch((error) => {
-            this.errors.clear() //Limpar os erros antes de setar novos erros
-            if(error.response.data.error[0].message)
-              this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })
-            else
-              this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
-          })
-
-        } else { // Se this.editedIndex  == -1 entao estamos na inserção
-          axios_instance({
-            method: 'post',
-            url: '/avaliacao',
-            data: {
-              //newavaliacao: JSON.stringify(this.editedItem)
-              //avaliacao: this.editedItem
-              id: this.editedItem.id,
-              data: this.editedItem.data,
-              horario: this.editedItem.horario,
-              tipo: this.editedItem.tipo,
-              sala_id: this.editedItem.sala_id,
-              trabalho_id: this.editedItem.trabalho_id,
-              avaliadores_nome: this.editedItem.avaliadores_nome,
-              instituto: this.editedItem.instituto
-            }
-          })
-          .then(response => {
-            //Inclui o item no array de item do front end
-            alert('Avaliacoes adicionada.');
-            this.getAxiosArrayAvaliacoes()
-            //this.close()
-          })
-          .catch((error) => {
+          .catch(error => {
             console.log(error)
-
-            // this.errors.clear()
-            // if(error.response.data.error[0].message)
-            //   this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })
-            // else
-            //   this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
+            this.updateComponentData()
+            this.estadoListagemSessao()
+            alert('Algum erro aconteceu! \n' + error)
           })
+      } else {
+        // Se this.editedSessaoIndex  == -1 entao estamos na inserção
+        axios_instance({
+          method: 'post',
+          url: '/sessao',
+          data: {
+            id: this.editedSessao.id,
+            nome: this.editedSessao.nome,
+            data: moment(String(this.editedSessao.data)).format('YYYY-MM-DD'),
+            horario: this.editedSessao.horario,
+            horariofim: this.editedSessao.horariofim,
+            sala_id: this.editedSessao.sala_id,
+            instituto: this.editedSessao.instituto,
+            ano_id: this.editedSessao.ano_id,
+            tipo: 1
+          }
+        })
+          .then(response => {
+            this.editedSessaoIndex = this.sessoes.length
+
+            this.editedSessao.id = response.data.sessao_id
+            alert('Sessão criada.')
+            this.updateComponentData()
+            this.estadoEditSessao()
+          })
+          .catch(error => {
+            console.log(error)
+            this.updateComponentData()
+            this.estadoListagemSessao()
+            alert('Algum erro aconteceu! \n' + error)
+          })
+      }
+    },
+
+    saveAvaliacao() {
+      axios_instance({
+        method: 'post',
+        url: '/avaliacao',
+        data: {
+          //id: this.editedAvaliacao.id,
+          trabalho_id: this.editedAvaliacao.trabalho_id,
+          sessao_id: this.editedSessao.id,
+          avaliador1_id: this.editedAvaliacao.avaliador1,
+          avaliador2_id: this.editedAvaliacao.avaliador2
         }
-        
-        //this.close()
-      },
+      })
+        .then(response => {
+          this.updateComponentData()
+          this.estadoEditSessao()
+          alert('Avaliação adicionada.')
+        })
+        .catch(error => {
+          console.log(error)
+          alert('Algum erro aconteceu! \n' + error)
+          this.updateComponentData()
+          this.estadoListagemSessao()
+        })
+    },
+
+    deleteAvaliacao(item) {
+      //Setando algumas variaveis para uso do delete
+      // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
+      confirm('Está certo que deseja deletar este item?') &&
+        axios_instance({
+          method: 'delete',
+          url: '/avaliacao/' + item.id + ''
+        })
+          .then(response => {
+            this.updateComponentData()
+            this.estadoEditSessao()
+            alert('Avaliação deletada.')
+          })
+          .catch(error => {
+            this.updateComponentData()
+            this.estadoListagemSessao()
+            alert('Algum erro aconteceu! \n' + error)
+          })
     }
   }
+}
 </script>

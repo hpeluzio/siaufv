@@ -8,7 +8,8 @@ class SalaStore {
     return {
       nome: 'required|unique:salas',
       descricao: 'required',
-      capacidade: 'required|integer'
+      capacidade: 'required|integer',
+      tipo: 'required'
     }
   }
 

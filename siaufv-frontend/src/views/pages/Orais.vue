@@ -55,11 +55,6 @@
       <!-- Cadastro de seção -->
       <!-- Cadastro de seção -->
       <!-- Cadastro de seção -->
-      <!-- Cadastro de seção -->
-      <!-- Cadastro de seção -->
-      <!-- Cadastro de seção -->
-      <!-- Cadastro de seção -->
-      <!-- Cadastro de seção -->
       <span v-if="cadastrarSessaoForm">
         <v-layout wrap>
           <v-flex xs12>
@@ -68,7 +63,7 @@
                 <v-card-title>
                   <v-icon large color="green darken-2">business</v-icon>
                   <span class="headline">
-                    <h5> Cadastro de sessão de avaliação oral</h5>
+                    <h5>Cadastro de sessão de avaliação oral</h5>
                   </span>
                 </v-card-title>
 
@@ -76,18 +71,15 @@
                   <!-- DATA -->
                   <v-container grid-list-md border>
                     <v-layout wrap>
- 
                       <v-flex xs12 sm6 md3>
                         <v-menu
                           v-model="menudata"
-                          :disabled="avaliacaoCadastroForm"
                           :close-on-content-click="false"
                           full-width
                           max-width="290"
                         >
                           <v-text-field
                             slot="activator"
-                            :disabled="avaliacaoCadastroForm"
                             :value="computedDateFormattedMomentjs"
                             clearable
                             outline
@@ -114,7 +106,6 @@
                       <!-- Horario -->
                       <v-flex xs12 sm6 md3>
                         <v-select
-                          :disabled="avaliacaoCadastroForm"
                           :items="horarios"
                           item-value="horario"
                           item-text="horario"
@@ -125,16 +116,24 @@
                           data-vv-name="horario"
                           v-validate="'required'"
                           :class="{ 'is-invalid': errors.has('form-sessao.horario')}"
-                        ></v-select>
+                        >
+                          <template
+                            slot="selection"
+                            slot-scope="data"
+                          >{{ data.item.horario.split(":")[0] }}:{{ data.item.horario.split(":")[1] }}</template>
+                          <template
+                            slot="item"
+                            slot-scope="data"
+                          >{{ data.item.horario.split(":")[0] }}:{{ data.item.horario.split(":")[1] }}</template>
+                        </v-select>
                         <div
                           v-if="errors.has('form-sessao.horario')"
                           style="color: red"
-                        >{{ errors.first('form-sessao.horario') }}</div>                   
+                        >{{ errors.first('form-sessao.horario') }}</div>
                       </v-flex>
                       <!-- Horario Final -->
                       <v-flex xs12 sm6 md3>
                         <v-select
-                          :disabled="avaliacaoCadastroForm"
                           :items="horariosFimDisponiveis"
                           item-value="horario"
                           item-text="horario"
@@ -145,16 +144,24 @@
                           data-vv-name="horariofim"
                           v-validate="'required'"
                           :class="{ 'is-invalid': errors.has('form-sessao.horariofim')}"
-                        ></v-select>                       
+                        >
+                          <template
+                            slot="selection"
+                            slot-scope="data"
+                          >{{ data.item.horario.split(":")[0] }}:{{ data.item.horario.split(":")[1] }}</template>
+                          <template
+                            slot="item"
+                            slot-scope="data"
+                          >{{ data.item.horario.split(":")[0] }}:{{ data.item.horario.split(":")[1] }}</template>
+                        </v-select>
                         <div
                           v-if="errors.has('form-sessao.horariofim')"
                           style="color: red"
                         >{{ errors.first('form-sessao.horariofim') }}</div>
-                      </v-flex>                      
+                      </v-flex>
                       <!-- Salas -->
                       <v-flex xs12 sm6 md3>
                         <v-select
-                          :disabled="avaliacaoCadastroForm"
                           :items="salasPorDataHorario"
                           item-value="id"
                           item-text="nome"
@@ -170,7 +177,7 @@
                           style="color: red"
                         >{{ errors.first('form-sessao.sala') }}</div>
                       </v-flex>
-                     <!-- Nome -->
+                      <!-- Nome -->
                       <v-flex xs12 sm6 md8>
                         <v-text-field
                           outline
@@ -184,7 +191,7 @@
                           v-if="errors.has('form-sessao.nome')"
                           style="color: red"
                         >{{ errors.first('form-sessao.nome') }}</div>
-                      </v-flex>                      
+                      </v-flex>
                       <!-- Instituto -->
                       <v-flex xs12 sm6 md2>
                         <v-select
@@ -474,11 +481,7 @@
               >Voltar</v-btn>
               <v-spacer></v-spacer>
 
-              <v-btn
-                class="primary"
-                color="blue"
-                @click="validateForm('form-sessao')"
-              >Salvar Sessão</v-btn>
+              <v-btn class="primary" color="blue" @click="validateForm('form-sessao')">Salvar Sessão</v-btn>
             </v-layout>
           </v-flex>
         </v-layout>
@@ -493,614 +496,566 @@ import moment from 'moment'
 const helpers = require('../../helpers')
 
 export default {
-    data: () => ({
-        cadastrarSessaoForm: false,
-        avaliacaoCadastroForm: false,
-        filtroInstitutoTrabalho: '',
-        filtroInstitutoAvaliador1: '',
-        filtroInstitutoAvaliador2: '',
-        menudata: false,
-        menuhorarioinicio: false,
-        menuhorariofim: false,
-        search: '',
-        trabalhos: [],
-        trabalhos_nao_cadastrados: [],
-        sessoes: [],
-        avaliacoes: [],
-        avaliadores: [],
-        salas: [],
-        horarios: [],
-        institutos: [],
-        anos: [],
-        editedSessaoIndex: -1,
-        sessaoHeaders: [
-            { text: 'Nome', value: 'nome' },
-            { text: 'Data', value: 'data' },
-            { text: 'Horário', value: 'horario' },
-            { text: 'Sala', value: 'sala_id' },
-            { text: 'Instituto', value: 'instituto' },
-            { text: 'Ano', value: 'anos_ano' },
-            { text: 'Ações', value: 'name', sortable: false }
-        ],
-        avaliacaoHeaders: [
-            { text: 'Trabalho ID', value: 'trabalho_id' },
-            { text: 'Avaliador 1', value: 'avaliadores' },
-            { text: 'Avaliador 2', value: 'avaliadores' },
-            { text: 'Trabalho', value: 'trabalho_nome' },
-            { text: 'Orientador', value: 'trabalho_orientador' },
-            { text: 'Autores', value: 'trabalho_autores' },
-            { text: 'Ações', value: 'name', sortable: false }
-        ],
-        editedAvaliacao: {
-            id: '',
-            trabalhos_orientador: '',
-            avaliador1: [],
-            avaliador2: [],
-            trabalhos_autores: [''],
-            trabalho_id: ''
-        },
-        defaultAvaliacao: {
-            id: '',
-            trabalhos_orientador: '',
-            avaliador1: [],
-            avaliador2: [],
-            trabalhos_autores: [''],
-            trabalho_id: ''
-        },
-        editedSessao: {
-            id: '',
-            nome: '',
-            data: '',
-            horario: '',
-            horariofim: '',
-            tipo: '',
-            instituto: '',
-            ano_id: '',
-            sala_id: ''
-        },
-        defaultSessao: {
-            id: '',
-            nome: '',
-            data: '',
-            horario: '',
-            horariofim: '',
-            tipo: '',
-            instituto: '',
-            ano_id: '',
-            sala_id: ''
-        },
-        rowsPerPageItems: [10, 20, 50, 100],
-        pagination: {
-            rowsPerPage: 10
-        }
-    }),
-
-    created() {
-
-      var timeini1 = '08:00:00'
-      var timeend1 = '09:00:00'
-      var timeini2 = '07:00:00'
-      var timeend2 = '08:00:00' 
-      
-      //console.log('checkRangeIntervalHorario : ', helpers.checkRangeIntervalHorario(timeini1, timeend1, timeini2, timeend2))
-      //console.log('normaliza : ', helpers.normaliza('timeini1, timeend1, %$¨# timeini2, timeend2'))
-      //console.log('CHECK INTERVAL', helpers.checkRangeIntervalHorario(timeini1, timeend1, timeini2, timeend2))
-
-      //console.log('Soma dois horarios: ','08:00:00' + '01:40:00')
-      // var d = new Date()
-      // console.log('Date: ',d.getFullYear())
-      
-      var d = new Date(0, 0, 0, 10, 33, 30);
-      console.log('Date: ', d.getMinutes())
-      d.setMinutes(d.getMinutes() + 2)
-      console.log('Date: ', d.getMinutes())
-      //var e = new Date(1, 0, 0, 10, 33, 30);
-      //console.log('d < e', d < e)
-
-
-      //Mudando o locale do Vuetify
-      this.changeLocale()
-      //Pegando todos sessoes
-      this.getArrayAxiosSessoes()
-      //Pegando todos avaliacoes
-      this.getArrayAxiosAvaliacoes()
-      //Pegando todos os Trabalhos
-      this.getArrayAxiosTrabalhos()
-      //Pegando todas sa salas
-      this.getArrayAxiosSalas()
-      //Pegando todos os avaliadores
-      this.getArrayAxiosAvaliadoresAtivos()
-      //Setando Horarios
-      this.setArrayHorarios()
-      //Setando Institutos
-      this.setArrayInstitutos()
-      //Pegando todos os anos
-      this.getArrayAxiosAnos()
+  data: () => ({
+    cadastrarSessaoForm: false,
+    avaliacaoCadastroForm: false,
+    filtroInstitutoTrabalho: '',
+    filtroInstitutoAvaliador1: '',
+    filtroInstitutoAvaliador2: '',
+    menudata: false,
+    menuhorarioinicio: false,
+    menuhorariofim: false,
+    search: '',
+    trabalhos: [],
+    trabalhos_nao_cadastrados: [],
+    sessoes: [],
+    avaliacoes: [],
+    avaliadores: [],
+    salas: [],
+    horarios: [],
+    institutos: [],
+    anos: [],
+    editedSessaoIndex: -1,
+    sessaoHeaders: [
+      { text: 'Nome', value: 'nome' },
+      { text: 'Data', value: 'data' },
+      { text: 'Horário', value: 'horario' },
+      { text: 'Sala', value: 'sala_id' },
+      { text: 'Instituto', value: 'instituto' },
+      { text: 'Ano', value: 'anos_ano' },
+      { text: 'Ações', value: 'name', sortable: false }
+    ],
+    avaliacaoHeaders: [
+      { text: 'Trabalho ID', value: 'trabalho_id' },
+      { text: 'Avaliador 1', value: 'avaliadores' },
+      { text: 'Avaliador 2', value: 'avaliadores' },
+      { text: 'Trabalho', value: 'trabalho_nome' },
+      { text: 'Orientador', value: 'trabalho_orientador' },
+      { text: 'Autores', value: 'trabalho_autores' },
+      { text: 'Ações', value: 'name', sortable: false }
+    ],
+    editedAvaliacao: {
+      id: '',
+      trabalhos_orientador: '',
+      avaliador1: [],
+      avaliador2: [],
+      trabalhos_autores: [''],
+      trabalho_id: ''
     },
+    defaultAvaliacao: {
+      id: '',
+      trabalhos_orientador: '',
+      avaliador1: [],
+      avaliador2: [],
+      trabalhos_autores: [''],
+      trabalho_id: ''
+    },
+    editedSessao: {
+      id: '',
+      nome: '',
+      data: '',
+      horario: '',
+      horariofim: '',
+      tipo: '',
+      instituto: '',
+      ano_id: '',
+      sala_id: ''
+    },
+    defaultSessao: {
+      id: '',
+      nome: '',
+      data: '',
+      horario: '',
+      horariofim: '',
+      tipo: '',
+      instituto: '',
+      ano_id: '',
+      sala_id: ''
+    },
+    rowsPerPageItems: [10, 20, 50, 100],
+    pagination: {
+      rowsPerPage: 10
+    }
+  }),
 
-    computed: {
-        salasPorDataHorario(){
-          //Se nao existe sessao entao retornar todas as salas
-          if(this.sessoes.length === 0)
-            return this.salas
+  created() {
+    //Mudando o locale do Vuetify
+    this.changeLocale()
+    //Pegando todos sessoes
+    this.getArrayAxiosSessoes()
+    //Pegando todos avaliacoes
+    this.getArrayAxiosAvaliacoes()
+    //Pegando todos os Trabalhos
+    this.getArrayAxiosTrabalhos()
+    //Pegando todas sa salas
+    this.getArrayAxiosSalas()
+    //Pegando todos os avaliadores
+    this.getArrayAxiosAvaliadoresAtivos()
+    //Setando Horarios
+    this.setArrayHorarios()
+    //Setando Institutos
+    this.setArrayInstitutos()
+    //Pegando todos os anos
+    this.getArrayAxiosAnos()
+  },
 
-          var filtrarEstaSala = false
+  computed: {
+    salasPorDataHorario() {
+      //Se nao existe sessao entao retornar todas as salas
+      if (this.sessoes.length === 0) return this.salas
 
-          var salasVazias = this.salas.filter( sala => {
+      var filtrarEstaSala = false
+
+      var salasVazias = this.salas.filter(sala => {
+        filtrarEstaSala = false
+        this.sessoes.map(sessao => {
+          //Filtro das salas que já estao cadastrados na mesma data e mesmo horário
+          if (moment(sessao.data).format('DD/MM/YYYY') === moment(this.editedSessao.data).format('DD/MM/YYYY') &&
+              helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim) && 
+                sessao.sala_nome === sala.nome)
+            filtrarEstaSala = true
+          //Se a sala já pertece a sessao editada entao inclui-se ela também
+          if (this.editedSessaoIndex > -1 && sala.id === this.editedSessao.sala_id)
             filtrarEstaSala = false
-            this.sessoes.map( sessao => {
-              if(moment(sessao.data).format('DD/MM/YYYY') === moment(this.editedSessao.data).format('DD/MM/YYYY') 
-                  && helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim)//sessao.horario === this.editedSessao.horario
-                    && sessao.sala_nome === sala.nome)
-                      filtrarEstaSala = true
-            })
-            if(filtrarEstaSala === false)
+        })
+        if (filtrarEstaSala === false) return sala
+      })
+
+      // console.log('salas:', this.salas)
+      // console.log('salasVazias:', salasVazias)
+      return salasVazias
+    },
+    computedDateFormattedMomentjs() {
+      return this.editedSessao.data
+        ? moment(this.editedSessao.data).format('DD/MM/YYYY')
+        : ''
+    },
+    horarioIsDisabled() {
+      if (this.editedSessao.data === '') return true
+      return false
+    },
+    salaIsDisabled() {
+      if (this.editedSessao.data === '') return true
+      if (this.editedSessao.horario === '') return true
+      return false
+    },
+    avaliadorIsDisabled() {
+      if (typeof this.editedAvaliacao.avaliador1 !== 'number') return true
+      return false
+    },
+    trabalhosNaoCadastrados() {
+      return this.trabalhos.filter(trabalho => {
+        //Filtro
+        var filterTrabalho = false
+
+        this.avaliacoes.map(avaliacao => {
+          if (trabalho.trabalho_id === avaliacao.trabalho_id)
+            filterTrabalho = true
+        })
+
+        if (filterTrabalho === false) return trabalho
+      })
+    },
+    avaliacoesDaSessao() {
+      var avaliacoesDaSessaoAtual = []
+      //Populando avaliacoes datatable com seus respectivos atributos
+      this.avaliacoes.map(avaliacao => {
+        if (avaliacao.sessao_id === this.editedSessao.id) {
+          //console.log('avaliacao_id:', avaliacao.id, 'this.editedSessao.id: ', this.editedSessao.id )
+          var autores = avaliacao.trabalho[0].autores.map(item => {
+            return item.autor
+          })
+          avaliacoesDaSessaoAtual.push({
+            id: avaliacao.id,
+            trabalho_id: avaliacao.trabalho_id,
+            avaliador1_id: avaliacao.avaliador1,
+            avaliador2_id: avaliacao.avaliador2,
+            trabalho_nome: avaliacao.trabalho[0].nome,
+            orientador: avaliacao.trabalho[0].orientador,
+            avaliador1_nome: avaliacao.avaliadores[0].nome,
+            avaliador2_nome: avaliacao.avaliadores[1].nome,
+            trabalho_autores: autores
+          })
+        }
+      })
+      //Retornando as avaliacoes da sessão a ser editada
+      return avaliacoesDaSessaoAtual
+    },
+    horariosFimDisponiveis() {
+      var horariosFim = this.horarios.filter(item => {
+        if (item.horario > this.editedSessao.horario) return item.horario
+      })
+      return horariosFim
+    }
+  },
+
+  watch: {
+    cadastrarSessaoForm(val) {
+      //this.editedAvaliacao = Object.assign({}, this.defaultAvaliacao)
+      if (val === false) {
+        this.getArrayAxiosSessoes()
+        this.editedSessao = Object.assign({}, this.defaultSessao)
+        this.editedAvaliacao = Object.assign({}, this.defaultSessao)
+      }
+    },
+    avaliacaoCadastroForm(val) {
+      if (val === true) {
+        this.getArrayAxiosAvaliacoes()
+      }
+    }
+  },
+
+  filters: {
+    formatDate(date) {
+      if (date) {
+        return moment(String(date)).format('DD/MM/YYYY')
+      }
+    },
+    filterTrabalhos(trabalhos, filtroInstitutoTrabalho) {
+      if (filtroInstitutoTrabalho === '') return trabalhos
+      else
+        return trabalhos.filter(trabalho => {
+          if (filtroInstitutoTrabalho === trabalho.instituto) return trabalho
+        })
+    },
+    filterAvaliadores(avaliadores, id_avaliador1) {
+      return avaliadores.filter(avaliador => {
+        if (avaliador.id !== id_avaliador1) return avaliador
+      })
+    },
+    filterAvaliadorInstituto1(avaliadores1, instituto) {
+      if (instituto === '') return avaliadores1
+      else
+        return avaliadores1.filter(avaliador1 => {
+          if (instituto === avaliador1.instituto) return avaliador1
+        })
+    },
+    filterAvaliadorInstituto2(avaliadores2, instituto) {
+      if (instituto === '') return avaliadores2
+      else
+        return avaliadores2.filter(avaliador2 => {
+          if (instituto === avaliador2.instituto) return avaliador2
+        })
+    }
+  },
+
+  methods: {
+    updateComponentData() {
+      this.getArrayAxiosSessoes()
+      this.getArrayAxiosAvaliacoes()
+    },
+    estadoListagemSessao() {
+      this.cadastrarSessaoForm = false
+      this.editedSessaoIndex = -1
+      this.avaliacaoCadastroForm = false
+    },
+    estadoCadastroDeSessao() {
+      this.cadastrarSessaoForm = true
+      this.editedSessaoIndex = -1
+      this.avaliacaoCadastroForm = false
+    },
+    estadoEditSessao() {
+      this.cadastrarSessaoForm = true
+      this.avaliacaoCadastroForm = true
+    },
+    changedautor(event) {
+      this.trabalhos.map(item => {
+        if (item.trabalho_id === event)
+          this.editedAvaliacao.trabalhos_autores = item.autores
+      })
+    },
+    getArrayAxiosAvaliacoes() {
+      //Pegando todos Avaliacoes
+      axios_instance({
+        method: 'get',
+        url: '/avaliacao'
+      })
+        .then(response => {
+          this.avaliacoes = response.data
+          //console.log('AVALIACOES: ', this.avaliacoes)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getArrayAxiosSessoes() {
+      //Pegando todos Avaliacoes
+      axios_instance({
+        method: 'get',
+        url: '/sessao'
+      })
+        .then(response => {
+          this.sessoes = response.data.filter(sessao => {
+            if(sessao.tipo === 0)
+              return sessao
+          })
+          //console.log('SESSOES: ', this.sessoes)
+
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getArrayAxiosTrabalhos() {
+      //Pegando todos os anos
+      axios_instance({
+        method: 'get',
+        url: '/trabalho'
+      })
+        .then(response => {
+          this.trabalhos = response.data
+          //console.log('TRABALHOS: ', this.trabalhos)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getArrayAxiosSalas() {
+      axios_instance({
+        method: 'get',
+        url: '/sala'
+      })
+        .then(response => {
+          this.salas = response.data.filter( sala => {
+            if(sala.tipo === 0)
               return sala
           })
+          //console.log('Salas', this.salas)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getArrayAxiosAvaliadoresAtivos() {
+      axios_instance({
+        method: 'get',
+        url: '/avaliador_ativo'
+      })
+        .then(response => {
+          this.avaliadores = response.data
+          //console.log('AVALIADORES', this.avaliadores)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    setArrayHorarios() {
+      this.horarios = [
+        { horario: '08:00:00' },
+        { horario: '09:00:00' },
+        { horario: '10:00:00' },
+        { horario: '11:00:00' },
+        { horario: '12:00:00' },
+        { horario: '13:00:00' },
+        { horario: '14:00:00' },
+        { horario: '15:00:00' },
+        { horario: '16:00:00' },
+        { horario: '17:00:00' },
+        { horario: '18:00:00' },
+        { horario: '19:00:00' },
+        { horario: '20:00:00' },
+        { horario: '21:00:00' }
+      ]
+    },
+    setArrayInstitutos() {
+      //Inicializando instituto com '' para zerar o filtro das selections
+      this.institutos.push({ instituto: '' })
 
-          console.log('salas:', this.salas)
-          console.log('salasVazias:', salasVazias)
-          return salasVazias
-        },
-        computedDateFormattedMomentjs() {
-            return this.editedSessao.data
-                ? moment(this.editedSessao.data).format('DD/MM/YYYY')
-                : ''
-        },
-        horarioIsDisabled() {
-            if (this.editedSessao.data === '') return true
-            return false
-        },
-        salaIsDisabled() {
-            if (this.editedSessao.data === '') return true
-            if (this.editedSessao.horario === '') return true
-            return false
-        },
-        avaliadorIsDisabled() {
-            if (typeof this.editedAvaliacao.avaliador1 !== 'number') return true
-            return false
-        },
-        trabalhosNaoCadastrados() {
-            return this.trabalhos.filter(trabalho => {
-                //Filtro
-                var filterTrabalho = false
-
-                this.avaliacoes.map(avaliacao => {
-                    if (trabalho.trabalho_id === avaliacao.trabalho_id)
-                        filterTrabalho = true
-                })
-
-                if (filterTrabalho === false) return trabalho
+      //Pegando todos os anos
+      axios_instance({
+        method: 'get',
+        url: '/instituto'
+      })
+        .then(response => {
+          for (let i in response.data)
+            this.institutos.push({
+              instituto: response.data[i].instituto
             })
-        },
-        avaliacoesDaSessao() {
-            var avaliacoesDaSessaoAtual = []
-            //Populando avaliacoes datatable com seus respectivos atributos
-            this.avaliacoes.map(avaliacao => {
-                if (avaliacao.sessao_id === this.editedSessao.id) {
-                    //console.log('avaliacao_id:', avaliacao.id, 'this.editedSessao.id: ', this.editedSessao.id )
-                    var autores = avaliacao.trabalho[0].autores.map(item => {
-                        return item.autor
-                    })
-                    avaliacoesDaSessaoAtual.push({
-                        id: avaliacao.id,
-                        trabalho_id: avaliacao.trabalho_id,
-                        avaliador1_id: avaliacao.avaliador1,
-                        avaliador2_id: avaliacao.avaliador2,
-                        trabalho_nome: avaliacao.trabalho[0].nome,
-                        orientador: avaliacao.trabalho[0].orientador,
-                        avaliador1_nome: avaliacao.avaliadores[0].nome,
-                        avaliador2_nome: avaliacao.avaliadores[1].nome,
-                        trabalho_autores: autores
-                    })
-                }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getArrayAxiosAnos() {
+      //Pegando todos os anos
+      axios_instance({
+        method: 'get',
+        url: '/ano'
+      })
+        .then(response => {
+          for (let i in response.data)
+            this.anos.push({
+              id: response.data[i].id,
+              ano: response.data[i].ano
             })
-            //Retornando as avaliacoes da sessão a ser editada
-            return avaliacoesDaSessaoAtual
-        },
-        horariosFimDisponiveis() {
-          var horariosFim = this.horarios.filter( item => {
-            if( item.horario > this.editedSessao.horario)
-              return item.horario
-          })
-          return horariosFim
-        }
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
 
-    watch: {
-        cadastrarSessaoForm(val) {
-            //this.editedAvaliacao = Object.assign({}, this.defaultAvaliacao)
-            if (val === false) {
-                this.getArrayAxiosSessoes()
-                this.editedSessao = Object.assign({}, this.defaultSessao)
-                this.editedAvaliacao = Object.assign({}, this.defaultSessao)
-            }
-        },
-        avaliacaoCadastroForm(val) {
-            if (val === true) {
-                this.getArrayAxiosAvaliacoes()
-            }
-        }
+    //Checar o formulário em busca de erros
+    validateForm(scope) {
+      if (scope === 'form-sessao') {
+        this.$validator.validateAll(scope).then(result => {
+          if (result) {
+            this.saveSessao()
+            this.editedSessao = Object.assign({}, this.editedSessao)
+            this.$validator.reset()
+          }
+        })
+      } else if (scope === 'form-avaliacao') {
+        this.$validator.validateAll(scope).then(result => {
+          if (result) {
+            this.saveAvaliacao()
+            this.editedAvaliacao = Object.assign({}, this.defaultSessao)
+            this.$validator.reset()
+          }
+        })
+      }
     },
 
-    filters: {
-        formatDate(date) {
-            if (date) {
-                return moment(String(date)).format('DD/MM/YYYY')
-            }
-        },
-        filterTrabalhos(trabalhos, filtroInstitutoTrabalho) {
-            if (filtroInstitutoTrabalho === '') return trabalhos
-            else
-                return trabalhos.filter(trabalho => {
-                    if (filtroInstitutoTrabalho === trabalho.instituto)
-                        return trabalho
-                })
-        },
-        filterAvaliadores(avaliadores, id_avaliador1) {
-            return avaliadores.filter(avaliador => {
-                if (avaliador.id !== id_avaliador1) return avaliador
-            })
-        },
-        filterAvaliadorInstituto1(avaliadores1, instituto) {
-            if (instituto === '') return avaliadores1
-            else
-                return avaliadores1.filter(avaliador1 => {
-                    if (instituto === avaliador1.instituto) return avaliador1
-                })
-        },
-        filterAvaliadorInstituto2(avaliadores2, instituto) {
-            if (instituto === '') return avaliadores2
-            else
-                return avaliadores2.filter(avaliador2 => {
-                    if (instituto === avaliador2.instituto) return avaliador2
-                })
-        }
+    changeLocale() {
+      this.$vuetify.lang.current = 'pt'
     },
 
-    methods: {
-        updateComponentData() {
-            this.getArrayAxiosSessoes()
-            this.getArrayAxiosAvaliacoes()
-        },
-        estadoListagemSessao() {
-            this.cadastrarSessaoForm = false
-            this.editedSessaoIndex = -1
-            this.avaliacaoCadastroForm = false
-        },
-        estadoCadastroDeSessao() {
-            this.cadastrarSessaoForm = true
-            this.editedSessaoIndex = -1
-            this.avaliacaoCadastroForm = false
-        },
-        estadoEditSessao() {
-            this.cadastrarSessaoForm = true
-            this.avaliacaoCadastroForm = true
-        },
-        changedautor(event) {
-            this.trabalhos.map(item => {
-                if (item.trabalho_id === event)
-                    this.editedAvaliacao.trabalhos_autores = item.autores
-            })
-        },
-        getArrayAxiosAvaliacoes() {
-            //Pegando todos Avaliacoes
-            axios_instance({
-                method: 'get',
-                url: '/avaliacao'
-            })
-                .then(response => {
-                    this.avaliacoes = response.data
-                    //console.log('AVALIACOES: ', this.avaliacoes)
-                    // this.avaliacoes.map(item => {
-                    //     item.horario =
-                    //         item.horario.split(':')[0] +
-                    //         ':' +
-                    //         item.horario.split(':')[1]
-                    //     item.data = moment(String(item.data)).format(
-                    //         'YYYY-MM-DD'
-                    //     )
-                    // })
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
-        getArrayAxiosSessoes() {
-            //Pegando todos Avaliacoes
-            axios_instance({
-                method: 'get',
-                url: '/sessao'
-            })
-                .then(response => {
-                    this.sessoes = response.data
-                    //console.log('SESSOES: ', this.sessoes)
-                    // this.sessoes.map(item => {
-                    //     item.horario =
-                    //         item.horario.split(':')[0] +
-                    //         ':' +
-                    //         item.horario.split(':')[1]
-                    //     item.data = moment(String(item.data)).format(
-                    //         'YYYY-MM-DD'
-                    //     )
-                    // })
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
-        getArrayAxiosTrabalhos() {
-            //Pegando todos os anos
-            axios_instance({
-                method: 'get',
-                url: '/trabalho'
-            })
-                .then(response => {
-                    this.trabalhos = response.data
-                    //console.log('TRABALHOS: ', this.trabalhos)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
-        getArrayAxiosSalas() {
-            axios_instance({
-                method: 'get',
-                url: '/sala'
-            })
-                .then(response => {
-                    this.salas = response.data
-                    // for (let i in response.data)
-                    //     this.salas.push({
-                    //         id: response.data[i].id,
-                    //         nome: response.data[i].nome
-                    //     })
-                    // //console.log('Salas', this.salas)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
-        getArrayAxiosAvaliadoresAtivos() {
-            axios_instance({
-                method: 'get',
-                url: '/avaliador_ativo'
-            })
-                .then(response => {
-                    this.avaliadores = response.data
-                    //console.log('AVALIADORES', this.avaliadores)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
-        setArrayHorarios() {
-            this.horarios = [
-                { horario: '08:00:00' },
-                { horario: '10:00:00' },
-                { horario: '12:00:00' },
-                { horario: '14:00:00' },
-                { horario: '16:00:00' },
-                { horario: '18:00:00' },
-                { horario: '19:00:00' },
-                { horario: '20:00:00' },
-                { horario: '21:00:00' }
-            ]
-        },
-        setArrayInstitutos() {
-            //Inicializando instituto com '' para zerar o filtro das selections
-            this.institutos.push(
-                { instituto: '' }
-            )
+    editSessao(item) {
+      this.editedSessaoIndex = this.sessoes.indexOf(item)
+      this.editedSessao = Object.assign({}, item)
+      this.estadoEditSessao()
+      this.updateComponentData()
+    },
 
-            //Pegando todos os anos
-            axios_instance({
-                method: 'get',
-                url: '/instituto'
-            })
-                .then(response => {
-                    for (let i in response.data)
-                        this.institutos.push({
-                            instituto: response.data[i].instituto
-                        })
-                })
-                .catch(error => {
-                    console.log(error)
-                })            
-        },
-        getArrayAxiosAnos() {
-            //Pegando todos os anos
-            axios_instance({
-                method: 'get',
-                url: '/ano'
-            })
-                .then(response => {
-                    for (let i in response.data)
-                        this.anos.push({
-                            id: response.data[i].id,
-                            ano: response.data[i].ano
-                        })
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
+    deleteSessao(item) {
+      //Setando algumas variaveis para uso do delete
+      const index = this.sessoes.indexOf(item)
 
-        //Checar o formulário em busca de erros
-        validateForm(scope) {
-            if (scope === 'form-sessao') {
-                this.$validator.validateAll(scope).then(result => {
-                    if (result) {
-                        this.saveSessao()
-                        this.editedSessao = Object.assign({}, this.editedSessao)
-                        this.$validator.reset()
-                    }
-                })
-            } else if (scope === 'form-avaliacao') {
-                this.$validator.validateAll(scope).then(result => {
-                    if (result) {
-                        this.saveAvaliacao()
-                        this.editedAvaliacao = Object.assign(
-                            {},
-                            this.defaultSessao
-                        )
-                        this.$validator.reset()
-                    }
-                })
-            }
-        },
-
-        changeLocale() {
-            this.$vuetify.lang.current = 'pt'
-        },
-
-        editSessao(item) {
-            this.editedSessaoIndex = this.sessoes.indexOf(item)
-            this.editedSessao = Object.assign({}, item)
-            this.estadoEditSessao()
+      // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
+      confirm('Está certo que deseja deletar este item?') &&
+        axios_instance({
+          method: 'delete',
+          url: '/sessao/' + item.id + ''
+        })
+          .then(response => {
+            //alert('Sessão deletada.')
             this.updateComponentData()
-        },
+            this.estadoListagemSessao()
+          })
+          .catch(error => {
+            alert('Algum erro aconteceu! \n' + error)
+            this.updateComponentData()
+            this.estadoListagemSessao()
+          })
+    },
 
-        deleteSessao(item) {
-            //Setando algumas variaveis para uso do delete
-            const index = this.sessoes.indexOf(item)
+    saveSessao() {
+      if (this.editedSessaoIndex > -1 && this.cadastrarSessaoForm == true) {
+        // Se this.editedSessaoIndex  > -1 entao estamos na edição
+        //Editando item chama-se o metodo put na rota avaliacoes e irá para update
+        axios_instance({
+          method: 'put',
+          url: '/sessao/' + this.editedSessao.id + '',
+          data: {
+            id: this.editedSessao.id,
+            nome: this.editedSessao.nome,
+            data: moment(String(this.editedSessao.data)).format('YYYY-MM-DD'),
+            horario: this.editedSessao.horario,
+            horariofim: this.editedSessao.horariofim,
+            sala_id: this.editedSessao.sala_id,
+            instituto: this.editedSessao.instituto,
+            ano_id: this.editedSessao.ano_id,
+            tipo: 0
+          }
+        })
+          .then(response => {
+            alert('Sessão editada.')
+            this.updateComponentData()
+            this.estadoEditSessao()
+          })
+          .catch(error => {
+            console.log(error)
+            this.updateComponentData()
+            this.estadoListagemSessao()
+            alert('Algum erro aconteceu! \n' + error)
+          })
+      } else {
+        // Se this.editedSessaoIndex  == -1 entao estamos na inserção
+        axios_instance({
+          method: 'post',
+          url: '/sessao',
+          data: {
+            id: this.editedSessao.id,
+            nome: this.editedSessao.nome,
+            data: moment(String(this.editedSessao.data)).format('YYYY-MM-DD'),
+            horario: this.editedSessao.horario,
+            horariofim: this.editedSessao.horariofim,
+            sala_id: this.editedSessao.sala_id,
+            instituto: this.editedSessao.instituto,
+            ano_id: this.editedSessao.ano_id,
+            tipo: 0
+          }
+        })
+          .then(response => {
+            this.editedSessaoIndex = this.sessoes.length
 
-            // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
-            confirm('Está certo que deseja deletar este item?') &&
-                axios_instance({
-                    method: 'delete',
-                    url: '/sessao/' + item.id + ''
-                })
-                    .then(response => {
-                        //alert('Sessão deletada.')
-                        this.updateComponentData()
-                        this.estadoListagemSessao()
-                    })
-                    .catch(error => {
-                        alert('Algum erro aconteceu! \n' + error)
-                        this.updateComponentData()
-                        this.estadoListagemSessao()
-                    })
-        },
+            this.editedSessao.id = response.data.sessao_id
+            alert('Sessão criada.')
+            this.updateComponentData()
+            this.estadoEditSessao()
+          })
+          .catch(error => {
+            console.log(error)
+            this.updateComponentData()
+            this.estadoListagemSessao()
+            alert('Algum erro aconteceu! \n' + error)
+          })
+      }
+    },
 
-        saveSessao() {
-            if (
-                this.editedSessaoIndex > -1 &&
-                this.cadastrarSessaoForm == true
-            ) {
-                // Se this.editedSessaoIndex  > -1 entao estamos na edição
-                //Editando item chama-se o metodo put na rota avaliacoes e irá para update
-                axios_instance({
-                    method: 'put',
-                    url: '/sessao/' + this.editedSessao.id + '',
-                    data: {
-                        id: this.editedSessao.id,
-                        nome: this.editedSessao.nome,
-                        data: moment(String(this.editedSessao.data)).format(
-                            'YYYY-MM-DD'
-                        ),
-                        horario: this.editedSessao.horario,
-                        horariofim: this.editedSessao.horariofim,
-                        sala_id: this.editedSessao.sala_id,
-                        instituto: this.editedSessao.instituto,
-                        ano_id: this.editedSessao.ano_id,
-                        tipo: 0
-                    }
-                })
-                    .then(response => {
-                        alert('Sessão editada.')
-                        this.updateComponentData()
-                        this.estadoEditSessao()
-                    })
-                    .catch(error => {
-                        console.log(error)
-                        this.updateComponentData()
-                        this.estadoListagemSessao()
-                        alert('Algum erro aconteceu! \n' + error)
-                    })
-            } else {
-                // Se this.editedSessaoIndex  == -1 entao estamos na inserção
-                axios_instance({
-                    method: 'post',
-                    url: '/sessao',
-                    data: {
-                        id: this.editedSessao.id,
-                        nome: this.editedSessao.nome,
-                        data: moment(String(this.editedSessao.data)).format(
-                            'YYYY-MM-DD'
-                        ),
-                        horario: this.editedSessao.horario,
-                        horariofim: this.editedSessao.horariofim,
-                        sala_id: this.editedSessao.sala_id,
-                        instituto: this.editedSessao.instituto,
-                        ano_id: this.editedSessao.ano_id,
-                        tipo: 0
-                    }
-                })
-                    .then(response => {
-                        console.log("response :", response)
-                        console.log("this.editedSessaoIndex: ", this.editedSessaoIndex)
-                        console.log("sessao.lenght: ", this.sessoes.length)
-                        this.editedSessaoIndex = this.sessoes.length
-                        
-                        this.editedSessao.id = response.data.sessao_id
-                        alert('Sessão criada.')
-                        this.updateComponentData()
-                        this.estadoEditSessao()
-                    })
-                    .catch(error => {
-                        console.log(error)
-                        this.updateComponentData()
-                        this.estadoListagemSessao()
-                        alert('Algum erro aconteceu! \n' + error)
-                    })
-            }
-        },
-
-        saveAvaliacao() {
-            axios_instance({
-                method: 'post',
-                url: '/avaliacao',
-                data: {
-                    //id: this.editedAvaliacao.id,
-                    trabalho_id: this.editedAvaliacao.trabalho_id,
-                    sessao_id: this.editedSessao.id,
-                    avaliador1_id: this.editedAvaliacao.avaliador1,
-                    avaliador2_id: this.editedAvaliacao.avaliador2
-                }
-            })
-                .then(response => {
-                    this.updateComponentData()
-                    this.estadoEditSessao()
-                    alert('Avaliação adicionada.')
-                })
-                .catch(error => {
-                    console.log(error)
-                    alert('Algum erro aconteceu! \n' + error)
-                    this.updateComponentData()
-                    this.estadoListagemSessao()
-                })
-        },
-
-        deleteAvaliacao(item) {
-            //Setando algumas variaveis para uso do delete
-            // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
-            confirm('Está certo que deseja deletar este item?') &&
-                axios_instance({
-                    method: 'delete',
-                    url: '/avaliacao/' + item.id + ''
-                })
-                    .then(response => {
-                        this.updateComponentData()
-                        this.estadoEditSessao()
-                        alert('Avaliação deletada.')
-                    })
-                    .catch(error => {
-                        this.updateComponentData()
-                        this.estadoListagemSessao()
-                        alert('Algum erro aconteceu! \n' + error)
-                    })
+    saveAvaliacao() {
+      axios_instance({
+        method: 'post',
+        url: '/avaliacao',
+        data: {
+          //id: this.editedAvaliacao.id,
+          trabalho_id: this.editedAvaliacao.trabalho_id,
+          sessao_id: this.editedSessao.id,
+          avaliador1_id: this.editedAvaliacao.avaliador1,
+          avaliador2_id: this.editedAvaliacao.avaliador2
         }
+      })
+        .then(response => {
+          this.updateComponentData()
+          this.estadoEditSessao()
+          alert('Avaliação adicionada.')
+        })
+        .catch(error => {
+          console.log(error)
+          alert('Algum erro aconteceu! \n' + error)
+          this.updateComponentData()
+          this.estadoListagemSessao()
+        })
+    },
+
+    deleteAvaliacao(item) {
+      //Setando algumas variaveis para uso do delete
+      // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
+      confirm('Está certo que deseja deletar este item?') &&
+        axios_instance({
+          method: 'delete',
+          url: '/avaliacao/' + item.id + ''
+        })
+          .then(response => {
+            this.updateComponentData()
+            this.estadoEditSessao()
+            alert('Avaliação deletada.')
+          })
+          .catch(error => {
+            this.updateComponentData()
+            this.estadoListagemSessao()
+            alert('Algum erro aconteceu! \n' + error)
+          })
     }
+  }
 }
 </script>

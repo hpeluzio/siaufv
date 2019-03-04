@@ -9,7 +9,8 @@ class SalaUpdate {
     return {
       nome: 'required|unique:salas,nome,id,'+ id,
       descricao: 'required',
-      capacidade: 'required|integer'
+      capacidade: 'required|integer',
+      tipo: 'required'
     }
   }
 

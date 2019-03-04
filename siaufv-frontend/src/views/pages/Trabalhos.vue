@@ -309,14 +309,7 @@ export default {
         .then(response => {
           // Pegando os trabalhos e os autores desses trabalhos
           this.trabalhos = response.data//.trabalhos;
-          // this.trabalhos.map((item, index) => {
-          //   if(item === [])
-          //     this.trabalhos[index].sessao = { data: 'Sem sessão'}
-
-          //   //return item
-          // })
-
-          //console.log('this.trabalhos: ',this.trabalhos)
+          console.log('TRABALHOS: ', this.trabalhos)
         })
         .catch(error => {
           console.log(error);
@@ -361,7 +354,8 @@ export default {
         if (helpers.normaliza(item.modalidade).includes(search)) return item;
         if (helpers.normaliza(item.instituto).includes(search)) return item;
         if (helpers.normaliza(item.area).includes(search)) return item;
-        else return false;
+        for (var item of item.sessao)
+          if (helpers.normaliza(item.nome).includes(search)) return item;
       });
     },
 

@@ -10,6 +10,7 @@ class SalaSchema extends Schema {
       table.string('nome').notNullable()
       table.string('descricao').notNullable()
       table.integer('capacidade').notNullable()
+      table.integer('tipo').notNullable()
       table.timestamps()
     })
   }

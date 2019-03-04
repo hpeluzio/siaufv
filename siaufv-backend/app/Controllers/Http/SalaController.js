@@ -10,10 +10,10 @@ class SalaController {
   }
 
   async store ({ request, response }) {
-    const { nome, descricao, capacidade } = request.only([ 'nome', 'descricao', 'capacidade' ]);
+    const { nome, descricao, capacidade, tipo } = request.only([ 'nome', 'descricao', 'capacidade', 'tipo' ]);
 
     try {
-      await Sala.create({ nome, descricao, capacidade })
+      await Sala.create({ nome, descricao, capacidade, tipo })
     } catch (error) {
       console.log(error)
       return response.status(500).send({ "error": error });
@@ -23,13 +23,14 @@ class SalaController {
   }
 
   async update ({ params, request, response }) {
-    const { nome, descricao, capacidade } = request.only([ 'nome', 'descricao', 'capacidade' ]);
+    const { nome, descricao, capacidade, tipo } = request.only([ 'nome', 'descricao', 'capacidade', 'tipo' ]);
 
     try {
       var sala = await Sala.findOrFail(params.id)
       sala.nome = nome
       sala.descricao = descricao
       sala.capacidade = capacidade
+      sala.tipo = tipo
       await sala.save()
     } catch (error) {
       console.log(error)
