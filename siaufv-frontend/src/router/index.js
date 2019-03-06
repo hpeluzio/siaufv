@@ -15,6 +15,7 @@ const Trabalhos = () => import('@/views/pages/Trabalhos')
 const Salas = () => import('@/views/pages/Salas')
 const Orais = () => import('@/views/pages/Orais')
 const Paineis = () => import('@/views/pages/Paineis')
+const Relatorios = () => import('@/views/reports/Relatorios')
 // SIA
 
 
@@ -205,7 +206,33 @@ const router = new Router({
         //   component: Register
         // }
       ]
-    }
+    },
+    {
+      path: '/',
+      redirect: '/home',
+      name: 'Home',
+      component: DefaultContainer,
+      meta: {
+        requiresAuth: false,
+      },
+      children: [
+        {
+          path: 'relatorios',
+          name: 'Relatorios',
+          component: Relatorios
+        },
+        {
+          path: 'forms',
+          name: 'Forms',
+          component: Forms
+        },
+        {
+          path: 'carousels',
+          name: 'Carousels',
+          component: Carousels
+        },
+      ]
+    },    
   ]
 })
 

@@ -55,7 +55,7 @@ export default {
     },
     {
       title: true,
-      name: 'Lançamentos',
+      name: 'Lançamentos de Sessões',
       class: '',
       wrapper: {
         element: '',
@@ -95,21 +95,21 @@ export default {
       icon: 'icon-note',
       children: [
         {
-          name: 'Breadcrumbs',
-          url: '/base/breadcrumbs',
+          name: 'Relatório testes',
+          url: '/relatorios',
         },
-        {
-          name: 'Cards',
-          url: '/base/cards',
-        },
-        {
-          name: 'Carousels',
-          url: '/base/carousels',
-        },
-        {
-          name: 'Forms',
-          url: '/base/forms',
-        },
+        // {
+        //   name: 'Cards',
+        //   url: '/base/cards',
+        // },
+        // {
+        //   name: 'Carousels',
+        //   url: '/base/carousels',
+        // },
+        // {
+        //   name: 'Forms',
+        //   url: '/base/forms',
+        // },
       ]
     },
     // {

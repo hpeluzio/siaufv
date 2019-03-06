@@ -11,25 +11,25 @@ export default {
     },
     {
       name: 'Relatórios',
-      url: '/relatorios',
+      url: '/',
       icon: 'icon-note',
       children: [
         {
-          name: 'Breadcrumbs',
-          url: '/base/breadcrumbs',
+          name: 'Relatório testes',
+          url: '/relatorios',
         },
-        {
-          name: 'Cards',
-          url: '/base/cards',
-        },
-        {
-          name: 'Carousels',
-          url: '/base/carousels',
-        },
-        {
-          name: 'Forms',
-          url: '/base/forms',
-        },
+        // {
+        //   name: 'Cards',
+        //   url: '/base/cards',
+        // },
+        // {
+        //   name: 'Carousels',
+        //   url: '/base/carousels',
+        // },
+        // {
+        //   name: 'Forms',
+        //   url: '/base/forms',
+        // },
       ]
     },
   ]
