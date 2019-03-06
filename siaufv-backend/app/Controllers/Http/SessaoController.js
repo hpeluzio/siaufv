@@ -150,6 +150,7 @@ class SessaoController {
             .innerJoin('avaliadores', 'avaliadores.id', 'avaliador_avaliacao.avaliador_id')
             .orderBy('data', 'asc')
             .orderBy('horario', 'asc')
+            .orderBy('avaliacoes_trabalho_id', 'asc')
 
         return sessoes
     }    

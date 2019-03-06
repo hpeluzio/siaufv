@@ -110,7 +110,7 @@ export default {
       { header: 'Nome', dataKey: 'nome' },
       { header: 'Data', dataKey: 'data' },
       { header: 'Horário', dataKey: 'horario' },
-      { header: 'Instituto', dataKey: 'instituto' },
+      //{ header: 'Instituto', dataKey: 'instituto' },
       { header: 'Sala', dataKey: 'salas_nome' },
       { header: 'Trabalhos', dataKey: 'avaliacoes_trabalho_id' },
       { header: 'Avaliadores', dataKey: 'avaliadores_nome' },
@@ -129,24 +129,37 @@ export default {
   //methods
   methods: {
     gerarRelatorioSalasPDF() {
+      this.getAxiosArraySalas()
 
-    var doc = new jsPDF('p', 'pt');
-    doc.setFontSize(12);
-    doc.setTextColor(0);
-    doc.setFontStyle('bold');
-    doc.text('APRENDENDO Rowspan and colspan', 40, 50);
+      if(this.salas.length === 0) {
+        alert("Não há salas cadastradas!")
+        return
+      }
 
-    doc.autoTable({
-        startY: 60,
-        head: this.headersSala,
-        body: this.salas,
-        theme: 'grid' //grid
-    });
-    doc.save('salas.pdf');
+      var doc = new jsPDF('p', 'pt');
+      doc.setFontSize(12);
+      doc.setTextColor(0);
+      doc.setFontStyle('bold');
+      doc.text('Salas Cadastradas', 40, 50);
 
+      doc.autoTable(//this.headersSala,this.salas)
+        {
+          startY: 60,
+          columns: this.headersSala,
+          body: this.salas,
+          theme: 'grid' //grid
+      });
+      doc.save('salas.pdf');
     },
 
     gerarRelatorioSessoesOraisPDF() {
+      this.getArrayAxiosSessoesOrais()
+
+      if(this.sessoes_orais.length === 0) {
+        alert("Não há sessões cadastradas!")
+        return
+      }
+
       var doc = new jsPDF('p', 'pt');
       doc.setFontSize(12);
       doc.setTextColor(0);
@@ -157,10 +170,10 @@ export default {
       this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'nome')
       this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'data')
       this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'horario')
-      this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'instituto')
+      //this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'instituto')
       this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'salas_nome')
       this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'avaliacoes_trabalho_id')
-      this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'avaliadores_nome')
+      //this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'avaliadores_nome')
 
       doc.autoTable({
           startY: 100,
@@ -209,9 +222,7 @@ export default {
               return sessao
             }  
           })
-
-
-          console.log('SESSOES: ', this.sessoes_orais)
+          //console.log('SESSOES: ', this.sessoes_orais)
         })
         .catch(error => {
           console.log(error)

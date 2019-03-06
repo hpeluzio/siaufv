@@ -2,7 +2,7 @@ export default {
   items: [
     {
       title: true,
-      name: 'Menu',
+      name: 'Consultas',
       class: '',
       wrapper: {
         element: '',
@@ -15,7 +15,7 @@ export default {
       icon: 'icon-note',
       children: [
         {
-          name: 'Relatório testes',
+          name: 'Relatórios gerais',
           url: '/relatorios',
         },
         // {
