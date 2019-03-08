@@ -95,7 +95,7 @@ export default {
       icon: 'icon-note',
       children: [
         {
-          name: 'Relatório testes',
+          name: 'Relatórios gerais',
           url: '/relatorios',
         },
         // {

@@ -21,6 +21,10 @@ export function normaliza (s) {
 }
 
 export function jsPDFautoTable_rowSpan (array_t, coluna) {
+  if(array_t.length === 0){
+    console.log("Array Vazio")  
+    return
+  }
   var index = 0
 
   array_t[0][eval("'"+coluna+"'")] = {rowSpan: 1, content: array_t[0][eval("'"+coluna+"'")] , styles: {valign: 'middle', halign: 'center'}}
