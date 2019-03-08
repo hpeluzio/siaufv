@@ -160,7 +160,7 @@ export default {
       this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'instituto')
       this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'salas_nome')
       this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'avaliacoes_trabalho_id')
-      this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'avaliadores_nome')
+      //this.sessoes_orais = helpers.jsPDFautoTable_rowSpan(this.sessoes_orais, 'avaliadores_nome')
 
       doc.autoTable({
           startY: 100,
