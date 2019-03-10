@@ -130,9 +130,9 @@ export default {
     },
 
     created () {
+      document.title = "SIA - Institutos"
       //Pegando todos Institutos 
       this.getAxiosArrayInstitutos()
-
       //Mudando o locale do Vuetify
       this.changeLocale () 
     },

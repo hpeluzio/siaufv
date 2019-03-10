@@ -1,14 +1,23 @@
 export default {
   items: [
-    // {
-    //   name: 'Home',
-    //   url: '/home',
-    //   icon: 'icon-frame',
-    //   //badge: {
-    //   //  variant: 'primary',
-    //   //  text: 'NEW'
-    //   //}
-    // },
+    {
+      title: true,
+      name: 'Menu Principal',
+      class: '',
+      wrapper: {
+        element: '',
+        attributes: {}
+      }
+    },    
+    {
+      name: 'Home',
+      url: '/home',
+      icon: 'icon-home',
+      //badge: {
+      //  variant: 'primary',
+      //  text: 'NEW'
+      //}
+    },
     // {
     //   title: true,
     //   name: 'Principal',
@@ -18,7 +27,7 @@ export default {
     //     attributes: {}
     //   }
     // },
-    ///
+    
     {
       title: true,
       name: 'Sistema',
@@ -94,10 +103,18 @@ export default {
       url: '/',
       icon: 'icon-note',
       children: [
+        // {
+        //   name: 'Relatórios Gerais',
+        //   url: '/relatorios',
+        // },
         {
-          name: 'Relatórios gerais',
-          url: '/relatorios',
-        },
+          name: 'Orais',
+          url: '/relatorios_orais',
+        },              
+        {
+          name: 'Painéis',
+          url: '/relatorios_paineis',
+        },        
         // {
         //   name: 'Cards',
         //   url: '/base/cards',

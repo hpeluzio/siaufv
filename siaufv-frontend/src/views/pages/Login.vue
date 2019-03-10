@@ -75,6 +75,9 @@ export default {
       submitted: false
     }
   },
+  created() {
+    document.title = "SIA - Login"
+  },
   methods: {
     //Checar o formulário em busca de erros
     handleSubmit(e) {
@@ -104,8 +107,6 @@ export default {
       })
 
       .then(response => {
-        console.log("response: ")
-        console.log(response)
         // console.log("response.data.userData: " )
         // console.log(response.data.userData.isAdmin)
         // console.log("response.data.tokenData: ")

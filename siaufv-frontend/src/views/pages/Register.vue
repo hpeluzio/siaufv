@@ -103,6 +103,9 @@ export default {
       submitted: false
     }
   },
+  created() {
+    document.title = "SIA - Register";
+  },  
   methods: {
     handleSubmit(e) {
       this.submitted = true;

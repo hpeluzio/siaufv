@@ -7,6 +7,7 @@ const DefaultContainerNotLogged = () => import('@/containers/DefaultContainerNot
 
 
 // SIA
+const Home = () => import('@/views/pages/Home')
 const Anos = () => import('@/views/pages/Anos')
 const Institutos = () => import('@/views/pages/Institutos')
 const Avaliadores = () => import('@/views/pages/Avaliadores')
@@ -16,6 +17,8 @@ const Salas = () => import('@/views/pages/Salas')
 const Orais = () => import('@/views/pages/Orais')
 const Paineis = () => import('@/views/pages/Paineis')
 const Relatorios = () => import('@/views/reports/Relatorios')
+const Oraisreport = () => import('@/views/reports/Oraisreport')
+const Paineisreport = () => import('@/views/reports/Paineisreport')
 // SIA
 
 
@@ -92,8 +95,8 @@ const router = new Router({
       children: [
         {
           path: 'home',
-          name: 'painel',
-          component: Painel,
+          //name: 'Home',
+          component: Home,
         },
         {
           path: 'institutos',
@@ -112,7 +115,7 @@ const router = new Router({
         },
         {
           path: 'avaliacoes',
-          name: 'Avaliacoes',
+          name: 'Avaliações',
           component: Avaliacoes,
         },
         {
@@ -122,7 +125,7 @@ const router = new Router({
         },
         {
           path: 'paineis',
-          name: 'Paineis',
+          name: 'Painéis',
           component: Paineis,
         },                    
         {
@@ -184,6 +187,9 @@ const router = new Router({
       component: {
         render (c) { return c('router-view') }
       },
+      // meta: {
+      //   requiresAuth: true,
+      // },      
       children: [
         {
           path: '404',
@@ -209,28 +215,28 @@ const router = new Router({
     },
     {
       path: '/',
-      redirect: '/home',
-      name: 'Home',
+      redirect: '/relatorios_orais',
+      name: 'Relatorios',
       component: DefaultContainer,
       meta: {
-        requiresAuth: false,
+        requiresAuth: true,
       },
       children: [
+        // {
+        //   path: 'relatorios',
+        //   name: 'Relatorios gerais',
+        //   component: Relatorios
+        // },
         {
-          path: 'relatorios',
-          name: 'Relatorios',
-          component: Relatorios
+          path: 'relatorios_orais',
+          name: 'Relatórios Orais',
+          component: Oraisreport
         },
         {
-          path: 'forms',
-          name: 'Forms',
-          component: Forms
-        },
-        {
-          path: 'carousels',
-          name: 'Carousels',
-          component: Carousels
-        },
+          path: 'relatorios_paineis',
+          name: 'Relatórios Painéis',
+          component: Paineisreport
+        },                   
       ]
     },    
   ]

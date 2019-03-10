@@ -579,6 +579,7 @@ export default {
   }),
 
   created() {
+    document.title = "SIA - Orais";
     //Mudando o locale do Vuetify
     this.changeLocale()
     //Pegando todos sessoes

@@ -130,9 +130,9 @@ export default {
     },
 
     created () {
+      document.title = "SIA - Anos"
       //Pegando todos anos 
       this.getAxiosArrayAnos()
-
       //Mudando o locale do Vuetify
       this.changeLocale () 
     },

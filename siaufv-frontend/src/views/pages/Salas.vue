@@ -166,12 +166,11 @@ export default {
     },
 
     created () {
+      document.title = "SIA - Salas"
       //Pegando todos salas 
       this.getAxiosArraySalas()
-
       //Pegando todos tipos 
       this.setArrayTipos()
-
       //Mudando o locale do Vuetify
       this.changeLocale () 
     },

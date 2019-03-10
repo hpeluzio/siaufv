@@ -43,3 +43,31 @@ export function jsPDFautoTable_rowSpan (array_t, coluna) {
   return array_t
 }
 
+
+export function jsPDF_HTMLrowSpan (array_t, coluna) {
+  if(array_t.length === 0){
+    console.log("Array Vazio")  
+    return
+  }
+  var index = 0
+
+  array_t[0][eval("'"+coluna+"_rowspan'")] = 1
+  
+  array_t.map( (rowAtual, indice, array) => {
+
+    if(array[index][eval("'"+coluna+"'")] !== rowAtual[eval("'"+coluna+"'")] && index !== indice){
+      index = array.indexOf(rowAtual)
+      rowAtual[eval("'"+coluna+"_rowspan'")] = 1
+    }
+
+    if(array[index][eval("'"+coluna+"'")] === rowAtual[eval("'"+coluna+"'")] && index !== indice){
+      array[index][eval("'"+coluna+"_rowspan'")] ++
+      delete rowAtual[eval("'"+coluna+"'")];
+    }
+
+
+  })  
+
+  return array_t
+}
+

@@ -186,9 +186,9 @@ export default {
     },
 
     created () {
+      document.title = "SIA - Avaliadores"
       //Mudando o locale do Vuetify
       this.changeLocale () 
-
       //Pegando todos avaliadores
       this.getAxiosArrayAvaliadores()
     },

@@ -289,6 +289,7 @@ export default {
   },
 
   created() {
+    document.title = "SIA - Trabalhos"
     //Mudando o locale do Vuetify
     this.changeLocale();
     //Pegando todos trabalhos... Importa ARRAY TRABALHO do

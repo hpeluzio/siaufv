@@ -61,7 +61,7 @@ Route.put('/sessao/:id', 'SessaoController.update').middleware('auth:jwt').valid
 Route.delete('/sessao/:id', 'SessaoController.destroy').middleware('auth:jwt')
 
 //Reports
-Route.get('/sessao_report', 'SessaoController.sessao_report')//.middleware('auth:jwt')
+Route.get('/sessao_report', 'SessaoController.sessao_report').middleware('auth:jwt')
 
 //Rotas do Avaliador Resource
 // Route
