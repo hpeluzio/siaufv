@@ -63,7 +63,7 @@
                         <td>{{ sessao.horario }}</td>
                         <td>{{ sessao.sala_nome }}</td>
                         <td>
-                          <table border="1" style="width:100%; border-top: 0; border-left: 0; border-bottom: 0; border-right: 0;">
+                          <table border="1" style="width:100%; ">
                             <thead>
                               <tr align="center">
                                 <th>Trabalho ID</th>
@@ -74,7 +74,7 @@
                               <tr align="center" v-for="(avaliacao, i) in sessao.avaliacoes" :key="i + '-third'" >
                                 <td width="80px">{{ avaliacao.trabalho_id }}</td>
                                 <td>
-                                  <table border="0" style="width:100%; border-top: 0; border-left: 0; border-bottom: 0; border-right: 0;">
+                                  <table border="1" style="width:100%; border-top: 0; border-left: 0; border-bottom: 0; border-right: 0;">
                                     <tbody>
                                       <tr align="center" v-for="(avaliador, i) in avaliacao.avaliadores" :key="i + '-third'" >
                                         <td>{{ avaliador.nome }}</td>
