@@ -27,15 +27,13 @@ class AuthController {
             console.log(err)
             return response.status(500).send( { "error": err } )
         }
-
     }
 
     async login ( { request, response, auth }) {
         //Pegando os campos da requisicao
         const { email, password } = await request.only( ['email','password'] )
         //Try Catch para capturar possiveis erros e garantir 
-        try {console.log("UAI0")
-            console.log(email, password)
+        try {
             const token = await auth.attempt(email, password)
 
             const user = await User.findByOrFail('email', email)

@@ -1,0 +1,15 @@
+version: '3.2'
+
+services:
+  frontend-sia:
+     build: .
+     restart: always
+     volumes:
+       - ./:/usr/src/app
+     ports:
+       - 8080:8080
+     env_file:
+       - .env
+     command: npm run serve
+
+

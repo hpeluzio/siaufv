@@ -164,7 +164,7 @@ export default {
           // this.sessoes_paineis = helpers.jsPDF_HTMLrowSpan(this.sessoes_paineis, 'avaliacoes_trabalho_id')
 
           //this.sessoes_paineis[0].nome_rowspan = 2
-          console.log('SESSOES JSON: ', this.sessoes_paineis_json)
+          //console.log('REPORT SESSOES: ', this.sessoes_paineis_json)
         })
         .catch(error => {
           console.log(error)

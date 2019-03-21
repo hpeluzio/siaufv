@@ -138,7 +138,7 @@ export default {
               return sessao
             }  
           })
-          console.log('SESSOES JSON: ', this.sessoes_orais_json)
+          //console.log('REPORT SESSOES: ', this.sessoes_orais_json)
         })
         .catch(error => {
           console.log(error)

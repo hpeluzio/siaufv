@@ -66,6 +66,7 @@
 <script>
 import axios from 'axios';
 
+
 export default {
   name: 'Login',
   data () {
@@ -91,15 +92,10 @@ export default {
     },
     //Função de login para retornar o token
     login() {
-      //console.log("Entrou no metodo login")
-      //console.log(this.email, this.password)
-      // axios.post('http://127.0.0.1:3333/login', {
-      //   email: this.email,
-      //   password: this.password
-      // })
+
       axios({
         method: 'post',
-        url: 'http://127.0.0.1:3333/login',
+        url: process.env.VUE_APP_API_URL + ':' + process.env.VUE_APP_API_PORT + '/login',
         data: {
           email: this.email,
           password: this.password
@@ -116,7 +112,6 @@ export default {
           sessionStorage.setItem('user', JSON.stringify(response.data))
           this.$router.push('/home')
         } 
-        console.log(response.status)
       })
       .catch((error) => {
         this.errors.add({ field: 'auth', msg: 'E-mail ou senha inválidos' })

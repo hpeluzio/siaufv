@@ -310,7 +310,7 @@ export default {
         .then(response => {
           // Pegando os trabalhos e os autores desses trabalhos
           this.trabalhos = response.data//.trabalhos;
-          console.log('TRABALHOS: ', this.trabalhos)
+          //console.log('TRABALHOS: ', this.trabalhos)
         })
         .catch(error => {
           console.log(error);
