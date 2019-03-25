@@ -91,6 +91,7 @@ const router = new Router({
       component: DefaultContainer,
       meta: {
         requiresAuth: true,
+        adminAuth: true
       },
       children: [
         {

@@ -68,8 +68,8 @@
                     <!-- CONFIRM PASSWORD-->   
                 </b-input-group>
       
-                <div style="color: red"v-if="submitted && errors.has('defaulterror')" ><strong>{{ errors.first('defaulterror') }}</strong></div> 
-                </p>
+                <div style="color: red" v-if="submitted && errors.has('defaulterror')" ><strong>{{ errors.first('defaulterror') }}</strong></div> 
+                
                 <b-button variant="success" @click="handleSubmit" block>Criar Conta</b-button>
               </b-form>
             </b-card-body>
