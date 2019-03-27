@@ -1,22 +1,20 @@
 'use strict'
 
-class SessaoStore {
+class UserRegister {
   get rules () {
     return {
-      nome: 'required',
-      data: 'required',
-      horario: 'required',
-      horariofim: 'required',
-      tipo: 'required',
-      instituto: 'required',
-      ano_id: 'required',
-      sala_id: 'required',
+      'name': 'required',
+      'email': 'required|email|unique:users,email',
+      'password': 'required|min:6',
+      'confirm_password': 'required|min:6'
     }
   }
 
   get messages() {
     return {
       'required': 'O campo {{ field }} é obrigatório.',
+      'unique': 'O campo {{ field }} já está cadastrado.',
+      'email': 'Digite um e-mail válido.'
     }
   }
 
@@ -36,4 +34,4 @@ class SessaoStore {
   }
 }
 
-module.exports = SessaoStore
+module.exports = UserRegister

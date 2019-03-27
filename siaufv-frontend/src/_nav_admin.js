@@ -2,7 +2,7 @@ export default {
   items: [
     {
       title: true,
-      name: 'Menu Principal',
+      name: 'Menu Admin',
       class: '',
       wrapper: {
         element: '',
@@ -11,22 +11,9 @@ export default {
     },    
     {
       name: 'Home',
-      url: '/home',
+      url: '/admin',
       icon: 'icon-home',
-      //badge: {
-      //  variant: 'primary',
-      //  text: 'NEW'
-      //}
     },
-    // {
-    //   title: true,
-    //   name: 'Principal',
-    //   class: '',
-    //   wrapper: {
-    //     element: '',
-    //     attributes: {}
-    //   }
-    // },
     
     {
       title: true,
@@ -39,27 +26,27 @@ export default {
     },
     {
       name: 'Institutos',
-      url: '/institutos',
+      url: '/admin/institutos',
       icon: 'cui-cog'
     },     
     {
       name: 'Anos',
-      url: '/anos',
+      url: '/admin/anos',
       icon: 'icon-calendar'
     },
     {
       name: 'Salas',
-      url: '/salas',
+      url: '/admin/salas',
       icon: 'cui-location-pin'
     },    
     {
       name: 'Avaliadores',
-      url: '/avaliadores',
+      url: '/admin/avaliadores',
       icon: 'icon-people'
     },
     {
       name: 'Trabalhos',
-      url: '/trabalhos',
+      url: '/admin/trabalhos',
       icon: 'icon-pencil'
     },
     {
@@ -71,21 +58,14 @@ export default {
         attributes: {}
       }
     },
-    // {
-    //   name: 'Avaliações',
-    //   url: '/avaliacoes',
-    //   icon: 'icon-bubbles'
-    // },
-
-
     {
       name: 'Orais',
-      url: '/orais',
+      url: '/admin/orais',
       icon: 'cui-speech'
     },
     {
       name: 'Painéis',
-      url: 'paineis',
+      url: '/admin/paineis',
       icon: 'cui-dashboard'
     },
 
@@ -105,11 +85,11 @@ export default {
       children: [
         {
           name: 'Orais',
-          url: '/relatorios_orais',
+          url: '/admin/relatorios_orais',
         },              
         {
           name: 'Painéis',
-          url: '/relatorios_paineis',
+          url: '/admin/relatorios_paineis',
         },        
       ]
     },

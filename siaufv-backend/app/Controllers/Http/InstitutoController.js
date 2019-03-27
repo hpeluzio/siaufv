@@ -11,7 +11,6 @@ class InstitutoController {
     return await Instituto.all()
   }
 
-
   async store ({ request, response }) {
     const { instituto } = request.only([ 'instituto' ]);
 
@@ -41,10 +40,8 @@ class InstitutoController {
   }
 
   async destroy ({ params, request, response }) {
-    try {
-      // console.log('ANTES')
-      // console.log(params.id)
 
+    try {
       var instituto = await Instituto.findOrFail(params.id)
       await instituto.delete() 
     } catch (error) {

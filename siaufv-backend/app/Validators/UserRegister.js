@@ -3,7 +3,7 @@
 class UserRegister {
   get rules () {
     return {
-      'username': 'required|unique:users,username',
+      'name': 'required',
       'email': 'required|email|unique:users,email',
       'password': 'required|min:6',
       'confirm_password': 'required|min:6'

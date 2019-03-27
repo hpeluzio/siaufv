@@ -52,8 +52,12 @@ export default {
   },
   methods: {
     logout(){
-      sessionStorage.clear()
+      //sessionStorage.clear()
+      sessionStorage.removeItem('user');
+      this.$store.loggedIn = false
+      this.$store.permission = ''    
       this.$router.push({ name: 'Login' })
+      //window.location.reload(true);
     }
   }
 

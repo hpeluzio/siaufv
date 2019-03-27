@@ -1,16 +1,9 @@
 'use strict'
 
-class SessaoStore {
+class UserRegister {
   get rules () {
     return {
-      nome: 'required',
-      data: 'required',
-      horario: 'required',
-      horariofim: 'required',
-      tipo: 'required',
-      instituto: 'required',
-      ano_id: 'required',
-      sala_id: 'required',
+      'permission': 'required',
     }
   }
 
@@ -36,4 +29,4 @@ class SessaoStore {
   }
 }
 
-module.exports = SessaoStore
+module.exports = UserRegister

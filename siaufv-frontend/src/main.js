@@ -9,12 +9,21 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
 
-// todo
-// cssVars()
 
-Vue.use(BootstrapVue)
+//STORE LOGIN
+Vue.prototype.$store = {
+  loggedIn: false,
+  permission: '' 
+};
+
 
 //Axios
+import axios from './axios'
+Vue.prototype.$axios = axios;
+
+
+
+Vue.use(BootstrapVue)
 
 
 // Vuetify

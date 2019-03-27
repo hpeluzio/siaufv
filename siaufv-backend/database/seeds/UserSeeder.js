@@ -16,9 +16,9 @@ const User = use('App/Models/User')
 
 class UserSeeder {
   async run () {
-    await User.create({ username: 'sia', email: 'sia@ufv.br', password: '123123' })
-    await User.create({ username: 'hpeluzio', email: 'hpeluzio@gmail.com', password: '123123' })
-    await User.create({ username: 'convidado', email: 'convidado@email.com', password: 'convidado' })
+    await User.create({ name: 'SIA', email: 'sia@ufv.br', password: '123123', permission: 'admin' })
+    await User.create({ name: 'Henrique Peluzio', email: 'hpeluzio@gmail.com', password: '123123', permission: 'user' })
+    await User.create({ name: 'Convidado', email: 'convidado@email.com', password: 'convidado', permission: 'user' })
   }
 }
 
