@@ -23,6 +23,7 @@
         <b-nav-item class="d-md-down-none">
           <i class="icon-location-pin"></i>
         </b-nav-item>-->
+        <b-nav-item class="px-3" to="/meusdados">{{ email }}</b-nav-item>
         <DefaultHeaderDropdownAccnt/>
       </b-navbar-nav>
       <!--<AsideToggler class="d-none d-lg-block" />-->
@@ -97,6 +98,10 @@ export default {
     },
     list () {
       return this.$route.matched.filter((route) => route.name || route.meta.label )
+    },
+    email () {
+      const authUser = JSON.parse(localStorage.getItem('user'))
+      return authUser.userData.email
     }
   }
 }

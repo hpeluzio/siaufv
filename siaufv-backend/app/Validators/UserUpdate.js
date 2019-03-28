@@ -1,10 +1,11 @@
 'use strict'
 
-class UserRegister {
+class UserUpdate {
   get rules () {
     return {
       'name': 'required',
-      'email': 'required|email|unique:users,email',
+      //'email': 'required|email|unique:users,email',
+      'email': 'required|unique:users,email,id,'+ this.ctx.auth.user.id,
       'password': 'required|min:6',
       'confirm_password': 'required|min:6'
     }
@@ -18,20 +19,10 @@ class UserRegister {
     }
   }
 
-  async authorize () {
-
-    if (this.ctx.auth.user.permission !== 'admin') {
-      this.ctx.response.unauthorized('Not authorized')
-      return false
-    }
-
-    return true
-  }
-
   async fails(error) {
     console.log(error)
     return this.ctx.response.status(400).json( { "error" : error })
   }
 }
 
-module.exports = UserRegister
+module.exports = UserUpdate

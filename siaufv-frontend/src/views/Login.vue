@@ -39,7 +39,7 @@
                     <b-col cols="6" class="text-right">
                       <b-button variant="link" class="px-0">Perdeu a senha?</b-button>
                     </b-col>
-                  </b-input-group>
+                  
                   </b-row>
                 </b-form>
               </b-card-body>
@@ -64,8 +64,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 
 export default {
   name: 'Login',
@@ -93,9 +91,9 @@ export default {
     //Função de login para retornar o token
     login() {
 
-      axios({
+      this.$axios({
         method: 'post',
-        url: process.env.VUE_APP_API_URL + ':' + process.env.VUE_APP_API_PORT + '/login',
+        url: '/login',
         data: {
           email: this.email,
           password: this.password

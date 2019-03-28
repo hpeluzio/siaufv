@@ -34,6 +34,7 @@ const Paineisreport = () => import('@/views/reports/Paineisreport')
 //Auth
 const Login = () => import('@/views/Login')
 const Register = () => import('@/views/Register')
+const MeusDados = () => import('@/views/MeusDados')
 
 
 Vue.use(Router)
@@ -60,7 +61,6 @@ const router = new Router({
           name: 'Login',
           component: Login,
         },
-
       ]
     },
 
@@ -125,7 +125,7 @@ const router = new Router({
           name: 'Usuários',
           component: AdminUsuarios,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-        },        
+        },
       ]
     },
     {
@@ -146,7 +146,13 @@ const router = new Router({
           name: 'Relatórios Painéis',
           component: Paineisreport,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-        },                   
+        },
+        {
+          path: '/meusdados',
+          name: 'Meus Dados',
+          component: MeusDados,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: false },
+        },                            
       ]
     },
 
@@ -205,7 +211,7 @@ const router = new Router({
           name: 'Salas',
           component: Salas,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
-        },        
+        },
       ]
     },
 
@@ -227,7 +233,13 @@ const router = new Router({
           name: 'Relatórios Painéis',
           component: Paineisreport,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
-        },                   
+        },
+        {
+          path: 'meusdados',
+          name: 'Meus Dados',
+          component: MeusDados,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: false },
+        },                              
       ]
     },
   ]
@@ -242,15 +254,16 @@ router.beforeEach((to, from, next) => {
     const authUser = JSON.parse(localStorage.getItem('user'))
 
     if(!authUser /*|| Vue.prototype.$store.loggedIn === false*/){
-      next({ name: '/Login' })
+      next({ name: 'Login' })
     }
+    
     else if (to.meta.adminAuth) {
       const authUser = JSON.parse(localStorage.getItem('user'))
       if(authUser.userData.permission === 'admin' /*&& Vue.prototype.$store.permission === 'admin'*/){
         next()
       }  
       else{
-        next({ name: '/Home' })
+        next({ name: 'Home' })
       } 
     }
     else if (to.meta.userAuth) {
@@ -258,9 +271,11 @@ router.beforeEach((to, from, next) => {
       if(authUser.userData.permission === 'user' /*&& Vue.prototype.$store.permission === 'user'*/){
         next()
       } else {
-        next({ name: '/Login' })
+        next({ name: 'Login' })
       }        
     }
+    else 
+     next()
   } 
   else
     next()

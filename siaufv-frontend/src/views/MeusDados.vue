@@ -1,12 +1,12 @@
 <template>
     <div class="container">
       <b-row class="justify-content-center">
-        <b-col md="6" sm="8">
+        <b-col md="6" sm="8" >
           <b-card no-body class="mx-4">
             <b-card-body class="p-4">
               <b-form>
-                <h1>Registrar</h1>
-                <p class="text-muted">Crie sua conta</p>
+                <h1>Meus Dados</h1>
+
                 <b-input-group class="mb-3">
                   <b-input-group-prepend>
                     <b-input-group-text><i class="icon-user"></i></b-input-group-text>
@@ -70,7 +70,7 @@
       
                 <div style="color: red" v-if="submitted && errors.has('defaulterror')" ><strong>{{ errors.first('defaulterror') }}</strong></div> 
                 
-                <b-button variant="success" @click="handleSubmit" block>Criar Conta</b-button>
+                <b-button variant="success" @click="handleSubmit" block>Atualizar Dados</b-button>
               </b-form>
             </b-card-body>
             <!--<b-card-footer class="p-4">
@@ -90,10 +90,9 @@
 </template>
 
 <script>
-import axios from 'axios';
 
 export default {
-  name: 'Register',
+  name: 'Update',
   data () {
     return {
       name: '',
@@ -104,48 +103,52 @@ export default {
     }
   },
   created() {
-    document.title = "SIA - Register";
+    document.title = "SIA - atualizar";
+    //Setando dados do usuario
+    this.setDados()
+
   },  
   methods: {
+
+    setDados() {
+      const authUser = JSON.parse(localStorage.getItem('user'))
+      this.name = authUser.userData.name
+      this.email = authUser.userData.email
+    },
+
     handleSubmit(e) {
       this.submitted = true;
       this.$validator.validate().then(valid => {
           if (valid) {
-              this.register()
+              this.atualizar()
               //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.user))
           }
       });
     },
-    register() {
+
+    atualizar() {
+      const authUser = JSON.parse(localStorage.getItem('user'))
+
       this.$axios({
-        method: 'post',
-        url: '/register',
+        method: 'put',
+        url: '/usuario/' + authUser.userData.id + '',
         data: {
+          id: authUser.userData.id,
           name: this.name,
           email: this.email,
           password: this.password,
           confirm_password: this.confirm_password
         }
-      })      
+      })
       .then(response => {
-        if(response.data.tokenData){
-          //console.log("Register Response")
-          // Se entrar aqui autenticou com sucesso
-          localStorage.setItem('user', JSON.stringify(response.data))
-          this.$store.loggedIn = true
-          this.$store.permission = response.data.userData.permission
-          this.$router.push('/home')
-        }
-        console.log(response)
+        localStorage.setItem('user', JSON.stringify(response.data))
+        this.$store.loggedIn = true
+        this.$store.permission = response.data.userData.permission
+        alert('Dados editados.'); 
       })
       .catch((error) => {
-        console.log(error);
-            this.errors.clear()
-            if(error.response.data.error[0].message)
-              this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })
-            else
-              this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
-      });
+        this.errors.clear() 
+      })
     }
   }
 }

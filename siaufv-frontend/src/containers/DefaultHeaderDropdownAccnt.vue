@@ -4,12 +4,12 @@
       <img
         src=""
         class="icon-user"
-        alt="" ></img>
+        alt="" />
     </template>\
     <template slot="dropdown">
       <b-dropdown-header tag="div" class="text-center"><strong>Minha Conta</strong></b-dropdown-header>
       <b-dropdown-item><i class="fa fa-bell-o" /> 
-            Meus Dados
+            <router-link to="/meusdados">Meus Dados</router-link>
       </b-dropdown-item>
       <!--<b-dropdown-item><i class="fa fa-envelope-o" /> Messages
         <b-badge variant="success">{{ itemsCount }}</b-badge>

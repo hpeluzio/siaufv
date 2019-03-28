@@ -14,7 +14,7 @@ Route.post('/login', 'Auth/AuthController.login').validator('UserLogin')
 //Usuarios
 Route.get('/usuario', 'UserController.index').middleware('auth:jwt')
 Route.put('/usuario_permission/:id', 'UserController.usuario_permission').middleware('auth:jwt').validator('UserPermissionUpdate')
-//Route.put('/usuario/:id', 'UserController.update').middleware('auth:jwt').validator('UsuarioUpdate')
+Route.put('/usuario/:id', 'UserController.update').middleware('auth:jwt').validator('UserUpdate')
 
 //Rotas do Instituto
 Route.get('/instituto', 'InstitutoController.index').middleware('auth:jwt')

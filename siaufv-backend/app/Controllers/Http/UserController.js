@@ -29,8 +29,8 @@ class UserController {
             usuarioParaAtualizar.permission = permission
             await usuarioParaAtualizar.save()
 
-            //Se chegou até aqui então o ano foi adicionado com sucesso
-            return response.status(200).send({ "success": "Ano atualizado com sucesso" });            
+            //Se chegou até aqui então o Usuario foi adicionado com sucesso
+            return response.status(200).send({ "success": "Usuario atualizado com sucesso" });            
         } catch (error) {
             console.log(error)
             return response.status(500).send({ "error": error });
@@ -38,21 +38,38 @@ class UserController {
 
     }    
 
-    async update ({ params, request, response }) {
-        const { name, email, permission } = request.only([ 'name', 'email', 'permission' ]);
-    
+    async update ({ auth, params, request, response }) {
+        
+        if(auth.user.id != params.id)
+            return response.unauthorized('Not authorized')
+
+        //Pegando os campos da requisicao
+        const { name, email, password, confirm_password } = await request.only(['name','email','password', 'confirm_password'])
+        //Try Catch para capturar possiveis erros e garantir 
+        console.log(name, email, password, confirm_password)
+
+        if (password !== confirm_password) {
+              return response.status(400).send( { "error": "Senhas não conferem" } )
+        }
+
+
         try {
-            var usuarioParaAtualizar = await User.findOrFail(params.id)
+            var usuarioParaAtualizar = await User.findOrFail(auth.user.id)
             usuarioParaAtualizar.name = name
             usuarioParaAtualizar.email = email
-            usuarioParaAtualizar.permission = permission
+            usuarioParaAtualizar.password = password
             await usuarioParaAtualizar.save()
 
-            //Se chegou até aqui então o ano foi adicionado com sucesso
-            return response.status(200).send({ "success": "Ano atualizado com sucesso" });            
-        } catch (error) {
-            console.log(error)
-            return response.status(500).send({ "error": error });
+            const token = await auth.attempt(email, password)
+
+            const user = await User.findByOrFail('email', email)
+            user.password = undefined
+
+            //Retornar o token e dados do usuario
+            return { 'tokenData': token, 'userData':  user }
+        } catch (err) {
+            console.log(err)
+            return response.status(500).send( { "error": err } )
         }
     }    
     
