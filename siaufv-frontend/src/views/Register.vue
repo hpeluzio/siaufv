@@ -128,12 +128,12 @@ export default {
         }
       })      
       .then(response => {
-        if(response.data.tokenData){
+        if(response.data.token){
           //console.log("Register Response")
           // Se entrar aqui autenticou com sucesso
           localStorage.setItem('user', JSON.stringify(response.data))
           this.$store.loggedIn = true
-          this.$store.permission = response.data.userData.permission
+          this.$store.permission = response.data.user.permission
           this.$router.push('/home')
         }
         console.log(response)

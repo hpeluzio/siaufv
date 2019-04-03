@@ -68,61 +68,61 @@ const router = new Router({
     {
       path: '/',
       redirect: '/admin',
-      name: 'Admin',
+      name: '',
       component: DefaultContainerAdmin,
       meta: { requiresAuth: true, adminAuth: true, userAuth: false },
       children: [
         {
           path: '/admin',
-          name: 'Admin',
+          name: 'Admin / Home',
           component: Admin,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/institutos',
-          name: 'Institutos',
+          name: 'Admin / Institutos ',
           component: AdminInstitutos,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },          
         }, 
         {
           path: '/admin/anos',
-          name: 'Anos',
+          name: 'Admin / Anos',
           component: AdminAnos,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/avaliadores',
-          name: 'Avaliadores',
+          name: 'Admin / Avaliadores',
           component: AdminAvaliadores,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/orais',
-          name: 'Orais',
+          name: 'Admin / Orais',
           component: AdminOrais,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/paineis',
-          name: 'Painéis',
+          name: 'Admin / Painéis',
           component: AdminPaineis,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },                    
         {
           path: '/admin/trabalhos',
-          name: 'Trabalhos',
+          name: 'Admin / Trabalhos',
           component: AdminTrabalhos,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/salas',
-          name: 'Salas',
+          name: 'Admin / Salas',
           component: AdminSalas,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/usuarios',
-          name: 'Usuários',
+          name: 'Admin / Usuários',
           component: AdminUsuarios,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
@@ -131,25 +131,25 @@ const router = new Router({
     {
       path: '/admin',
       redirect: '/admin',
-      name: 'Relatorios',
+      name: 'admin',
       component: DefaultContainerAdmin,
       meta: { requiresAuth: true, adminAuth: true, userAuth: false },
       children: [
         {
           path: '/admin/relatorios_orais',
-          name: 'Relatórios Orais',
+          name: 'Administrador / Relatórios Orais',
           component: Oraisreport,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/relatorios_paineis',
-          name: 'Relatórios Painéis',
+          name: 'Administrador / Relatórios Painéis',
           component: Paineisreport,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/meusdados',
-          name: 'Meus Dados',
+          name: 'Administrador / Meus Dados',
           component: MeusDados,
           meta: { requiresAuth: true, adminAuth: false, userAuth: false },
         },                            
@@ -254,24 +254,24 @@ router.beforeEach((to, from, next) => {
     const authUser = JSON.parse(localStorage.getItem('user'))
 
     if(!authUser /*|| Vue.prototype.$store.loggedIn === false*/){
-      next({ name: 'Login' })
+      next({ path: '/login' })
     }
     
     else if (to.meta.adminAuth) {
       const authUser = JSON.parse(localStorage.getItem('user'))
-      if(authUser.userData.permission === 'admin' /*&& Vue.prototype.$store.permission === 'admin'*/){
+      if(authUser.user.permission === 'admin' /*&& Vue.prototype.$store.permission === 'admin'*/){
         next()
       }  
       else{
-        next({ name: 'Home' })
+        next({ path: '/home' })
       } 
     }
     else if (to.meta.userAuth) {
       const authUser = JSON.parse(localStorage.getItem('user'))
-      if(authUser.userData.permission === 'user' /*&& Vue.prototype.$store.permission === 'user'*/){
+      if(authUser.user.permission === 'user' /*&& Vue.prototype.$store.permission === 'user'*/){
         next()
       } else {
-        next({ name: 'Login' })
+        next({ path: '/login' })
       }        
     }
     else 

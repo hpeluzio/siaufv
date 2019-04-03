@@ -25,7 +25,7 @@ class AuthController {
             user.password = undefined
 
             //Retornar o token e dados do usuario
-            return { 'tokenData': token, 'userData':  user }
+            return { 'token': token, 'user':  user }
         } catch (err) {
             console.log(err)
             return response.status(500).send( { "error": err } )
@@ -43,7 +43,7 @@ class AuthController {
             user.password = undefined
 
             //Retornar o token e dados do usuario
-            return { 'tokenData': token, 'userData':  user}
+            return { 'token': token, 'user':  user}
         } catch (err) {
             return response.status(401).send( { "error": "E-mail ou senha informados estão incorretos." } )
         }

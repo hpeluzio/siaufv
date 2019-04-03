@@ -53,11 +53,12 @@ export default {
   methods: {
     logout(){
       //sessionStorage.clear()
-      sessionStorage.removeItem('user');
+      localStorage.removeItem('user');
       this.$store.loggedIn = false
       this.$store.permission = ''    
       this.$router.push({ name: 'Login' })
       //window.location.reload(true);
+      this.$axios = null
     }
   }
 

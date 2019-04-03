@@ -101,7 +101,7 @@ export default {
     },
     email () {
       const authUser = JSON.parse(localStorage.getItem('user'))
-      return authUser.userData.email
+      return authUser.user.email
     }
   }
 }

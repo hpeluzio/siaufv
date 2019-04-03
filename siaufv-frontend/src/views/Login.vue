@@ -101,15 +101,15 @@ export default {
       })
 
       .then(response => {
-        // console.log("response.data.userData: " )
-        // console.log(response.data.userData.isAdmin)
-        // console.log("response.data.tokenData: ")
-        // console.log(response.data.tokenData.token)
-        if(response.data.tokenData){
+        // console.log("response.data.user: " )
+        // console.log(response.data.user.isAdmin)
+        // console.log("response.data.token: ")
+        // console.log(response.data.token.token)
+        if(response.data.token){
           // Se entrar aqui autenticou com sucesso
           localStorage.setItem('user', JSON.stringify(response.data))
           this.$store.loggedIn = true
-          this.$store.permission = response.data.userData.permission
+          this.$store.permission = response.data.user.permission
           if(this.$store.permission === 'admin')
             this.$router.push('/admin')
           else

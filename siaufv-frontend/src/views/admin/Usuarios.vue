@@ -32,12 +32,12 @@
               <v-layout wrap>
 
                 <v-flex xs12 sm6 md6>
-                  <v-text-field outline readonly v-model="editedItem.name" label="name" data-vv-name="name" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('name') }"></v-text-field>
+                  <v-text-field  readonly v-model="editedItem.name" label="Nome" data-vv-name="name" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('name') }"></v-text-field>
                   <div v-if="submitted && errors.has('name')" style="color: red">{{ errors.first('name') }}</div>
                 </v-flex>
 
                 <v-flex xs12 sm6 md6>
-                  <v-text-field outline readonly v-model="editedItem.email" label="E-mail" data-vv-name="email" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('email') }"></v-text-field>
+                  <v-text-field  readonly v-model="editedItem.email" label="E-mail" data-vv-name="email" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('email') }"></v-text-field>
                   <div v-if="submitted && errors.has('email')" style="color: red">{{ errors.first('email') }}</div>
                 </v-flex>
 

@@ -66,13 +66,25 @@ class UserController {
             user.password = undefined
 
             //Retornar o token e dados do usuario
-            return { 'tokenData': token, 'userData':  user }
+            return { 'token': token, 'user':  user }
         } catch (err) {
             console.log(err)
             return response.status(500).send( { "error": err } )
         }
     }    
-    
+
+    async destroy ({ params, request, response }) {
+        try {
+          var usuarioParaSerDeletado = await User.findOrFail(params.id)
+          await usuarioParaSerDeletado.delete()
+        } catch (error) {
+          console.log(error)
+          return response.status(500).send({ "error": error });
+        }
+        //Se chegou até aqui então o Trabalho foi adicionado com sucesso
+        return response.status(200).send({ "success": "Usuário deletado com sucesso" });
+      }
+
 }
 
 module.exports = UserController
