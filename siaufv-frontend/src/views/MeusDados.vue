@@ -63,8 +63,7 @@
                           :class="{ 'is-invalid': submitted && errors.has('confirm_password') }" 
                           placeholder="Confirme sua senha" data-vv-as="password"
                     />
-                    
-
+                    <div v-if="submitted && errors.has('confirm_password')" class="invalid-feedback">{{ errors.first('confirm_password') }}</div> 
                     <!-- CONFIRM PASSWORD-->   
                 </b-input-group>
       
@@ -112,8 +111,8 @@ export default {
 
     setDados() {
       const authUser = JSON.parse(localStorage.getItem('user'))
-      this.name = authUser.userData.name
-      this.email = authUser.userData.email
+      this.name = authUser.user.name
+      this.email = authUser.user.email
     },
 
     handleSubmit(e) {
@@ -131,9 +130,9 @@ export default {
 
       this.$axios({
         method: 'put',
-        url: '/usuario/' + authUser.userData.id + '',
+        url: '/usuario/' + authUser.user.id + '',
         data: {
-          id: authUser.userData.id,
+          id: authUser.user.id,
           name: this.name,
           email: this.email,
           password: this.password,
@@ -143,7 +142,7 @@ export default {
       .then(response => {
         localStorage.setItem('user', JSON.stringify(response.data))
         this.$store.loggedIn = true
-        this.$store.permission = response.data.userData.permission
+        this.$store.permission = response.data.user.permission
         alert('Dados editados.'); 
       })
       .catch((error) => {

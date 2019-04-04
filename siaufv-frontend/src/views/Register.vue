@@ -63,9 +63,8 @@
                           :class="{ 'is-invalid': submitted && errors.has('confirm_password') }" 
                           placeholder="Confirme sua senha" data-vv-as="password"
                     />
-                    
-
-                    <!-- CONFIRM PASSWORD-->   
+                    <div v-if="submitted && errors.has('confirm_password')" class="invalid-feedback">{{ errors.first('confirm_password') }}</div> 
+                    <!-- CONFIRM PASSWORD-->    
                 </b-input-group>
       
                 <div style="color: red" v-if="submitted && errors.has('defaulterror')" ><strong>{{ errors.first('defaulterror') }}</strong></div> 
