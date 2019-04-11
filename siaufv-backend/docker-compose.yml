@@ -3,6 +3,7 @@ version: '3.2'
 services:
   mysql-db-sia:
     image: mysql:5.7
+    container_name: mysql-db-sia
     restart: always
     ports:
       - 3306:3306
@@ -14,6 +15,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
     restart: always
     links:
       - mysql-db-sia
@@ -21,9 +23,12 @@ services:
       - 8888:80
     environment:
       PMA_ARBITRARY: 1
+    depends_on:
+      - mysql-db-sia
 
   backend-sia:
     build: .
+    container_name: backend-sia
     restart: always
     ports:
        - 3333:3333
@@ -32,6 +37,9 @@ services:
     command: nodemon server.js
     links:
         - mysql-db-sia
+    depends_on:
+      - mysql-db-sia
+
 volumes:
   data:
 
