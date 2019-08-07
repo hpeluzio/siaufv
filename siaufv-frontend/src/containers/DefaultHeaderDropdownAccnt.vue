@@ -5,6 +5,8 @@
         src=""
         class="icon-user"
         alt="" />
+      <span class="align-top px-1">Usuário</span>
+
     </template>\
     <template slot="dropdown">
       <b-dropdown-header tag="div" class="text-center"><strong>Minha Conta</strong></b-dropdown-header>
