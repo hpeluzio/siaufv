@@ -87,7 +87,43 @@ class AvaliadorController {
     }
     //Se chegou até aqui então o avaliador foi adicionado com sucesso
     return response.status(200).send({ "success": "Avaliador ativado com sucesso" });
-  }  
+  }
+  
+  async avaliadores_por_instituto({ request, response, view }) {
+
+    const avaliadores = 
+      await Database
+        .select(
+          'avaliadores.*',
+          'avaliacoes.trabalho_id',
+          'sessoes.id as sessao_id',
+          'sessoes.nome as sessao_nome',
+          'sessoes.data as sessao_data',
+          'sessoes.horario as sessao_horario',
+          'sessoes.horariofim as sessao_horariofim',
+          'sessoes.ano_id as sessao_ano_id',
+          'sessoes.sala_id as sessao_sala_id',
+          'salas.id as sala_sala_id',
+          'salas.nome as sala_nome',
+          'salas.tipo as sala_tipo',
+          'anos.ano as ano'
+
+        )
+        .table('avaliadores')
+        .innerJoin('avaliador_avaliacao', 'avaliador_avaliacao.avaliador_id', 'avaliadores.id')
+        .innerJoin('avaliacoes', 'avaliador_avaliacao.avaliacao_id', 'avaliacoes.id')
+        .innerJoin('sessoes', 'sessoes.id', 'avaliacoes.sessao_id')
+        .innerJoin('trabalhos', 'trabalhos.trabalho_id', 'avaliacoes.trabalho_id')
+        .innerJoin('salas', 'sessoes.sala_id', 'salas.id')
+        .innerJoin('anos', 'sessoes.ano_id', 'anos.id')
+        //.where('avaliadores.ativo', '=', 1)
+        .orderBy('avaliadores.nome', 'asc')
+        .orderBy('sessao_data', 'asc')
+        .orderBy('sessao_horario', 'asc')
+    return avaliadores
+
+}   
+
 }
 
 module.exports = AvaliadorController

@@ -110,7 +110,15 @@ export default {
         {
           name: 'Painéis',
           url: '/relatorios_paineis',
-        },        
+        },
+        {
+          name: 'Avaliadores por Instituto',
+          url: '/avaliadoresporinstituto',
+        },
+        {
+          name: 'Trabalhos por Instituto',
+          url: '/trabalhosporinstituto',
+        },                      
       ]
     },
     // {

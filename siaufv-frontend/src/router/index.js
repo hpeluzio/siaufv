@@ -30,6 +30,8 @@ const Paineis = () => import('@/views/user/Paineis')
 const Relatorios = () => import('@/views/reports/Relatorios')
 const Oraisreport = () => import('@/views/reports/Oraisreport')
 const Paineisreport = () => import('@/views/reports/Paineisreport')
+const AvaliadoresPorInstituto = () => import('@/views/reports/AvaliadoresPorInstituto')
+const TrabalhosPorInstituto = () => import('@/views/reports/TrabalhosPorInstituto')
 
 //Auth
 const Login = () => import('@/views/Login')
@@ -148,6 +150,18 @@ const router = new Router({
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
+          path: '/admin/avaliadoresporinstituto',
+          name: 'Administrador / Avaliadores por Instituto',
+          component: AvaliadoresPorInstituto,
+          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
+        },
+        {
+          path: '/admin/trabalhosporinstituto',
+          name: 'Administrador / Trabalhos por Instituto',
+          component: TrabalhosPorInstituto,
+          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
+        },                
+        {
           path: '/meusdados',
           name: 'Administrador / Meus Dados',
           component: MeusDados,
@@ -234,6 +248,18 @@ const router = new Router({
           component: Paineisreport,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
+        {
+          path: 'avaliadoresporinstituto',
+          name: 'Avaliadores por Instituto',
+          component: AvaliadoresPorInstituto,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: true },
+        },
+        {
+          path: 'trabalhosporinstituto',
+          name: 'Trabalhos por Instituto',
+          component: TrabalhosPorInstituto,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: true },
+        },                   
         {
           path: 'meusdados',
           name: 'Meus Dados',
