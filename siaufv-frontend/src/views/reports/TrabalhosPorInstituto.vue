@@ -11,13 +11,13 @@
                       <v-card-text >
                         <h4>Este relatório contém as seguintes informações de trabalhos por instituto:</h4>
                         <ul>
-                          <li>Nome do avaliador</li>
-                          <li>Data da avaliação</li>
-                          <li>Horário da avaliação</li>
-                          <li>Instituto do avaliador</li>
-                          <li>Sala da avaliação</li>
-                          <li>Tipo da avaliação</li>
-                          <li>ID do Trabalho</li>
+                          <li>ID do trabalho</li>
+                          <li>Autores do trabalho</li>
+                          <li>Instituto do trabalho</li>
+                          <li>Data do trabalho</li>
+                          <li>Data e horário do trabalho</li>
+                          <li>Sala do trabalho</li>
+                          <li>Avaliadores de cada do trabalho</li>
 
                         </ul>
                               <v-flex xs12 sm12 md12>
