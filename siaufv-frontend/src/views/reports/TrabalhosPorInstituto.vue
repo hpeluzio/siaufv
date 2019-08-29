@@ -202,7 +202,7 @@ export default {
 
     getArrayAxiosTrabalhosJson() {
       //Pegando todos Avaliadores
-      axios_instance({
+      this.$axios({
         method: 'get',
         url: '/trabalhos_por_instituto'
       })

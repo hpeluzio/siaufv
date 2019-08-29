@@ -147,7 +147,7 @@ export default {
 
     getArrayAxiosSessoesPaineisJson() {
       //Pegando todos Avaliacoes
-      axios_instance({
+      this.$axios({
         method: 'get',
         url: '/sessao'
       })
@@ -173,7 +173,7 @@ export default {
 
     // getArrayAxiosSessoesPaineis() {
     //   //Pegando todos Avaliacoes
-    //   axios_instance({
+    //   this.$axios({
     //     method: 'get',
     //     url: '/sessao_report'
     //   })

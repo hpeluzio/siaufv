@@ -189,7 +189,7 @@ export default {
      * Gets do componente
      */
     getAxiosArraySalas() {
-      axios_instance({
+      this.$axios({
         method: 'get',
         url: '/sala'
       })
@@ -208,7 +208,7 @@ export default {
 
     getArrayAxiosSessoesOrais() {
       //Pegando todos Avaliacoes
-      axios_instance({
+      this.$axios({
         method: 'get',
         url: '/sessao_report'
       })

@@ -124,7 +124,7 @@ export default {
 
     getArrayAxiosSessoesOraisJson() {
       //Pegando todos Avaliacoes
-      axios_instance({
+      this.$axios({
         method: 'get',
         url: '/sessao'
       })

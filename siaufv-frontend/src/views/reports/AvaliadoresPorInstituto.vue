@@ -106,7 +106,6 @@
 </template>
 
 <script>
-import axios_instance from '../../axios'
 import moment from 'moment'
 const helpers = require('../../helpers')
 
@@ -187,7 +186,7 @@ export default {
 
     getArrayAxiosAvaliadoresJson() {
       //Pegando todos Avaliadores
-      axios_instance({
+      this.$axios({
         method: 'get',
         url: '/avaliadores_por_instituto'
       })
