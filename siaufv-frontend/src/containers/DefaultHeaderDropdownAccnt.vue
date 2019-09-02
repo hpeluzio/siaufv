@@ -3,9 +3,8 @@
     <template slot="header">
       <img
         src=""
-        class="icon-user"
         alt="" />
-      <span class="align-top px-1">Usuário</span>
+      <span class="align-top px-1"><i class="icon-user"></i> Usuário</span>
 
     </template>\
     <template slot="dropdown">

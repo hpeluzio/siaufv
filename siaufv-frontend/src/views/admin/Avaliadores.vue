@@ -41,10 +41,13 @@
                   <v-text-field outline v-model="editedItem.nome" label="Nome" data-vv-name="nome" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('nome') }"></v-text-field>
                   <div v-if="submitted && errors.has('nome')" style="color: red">{{ errors.first('nome') }}</div>
                 </v-flex>
+
                 <v-flex xs12 sm6 md3>
-                  <v-text-field outline v-model="editedItem.instituto" label="Instituto" data-vv-name="instituto" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('instituto') }"></v-text-field>
+                  <v-select :items="institutos" item-value="instituto" item-text="instituto"  outline v-model="editedItem.instituto" label="Instituto"  
+                  data-vv-name="instituto" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('instituto') }"></v-select>
                   <div v-if="submitted && errors.has('instituto')" style="color: red">{{ errors.first('instituto') }}</div>
-                </v-flex>                
+                </v-flex> 
+                             
                 <v-flex xs12 sm6 md4>
                   <v-text-field outline v-model="editedItem.curso" label="Curso" data-vv-name="curso" v-validate="'required'" :class="{ 'is-invalid': submitted && errors.has('curso') }"></v-text-field>
                   <div v-if="submitted && errors.has('curso')" style="color: red">{{ errors.first('curso') }}</div>
@@ -146,6 +149,7 @@ export default {
         { text: 'Actions', value: 'name', sortable: false }
       ],
       avaliadores: [],
+      institutos: [],
       editedIndex: -1,
       editedItem: {
         id: '',
@@ -190,6 +194,8 @@ export default {
       this.changeLocale () 
       //Pegando todos avaliadores
       this.getAxiosArrayAvaliadores()
+    //Setando Institutos
+    this.setArrayInstitutos()       
     },
 
     //methods
@@ -208,22 +214,26 @@ export default {
         });
       },
 
-    //Custom filter da datatable
-    customFilter(items, search, filter, headers) {
-      //Normalizando a search
-      if (search.trim() === "") return items;
-      search = helpers.normaliza(search).trim();
+      //Custom filter da datatable
+      customFilter(items, search, filter, headers) {
+        //Normalizando a search
+        if (search.trim() === "") return items;
+        search = helpers.normaliza(search).trim();
 
-      return items.filter(item => {
-        if (helpers.normaliza(item.matricula).includes(search)) return item;
-        if (helpers.normaliza(item.nome).includes(search)) return item;
-        if (helpers.normaliza(item.curso).includes(search)) return item;
-        if (helpers.normaliza(item.instituto).includes(search)) return item;
-        if (helpers.normaliza(item.email).includes(search)) return item;
-        if(search.includes('ativo') && item.ativo !== null)
-          return item
-      });
-    },
+        return items.filter(item => {
+          if (helpers.normaliza(item.matricula).includes(search)) return item;
+          if (helpers.normaliza(item.nome).includes(search)) return item;
+          if (helpers.normaliza(item.curso).includes(search)) return item;
+          if (helpers.normaliza(item.instituto).includes(search)) return item;
+          if (helpers.normaliza(item.email).includes(search)) return item;
+          if(search.includes('ativo') && item.ativo !== null)
+            return item
+        });
+      },
+
+      setArrayInstitutos() {
+        this.institutos = [{ instituto: 'IAP' }, { instituto: 'IBP' }, { instituto: 'IEP' }, { instituto: 'IHP' } ]
+      },
 
       //Checar o formulário em busca de erros
       handleSubmit(e) {
@@ -234,7 +244,7 @@ export default {
             }
         });
       },
-      
+        
       changeLocale () {
         this.$vuetify.lang.current = 'pt'
       },
@@ -335,6 +345,7 @@ export default {
         
         //this.close()
       },
+
       ativarAvaliador (item) {
         //Setando algumas variaveis para uso
         var ativar = 1
@@ -361,7 +372,7 @@ export default {
           else
             this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
         })
-    }
+      }
     }
   }
 </script>
