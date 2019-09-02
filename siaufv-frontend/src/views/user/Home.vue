@@ -49,6 +49,8 @@
                 <ul>
                   <li><b>Emissão de Relatórios de Sessões Orais</b></li>
                   <li><b>Emissão de Relatórios de Painéis</b></li>
+                  <li><b>Emissão de Relatórios de Avaliadores por instituto</b></li>
+                  <li><b>Emissão de Relatórios de Trabalhos por instituto</b></li>
                 </ul>                
               </v-card-text>
             </v-card>

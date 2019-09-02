@@ -104,7 +104,7 @@ export default {
       icon: 'icon-note',
       children: [
         {
-          name: 'Orais',
+          name: 'Sessões Orais',
           url: '/relatorios_orais',
         },              
         {

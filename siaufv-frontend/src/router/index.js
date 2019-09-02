@@ -75,14 +75,14 @@ const router = new Router({
       meta: { requiresAuth: true, adminAuth: true, userAuth: false },
       children: [
         {
-          path: '/admin',
+          path: 'admin',
           name: 'Admin / Home',
           component: Admin,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/institutos',
-          name: 'Admin / Institutos ',
+          name: 'Admin / Institutos',
           component: AdminInstitutos,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },          
         }, 

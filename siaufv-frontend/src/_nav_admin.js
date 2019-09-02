@@ -84,11 +84,11 @@ export default {
       icon: 'icon-note',
       children: [
         {
-          name: 'Orais',
+          name: 'Sessões Orais',
           url: '/admin/relatorios_orais',
         },              
         {
-          name: 'Painéis',
+          name: ' Painéis',
           url: '/admin/relatorios_paineis',
         },
         {
