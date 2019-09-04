@@ -611,7 +611,7 @@ export default {
         filtrarEstaSala = false
         this.sessoes.map(sessao => {
           //Filtro das salas que já estao cadastrados na mesma data e mesmo horário
-          if (moment(sessao.data).format('DD/MM/YYYY') === moment(this.editedSessao.data).format('DD/MM/YYYY') &&
+          if (moment.utc(sessao.data).format('DD/MM/YYYY') === moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
               helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim) && 
                 sessao.sala_nome === sala.nome)
             filtrarEstaSala = true
@@ -628,7 +628,7 @@ export default {
     },
     computedDateFormattedMomentjs() {
       return this.editedSessao.data
-        ? moment(this.editedSessao.data).format('DD/MM/YYYY')
+        ? moment.utc(this.editedSessao.data).format('DD/MM/YYYY')
         : ''
     },
     horarioIsDisabled() {
@@ -709,7 +709,7 @@ export default {
   filters: {
     formatDate(date) {
       if (date) {
-        return moment(String(date)).format('DD/MM/YYYY')
+        return moment.utc(String(date)).format('DD/MM/YYYY')
       }
     },
     filterTrabalhos(trabalhos, filtroInstitutoTrabalho) {
@@ -959,7 +959,7 @@ export default {
           data: {
             id: this.editedSessao.id,
             nome: this.editedSessao.nome,
-            data: moment(String(this.editedSessao.data)).format('YYYY-MM-DD'),
+            data: moment.utc(String(this.editedSessao.data)).format('YYYY-MM-DD'),
             horario: this.editedSessao.horario,
             horariofim: this.editedSessao.horariofim,
             sala_id: this.editedSessao.sala_id,
@@ -987,7 +987,7 @@ export default {
           data: {
             id: this.editedSessao.id,
             nome: this.editedSessao.nome,
-            data: moment(String(this.editedSessao.data)).format('YYYY-MM-DD'),
+            data: moment.utc(String(this.editedSessao.data)).format('YYYY-MM-DD'),
             horario: this.editedSessao.horario,
             horariofim: this.editedSessao.horariofim,
             sala_id: this.editedSessao.sala_id,

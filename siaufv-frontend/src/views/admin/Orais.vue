@@ -353,7 +353,7 @@
                               </v-flex>
                               <v-flex xs12 sm6 md5>
                                 <v-select
-                                  :items="avaliadores | filterAvaliadorInstituto1(filtroInstitutoAvaliador1)"
+                                  :items="avaliadoresLivresParaAvaliar | filterAvaliadorInstituto1(filtroInstitutoAvaliador1)"
                                   item-value="id"
                                   item-text="data"
                                   outline
@@ -391,7 +391,7 @@
                               </v-flex>
                               <v-flex xs12 sm6 md5>
                                 <v-select
-                                  :items="avaliadores | filterAvaliadores(editedAvaliacao.avaliador1)  | filterAvaliadorInstituto1(filtroInstitutoAvaliador2)"
+                                  :items="avaliadoresLivresParaAvaliar | filterAvaliadores(editedAvaliacao.avaliador1)  | filterAvaliadorInstituto1(filtroInstitutoAvaliador2)"
                                   item-value="id"
                                   item-text="data"
                                   outline
@@ -611,7 +611,7 @@ export default {
         filtrarEstaSala = false
         this.sessoes.map(sessao => {
           //Filtro das salas que já estao cadastrados na mesma data e mesmo horário
-          if (moment(sessao.data).format('DD/MM/YYYY') === moment(this.editedSessao.data).format('DD/MM/YYYY') &&
+          if (moment.utc(sessao.data).format('DD/MM/YYYY') === moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
               helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim) && 
                 sessao.sala_nome === sala.nome)
             filtrarEstaSala = true
@@ -628,7 +628,7 @@ export default {
     },
     computedDateFormattedMomentjs() {
       return this.editedSessao.data
-        ? moment(this.editedSessao.data).format('DD/MM/YYYY')
+        ? moment.utc(this.editedSessao.data).format('DD/MM/YYYY')
         : ''
     },
     horarioIsDisabled() {
@@ -687,6 +687,36 @@ export default {
         if (item.horario > this.editedSessao.horario) return item.horario
       })
       return horariosFim
+    },
+    //avaliadoresLivresParaAvaliar com mesma data/horario 
+    avaliadoresLivresParaAvaliar() {
+      //Filtrador de avaliador inicializado como false
+      var filtrarEsteAvaliador = false
+
+      var avaliadoresLivres = this.avaliadores.filter(avaliadorlivre => {
+        //Iniciando a variavel filtrarEsteAvaliador como false
+        filtrarEsteAvaliador = false
+        //avaliador está em outra sessão com o mesmo horario que esta?
+        //Verificar se existe sessões
+        this.sessoes.map( sessao => {
+          //Verificar quais sessões tem mesma data e horario que a atual (EDITADA)
+          if (moment.utc(sessao.data).format('DD/MM/YYYY') === moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
+              sessao.id !== this.editedSessao.id &&
+              helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim)){
+            
+            sessao.avaliacoes.map( avaliacao => {
+              avaliacao.avaliadores.map( avaliador => {
+                if(avaliador.id === avaliadorlivre.id)
+                  filtrarEsteAvaliador = true
+              })
+            })            
+          }
+        })
+
+        if (filtrarEsteAvaliador === false) return avaliadorlivre
+      })
+      
+      return avaliadoresLivres
     }
   },
 
@@ -709,7 +739,7 @@ export default {
   filters: {
     formatDate(date) {
       if (date) {
-        return moment(String(date)).format('DD/MM/YYYY')
+        return moment.utc(String(date)).format('DD/MM/YYYY')
       }
     },
     filterTrabalhos(trabalhos, filtroInstitutoTrabalho) {
@@ -953,13 +983,14 @@ export default {
       if (this.editedSessaoIndex > -1 && this.cadastrarSessaoForm == true) {
         // Se this.editedSessaoIndex  > -1 entao estamos na edição
         //Editando item chama-se o metodo put na rota avaliacoes e irá para update
+        //console.log('this.editedSessao', this.editedSessao.data)
         this.$axios({
           method: 'put',
           url: '/sessao/' + this.editedSessao.id + '',
           data: {
             id: this.editedSessao.id,
             nome: this.editedSessao.nome,
-            data: moment(String(this.editedSessao.data)).format('YYYY-MM-DD'),
+            data: moment.utc(String(this.editedSessao.data)).format('YYYY-MM-DD'),
             horario: this.editedSessao.horario,
             horariofim: this.editedSessao.horariofim,
             sala_id: this.editedSessao.sala_id,
@@ -970,6 +1001,7 @@ export default {
         })
           .then(response => {
             alert('Sessão editada.')
+            console.log('this.editedSessao', this.editedSessao.data)
             this.updateComponentData()
             this.estadoEditSessao()
           })
@@ -987,7 +1019,7 @@ export default {
           data: {
             id: this.editedSessao.id,
             nome: this.editedSessao.nome,
-            data: moment(String(this.editedSessao.data)).format('YYYY-MM-DD'),
+            data: moment.utc(String(this.editedSessao.data)).format('YYYY-MM-DD'),
             horario: this.editedSessao.horario,
             horariofim: this.editedSessao.horariofim,
             sala_id: this.editedSessao.sala_id,
