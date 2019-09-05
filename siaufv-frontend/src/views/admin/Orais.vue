@@ -21,7 +21,7 @@
         <!-- Data Table de sessões-->
         <v-data-table
           :headers="sessaoHeaders"
-          :items="sessoes"
+          :items="sessoesOrais"
           :rows-per-page-items="rowsPerPageItems"
           :pagination.sync="pagination"
           :search="search"
@@ -701,7 +701,8 @@ export default {
         this.sessoes.map( sessao => {
           //Verificar quais sessões tem mesma data e horario que a atual (EDITADA)
           if (moment.utc(sessao.data).format('DD/MM/YYYY') === moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
-              sessao.id !== this.editedSessao.id &&
+              sessao.id !== this.editedSessao.id && 
+              //sessao.tipo === 0 && // Fazer o filtro sem levar em conta as sessoes de paineis
               helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim)){
             
             sessao.avaliacoes.map( avaliacao => {
@@ -717,6 +718,12 @@ export default {
       })
       
       return avaliadoresLivres
+    },
+    sessoesOrais(){
+      return this.sessoes.filter(sessao => {
+        if(sessao.tipo === 0)
+          return sessao
+      })      
     }
   },
 
@@ -816,10 +823,11 @@ export default {
         url: '/sessao'
       })
         .then(response => {
-          this.sessoes = response.data.filter(sessao => {
-            if(sessao.tipo === 0)
-              return sessao
-          })
+          this.sessoes = response.data
+          // this.sessoes = response.data.filter(sessao => {
+          //   if(sessao.tipo === 0)
+          //     return sessao
+          // })
           //console.log('SESSOES: ', this.sessoes)
 
         })

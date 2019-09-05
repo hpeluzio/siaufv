@@ -21,7 +21,7 @@
         <!-- Data Table de sessões-->
         <v-data-table
           :headers="sessaoHeaders"
-          :items="sessoes"
+          :items="sessoesPaineis"
           :rows-per-page-items="rowsPerPageItems"
           :pagination.sync="pagination"
           :search="search"
@@ -353,7 +353,7 @@
                               </v-flex>
                               <v-flex xs12 sm6 md5>
                                 <v-select
-                                  :items="avaliadores | filterAvaliadorInstituto1(filtroInstitutoAvaliador1)"
+                                  :items="avaliadoresLivresParaAvaliar | filterAvaliadorInstituto1(filtroInstitutoAvaliador1)"
                                   item-value="id"
                                   item-text="data"
                                   outline
@@ -391,7 +391,7 @@
                               </v-flex>
                               <v-flex xs12 sm6 md5>
                                 <v-select
-                                  :items="avaliadores | filterAvaliadores(editedAvaliacao.avaliador1)  | filterAvaliadorInstituto1(filtroInstitutoAvaliador2)"
+                                  :items="avaliadoresLivresParaAvaliar | filterAvaliadores(editedAvaliacao.avaliador1)  | filterAvaliadorInstituto1(filtroInstitutoAvaliador2)"
                                   item-value="id"
                                   item-text="data"
                                   outline
@@ -687,6 +687,43 @@ export default {
         if (item.horario > this.editedSessao.horario) return item.horario
       })
       return horariosFim
+    },
+    //avaliadoresLivresParaAvaliar com mesma data/horario 
+    avaliadoresLivresParaAvaliar() {
+      //Filtrador de avaliador inicializado como false
+      var filtrarEsteAvaliador = false
+
+      var avaliadoresLivres = this.avaliadores.filter(avaliadorlivre => {
+        //Iniciando a variavel filtrarEsteAvaliador como false
+        filtrarEsteAvaliador = false
+        //avaliador está em outra sessão com o mesmo horario que esta?
+        //Verificar se existe sessões
+        this.sessoes.map( sessao => {
+          //Verificar quais sessões tem mesma data e horario que a atual (EDITADA)
+          if (moment.utc(sessao.data).format('DD/MM/YYYY') === moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
+              sessao.id !== this.editedSessao.id && 
+              //sessao.tipo === 1 && // Fazer o filtro sem levar em conta as sessoes de orais
+              helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim)){
+            
+            sessao.avaliacoes.map( avaliacao => {
+              avaliacao.avaliadores.map( avaliador => {
+                if(avaliador.id === avaliadorlivre.id)
+                  filtrarEsteAvaliador = true
+              })
+            })            
+          }
+        })
+
+        if (filtrarEsteAvaliador === false) return avaliadorlivre
+      })
+      
+      return avaliadoresLivres
+    },    
+    sessoesPaineis(){
+      return this.sessoes.filter(sessao => {
+        if(sessao.tipo === 1)
+          return sessao
+      })      
     }
   },
 
@@ -786,10 +823,11 @@ export default {
         url: '/sessao'
       })
         .then(response => {
-          this.sessoes = response.data.filter(sessao => {
-            if(sessao.tipo === 1)
-              return sessao
-          })
+          this.sessoes = response.data
+          // this.sessoes = response.data.filter(sessao => {
+          //   if(sessao.tipo === 1)
+          //     return sessao
+          // })
           //console.log('SESSOES: ', this.sessoes)
 
         })
