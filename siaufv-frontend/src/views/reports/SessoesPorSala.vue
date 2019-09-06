@@ -98,7 +98,7 @@
                         <table border="1" style="width:100%;">
                           <thead>
                             <tr align="center">
-                              <th style="width:10%;">Nome</th>
+                              <th style="width:10%;">Instituto</th>
                               <th style="width:10%;">Data</th>
                               <th style="width:10%;">Horário</th>
                               <th style="width:70%;">Trabalho</th>
@@ -112,13 +112,13 @@
                             >
                               <td>{{ sessao.instituto }}</td>
                               <td>{{ sessao.data | formatDate() }}</td>
-                              <td>{{ sessao.horario | formatHour }} - {{ sessao.horariofim | formatHour }}</td>
+                              <td>{{ sessao.horario | formatHour }} às {{ sessao.horariofim | formatHour }}</td>
                               <td>
                                 <!-- tabela do trabalho -->
-                                <table style="width:100%;">
+                                <table border="1" style="width:100%;">
                                   <thead>
                                     <tr align="center">
-                                      <th style="width:60%;">Nome</th>
+                                      <th style="width:60%;">Título</th>
                                       <th style="width:40%;">Avaliadores</th>
                                     </tr>
                                   </thead>
@@ -131,7 +131,7 @@
                                       <td>{{ avaliacao.nome }}</td>
                                       <td>
                                         <!-- tabela dos avaliadores -->
-                                        <table border="1" style="width:100%; ">
+                                        <table border="0" style="width:100%; ">
                                           <tbody>
                                             <tr
                                               align="center"
@@ -179,7 +179,7 @@ export default {
   }),
 
   created() {
-    document.title = 'SIA - Relatório de Trabalhos por Instituto'
+    document.title = 'SIA - Relatório de Salas e suas Sessões'
     //Pegando todos Trabalhos Json
     this.getArrayAxiosTrabalhosJson()
     //Pegando todos Trabalhos Json

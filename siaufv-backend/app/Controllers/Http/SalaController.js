@@ -61,6 +61,7 @@ class SalaController {
       .select('salas.*')
       .table('salas')
       .innerJoin('sessoes', 'sessoes.sala_id', 'salas.id')
+      .orderBy('salas.nome')
       .groupBy('salas.id')
 
     // salas.forEach(sala => {
