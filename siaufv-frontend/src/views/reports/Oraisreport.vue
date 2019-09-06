@@ -131,7 +131,7 @@ export default {
         .then(response => {
           this.sessoes_orais_json = response.data.filter(sessao => {
             if(sessao.tipo === 0){
-              sessao.data = moment(sessao.data).format('DD/MM/YYYY')
+              sessao.data = moment.utc(sessao.data).format('DD/MM/YYYY')
               sessao.horario = sessao.horario.split(":")[0] + ':' + sessao.horario.split(":")[1] + 
                 ' às ' + sessao.horariofim.split(":")[0] + ':' + sessao.horariofim.split(":")[1]  
               sessao.horariofim = sessao.horariofim.split(":")[0] + ':' + sessao.horariofim.split(":")[1]  

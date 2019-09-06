@@ -59,7 +59,7 @@
                   <tr height="90" align="center">
                     
                       <th><img src="@/assets/sia-images/sia-logo.png" alt="sia-logo" style="width:60px"></th>
-                      <th><h1>RELATÓRIO DE AVALIADORES POR INSTITUTO</h1></th> 
+                      <th><h1>RELATÓRIO DE TRABALHOS POR INSTITUTO</h1></th> 
                       <th><img src="@/assets/sia-images/ufv-logo.png" alt="sia-logo" style="width:90px"></th>
                     </tr>
                 </table>

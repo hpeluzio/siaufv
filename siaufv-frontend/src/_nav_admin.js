@@ -98,7 +98,11 @@ export default {
         {
           name: 'Trabalhos por Instituto',
           url: '/admin/trabalhosporinstituto',
-        },                
+        },
+        {
+          name: 'Salas e suas Sessões',
+          url: '/admin/sessoesporsala',
+        },                  
       ]
     },
     // {

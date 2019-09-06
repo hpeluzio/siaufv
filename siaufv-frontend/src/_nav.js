@@ -118,7 +118,11 @@ export default {
         {
           name: 'Trabalhos por Instituto',
           url: '/trabalhosporinstituto',
-        },                      
+        },
+        {
+          name: 'Salas e suas Sessões',
+          url: '/sessoesporsala',
+        },                                 
       ]
     },
     // {
