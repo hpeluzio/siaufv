@@ -68,11 +68,11 @@ class TrabalhoController {
   }
 
   async store ({ request, response }) {
-    const { trabalho_id, nome, autores, orientador, modalidade, area, ano_id, instituto } = 
-      request.only([ 'trabalho_id', 'nome', 'autores','orientador', 'modalidade', 'area', 'ano_id', 'instituto' ]);
+    const { trabalho_id, nome, autores, orientador, modalidade, area, ano_id, instituto, tipo } = 
+      request.only([ 'trabalho_id', 'nome', 'autores','orientador', 'modalidade', 'area', 'ano_id', 'instituto', 'tipo' ]);
     
     try {
-      await Trabalho.create({ trabalho_id, nome, orientador, modalidade, area, ano_id, instituto })
+      await Trabalho.create({ trabalho_id, nome, orientador, modalidade, area, ano_id, instituto, tipo })
       for(var i=0; i < autores.length; i++){
         await TrabalhoAutor.create({ 'trabalho_id': trabalho_id, 'autor': autores[i].autor })
       }  
@@ -85,9 +85,9 @@ class TrabalhoController {
   }
 
   async update ({ params, request, response }) {
-    const { id, trabalho_id, nome, autores, deletedAutores, orientador, modalidade, area, ano_id, instituto } = 
-      request.only([ 'id', 'trabalho_id', 'nome', 'autores', 'deletedAutores', 'orientador', 'modalidade', 'area', 'ano_id', 'instituto' ]);
-    
+    const { id, trabalho_id, nome, autores, deletedAutores, orientador, modalidade, area, ano_id, instituto, tipo } = 
+      request.only([ 'id', 'trabalho_id', 'nome', 'autores', 'deletedAutores', 'orientador', 'modalidade', 'area', 'ano_id', 'instituto', 'tipo' ]);
+    console.log('tipo:' , tipo)
     try {
       //Update de trabalhos
       var trabalho = await Trabalho.findOrFail(id)
@@ -98,6 +98,7 @@ class TrabalhoController {
       trabalho.area = area
       trabalho.ano_id = ano_id
       trabalho.instituto = instituto
+      trabalho.tipo = tipo
       await trabalho.save()
 
       //Update de autores dos trabalhos

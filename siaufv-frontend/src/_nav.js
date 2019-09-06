@@ -108,7 +108,7 @@ export default {
           url: '/relatorios_orais',
         },              
         {
-          name: 'Painéis',
+          name: 'Paineis',
           url: '/relatorios_paineis',
         },
         {

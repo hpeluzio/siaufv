@@ -842,7 +842,10 @@ export default {
         url: '/trabalho'
       })
         .then(response => {
-          this.trabalhos = response.data
+          this.trabalhos = response.data.filter( trabalho => {
+            if(trabalho.tipo === 0)
+              return trabalho
+          })
           //console.log('TRABALHOS: ', this.trabalhos)
         })
         .catch(error => {

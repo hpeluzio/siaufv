@@ -9,7 +9,8 @@ class TrabalhoStore {
       modalidade: 'required',
       area: 'required',
       ano_id: 'required',
-      instituto: 'required'
+      instituto: 'required',
+      tipo: 'required'
     }
   }
 

@@ -204,7 +204,7 @@ export default {
                 avaliador.sala_tipo_id = 0
                } 
               else {
-                avaliador.sala_tipo = 'Painél'
+                avaliador.sala_tipo = 'Painel'
                 avaliador.sala_tipo_id = 1
               }
               return avaliador

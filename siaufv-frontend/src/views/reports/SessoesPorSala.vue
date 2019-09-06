@@ -63,7 +63,7 @@
                   border="1"
                   style="width:100%; "
                 >
-                  <thead class="pagebreak">
+                  <thead>
                     <tr align="center">
                       <th style="width:100%;">
                         <table border="0" style="width:100%; ">

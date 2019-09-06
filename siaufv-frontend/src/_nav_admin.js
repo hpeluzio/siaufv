@@ -64,7 +64,7 @@ export default {
       icon: 'cui-speech'
     },
     {
-      name: 'Painéis',
+      name: 'Paineis',
       url: '/admin/paineis',
       icon: 'cui-dashboard'
     },
@@ -88,7 +88,7 @@ export default {
           url: '/admin/relatorios_orais',
         },              
         {
-          name: ' Painéis',
+          name: ' Paineis',
           url: '/admin/relatorios_paineis',
         },
         {
