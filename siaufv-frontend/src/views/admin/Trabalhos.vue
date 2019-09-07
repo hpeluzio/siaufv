@@ -214,7 +214,7 @@
 
           <!-- AUTOR -->
           <td class="text-xs-left">
-            <span v-for="(autor, index) in props.item.autores" :key="index">{{ autor.autor }}, </span>
+            <p v-for="(autor, index) in props.item.autores" :key="index">{{ autor.autor }}</p>
           </td>
           <!-- AUTOR -->
           <td class="text-xs-left">{{ props.item.orientador }}</td>
@@ -262,14 +262,14 @@ export default {
       { text: 'ID', value: 'trabalho_id' },
       { text: 'Nome', value: 'nome' },
       { text: 'Autor(es)', value: 'autores' },
-      { text: 'orientador', value: 'orientador' },
+      { text: 'Orientador', value: 'orientador' },
       { text: 'Modalidade', value: 'modalidade' },
       { text: 'Instituto', value: 'instituto' },
       { text: 'Tipo', value: 'tipo' },
       { text: 'Área', value: 'area' },
       { text: 'Ano', value: 'ano' },
       { text: 'Sessão', value: 'sessao' },
-      { text: 'Actions', value: 'name', sortable: false }
+      { text: 'Ações', value: 'name', sortable: false }
     ],
     trabalhos: [],
     trabalhos_autores: [],

@@ -453,11 +453,13 @@
                     <td class="text-xs-left">{{ props.item.avaliador2_nome }}</td>
                     <td class="text-xs-left">{{ props.item.trabalho_nome }}</td>
                     <td class="text-xs-left">{{ props.item.orientador }}</td>
-                    <td
-                      class="text-xs-left"
-                      v-for="(autores, i) in props.item.trabalho_autores"
-                      v-bind:key="i"
-                    >{{ autores }}</td>
+                    <td>
+                      <p
+                        class="text-xs-left"
+                        v-for="(autores, i) in props.item.trabalho_autores"
+                        v-bind:key="i"
+                      >{{ autores }}</p>
+                    </td>
                     <td class="justify-center layout px-0">
                       <v-icon small @click="deleteAvaliacao(props.item)">delete</v-icon>
                     </td>
@@ -491,7 +493,6 @@
 </template>
 
 <script>
-
 import moment from 'moment'
 const helpers = require('../../helpers')
 
@@ -579,7 +580,7 @@ export default {
   }),
 
   created() {
-    document.title = "SIA - Orais";
+    document.title = 'SIA - Orais'
     //Mudando o locale do Vuetify
     this.changeLocale()
     //Pegando todos sessoes
@@ -611,12 +612,23 @@ export default {
         filtrarEstaSala = false
         this.sessoes.map(sessao => {
           //Filtro das salas que já estao cadastrados na mesma data e mesmo horário
-          if (moment.utc(sessao.data).format('DD/MM/YYYY') === moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
-              helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim) && 
-                sessao.sala_nome === sala.nome)
+          if (
+            moment.utc(sessao.data).format('DD/MM/YYYY') ===
+              moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
+            helpers.checkRangeIntervalHorario(
+              sessao.horario,
+              sessao.horariofim,
+              this.editedSessao.horario,
+              this.editedSessao.horariofim
+            ) &&
+            sessao.sala_nome === sala.nome
+          )
             filtrarEstaSala = true
           //Se a sala já pertece a sessao editada entao inclui-se ela também
-          if (this.editedSessaoIndex > -1 && sala.id === this.editedSessao.sala_id)
+          if (
+            this.editedSessaoIndex > -1 &&
+            sala.id === this.editedSessao.sala_id
+          )
             filtrarEstaSala = false
         })
         if (filtrarEstaSala === false) return sala
@@ -688,7 +700,7 @@ export default {
       })
       return horariosFim
     },
-    //avaliadoresLivresParaAvaliar com mesma data/horario 
+    //avaliadoresLivresParaAvaliar com mesma data/horario
     avaliadoresLivresParaAvaliar() {
       //Filtrador de avaliador inicializado como false
       var filtrarEsteAvaliador = false
@@ -698,32 +710,38 @@ export default {
         filtrarEsteAvaliador = false
         //avaliador está em outra sessão com o mesmo horario que esta?
         //Verificar se existe sessões
-        this.sessoes.map( sessao => {
+        this.sessoes.map(sessao => {
           //Verificar quais sessões tem mesma data e horario que a atual (EDITADA)
-          if (moment.utc(sessao.data).format('DD/MM/YYYY') === moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
-              sessao.id !== this.editedSessao.id && 
-              //sessao.tipo === 0 && // Fazer o filtro sem levar em conta as sessoes de paineis
-              helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim)){
-            
-            sessao.avaliacoes.map( avaliacao => {
-              avaliacao.avaliadores.map( avaliador => {
-                if(avaliador.id === avaliadorlivre.id)
+          if (
+            moment.utc(sessao.data).format('DD/MM/YYYY') ===
+              moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
+            sessao.id !== this.editedSessao.id &&
+            //sessao.tipo === 0 && // Fazer o filtro sem levar em conta as sessoes de paineis
+            helpers.checkRangeIntervalHorario(
+              sessao.horario,
+              sessao.horariofim,
+              this.editedSessao.horario,
+              this.editedSessao.horariofim
+            )
+          ) {
+            sessao.avaliacoes.map(avaliacao => {
+              avaliacao.avaliadores.map(avaliador => {
+                if (avaliador.id === avaliadorlivre.id)
                   filtrarEsteAvaliador = true
               })
-            })            
+            })
           }
         })
 
         if (filtrarEsteAvaliador === false) return avaliadorlivre
       })
-      
+
       return avaliadoresLivres
     },
-    sessoesOrais(){
+    sessoesOrais() {
       return this.sessoes.filter(sessao => {
-        if(sessao.tipo === 0)
-          return sessao
-      })      
+        if (sessao.tipo === 0) return sessao
+      })
     }
   },
 
@@ -829,7 +847,6 @@ export default {
           //     return sessao
           // })
           //console.log('SESSOES: ', this.sessoes)
-
         })
         .catch(error => {
           console.log(error)
@@ -842,9 +859,8 @@ export default {
         url: '/trabalho'
       })
         .then(response => {
-          this.trabalhos = response.data.filter( trabalho => {
-            if(trabalho.tipo === 0)
-              return trabalho
+          this.trabalhos = response.data.filter(trabalho => {
+            if (trabalho.tipo === 0) return trabalho
           })
           //console.log('TRABALHOS: ', this.trabalhos)
         })
@@ -858,9 +874,8 @@ export default {
         url: '/sala'
       })
         .then(response => {
-          this.salas = response.data.filter( sala => {
-            if(sala.tipo === 0)
-              return sala
+          this.salas = response.data.filter(sala => {
+            if (sala.tipo === 0) return sala
           })
           //console.log('Salas', this.salas)
         })
@@ -1001,7 +1016,9 @@ export default {
           data: {
             id: this.editedSessao.id,
             nome: this.editedSessao.nome,
-            data: moment.utc(String(this.editedSessao.data)).format('YYYY-MM-DD'),
+            data: moment
+              .utc(String(this.editedSessao.data))
+              .format('YYYY-MM-DD'),
             horario: this.editedSessao.horario,
             horariofim: this.editedSessao.horariofim,
             sala_id: this.editedSessao.sala_id,
@@ -1030,7 +1047,9 @@ export default {
           data: {
             id: this.editedSessao.id,
             nome: this.editedSessao.nome,
-            data: moment.utc(String(this.editedSessao.data)).format('YYYY-MM-DD'),
+            data: moment
+              .utc(String(this.editedSessao.data))
+              .format('YYYY-MM-DD'),
             horario: this.editedSessao.horario,
             horariofim: this.editedSessao.horariofim,
             sala_id: this.editedSessao.sala_id,
