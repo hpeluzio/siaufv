@@ -70,13 +70,14 @@
                   <table border="1" style="width:100%; ">
                     <thead>
                       <tr align="center">
-                        <th>Nome</th>
-                        <th>Data</th> 
-                        <th>Horário</th>
-                        <th>Instituto</th>
-                        <th>Sala</th>
-                        <th>Tipo</th>
-                        <th>Trabalho ID</th>
+                        <th style="width: 15%">Nome</th>
+                        <th style="width: 10%">Data</th> 
+                        <th style="width: 10%">Horário</th>
+                        <th style="width: 6%">Instituto</th>
+                        <th style="width: 9%">Sala</th>
+                        <th style="width: 6%">Tipo</th>
+                        <th style="width: 9%">Trabalho ID</th>
+                        <th >Título do Trabalho</th>
 
                       </tr>
                     </thead>
@@ -89,6 +90,7 @@
                         <td>{{ avaliador.sala_nome }}</td>
                         <td>{{ avaliador.sala_tipo }}</td>
                         <td>{{ avaliador.trabalho_id }}</td>
+                        <td>{{ avaliador.trabalhos_nome }}</td>
                       </tr>
                     </tbody> 
                   </table>
@@ -131,10 +133,6 @@ export default {
 
   computed: {
     filterAvaliadoresInstituto() {
-
-      console.log('Avaliadores', this.avaliadores_json)
-      console.log('Tipo',  this.filtroTrabalhoTipo)
-
       if (this.filtroAvaliadorInstituto === '' && this.filtroTrabalhoTipo === '') 
         return this.avaliadores_json
 
@@ -191,11 +189,11 @@ export default {
         url: '/avaliadores_por_instituto'
       })
         .then(response => {
-          this.avaliadores_json = response.data
+          //this.avaliadores_json = response.data
           this.avaliadores_json = response.data.filter(avaliador => {
             //if(sessao.tipo === 0){
             // Pego tudo, orais e paineis
-              avaliador.sessao_data = moment(avaliador.sessao_data).format('DD/MM/YYYY')
+              avaliador.sessao_data = moment.utc(avaliador.sessao_data).format('DD/MM/YYYY')
               avaliador.sessao_horario = avaliador.sessao_horario.split(":")[0] + ':' + avaliador.sessao_horario.split(":")[1] + 
                 ' às ' + avaliador.sessao_horariofim.split(":")[0] + ':' + avaliador.sessao_horariofim.split(":")[1]  
               avaliador.sessao_horariofim = avaliador.sessao_horariofim.split(":")[0] + ':' + avaliador.sessao_horariofim.split(":")[1]  
@@ -210,7 +208,7 @@ export default {
               return avaliador
             //}  
           })
-          //console.log('avaliadores_json: ', this.avaliadores_json)
+          console.log('avaliadores_json: ', this.avaliadores_json)
         })
         .catch(error => {
           console.log(error)

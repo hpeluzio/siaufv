@@ -70,22 +70,24 @@
                   <table border="1" style="width:100%; ">
                     <thead>
                       <tr align="center">
-                        <th>Trabalho ID</th>
-                        <th>Autor</th> 
-                        <th>Orientador</th>
-                        <th>Instituto</th>
-                        <th>Data</th>
-                        <th>Horário</th>
-                        <th>Sala</th>
-                        <th>Avaliadores</th>
+                        <th style="width: 6%;">ID</th>
+                        <th style="width: 20%;">Título</th>
+                        <th style="width: 20%;">Autor</th> 
+                        <th style="width: 10%;">Orientador</th>
+                        <th style="width: 6%;">Instituto</th>
+                        <th style="width: 6%;">Data</th>
+                        <th style="width: 6%;">Horário</th>
+                        <th style="width: 6%;">Sala</th>
+                        <th >Avaliadores</th>
 
                       </tr>
                     </thead>
                     <tbody>               
                       <tr style="page-break-inside: avoid" align="center" height="40" v-for="(trabalho, i) in filterTrabalhosInstituto" :key="i + '-first'" >
                         <td>{{ trabalho.trabalho_id }}</td>
+                        <td>{{ trabalho.nome }}</td>
                         <td>
-                          <table border="1" style="width:100%; border-top: 0; border-left: 0; border-bottom: 0; border-right: 0;">
+                          <table style="width:100%;">
                             <tbody>
                               <tr align="center" v-for="(autor, i) in trabalho.autores" :key="i + '-second'" >
                                 <td>{{ autor.autor }}</td>
@@ -95,13 +97,13 @@
                         </td>
                         <td>{{ trabalho.orientador }}</td>
                         <td>{{ trabalho.instituto }}</td>
-                        <td>{{ trabalho.sala_nome }}</td>
+                        <td>{{ trabalho.sessao_data | formatDate }}</td>
                         <td>{{ trabalho.sessao_horario }}</td>
                         <td>{{ trabalho.sala_nome }}</td>
                         <td>
-                          <table border="1" style="width:100%; border-top: 0; border-left: 0; border-bottom: 0; border-right: 0;">
+                          <table  style="width:100%;">
                             <tbody>
-                              <tr align="center" v-for="(avaliador, i) in trabalho.avaliadores" :key="i + '-second'" >
+                              <tr align="center" v-for="(avaliador, i) in trabalho.avaliadores" :key="i + '-third'" >
                                 <td>{{ avaliador.nome }}</td>
                               </tr>
                             </tbody>  
@@ -172,6 +174,14 @@ export default {
           if (this.filtroTrabalhoTipo == trabalho.sala_tipo) 
             return trabalho
         })
+    }
+  },
+
+  filters:{
+    formatDate(date) {
+      if (date) {
+        return moment.utc(String(date)).format('DD/MM/YYYY')
+      }
     }
   },
 

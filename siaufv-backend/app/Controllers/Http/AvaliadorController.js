@@ -106,8 +106,8 @@ class AvaliadorController {
           'salas.id as sala_sala_id',
           'salas.nome as sala_nome',
           'salas.tipo as sala_tipo',
-          'anos.ano as ano'
-
+          'anos.ano as ano',
+          'trabalhos.nome as trabalhos_nome'
         )
         .table('avaliadores')
         .innerJoin('avaliador_avaliacao', 'avaliador_avaliacao.avaliador_id', 'avaliadores.id')

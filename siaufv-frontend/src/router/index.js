@@ -35,6 +35,10 @@ const AvaliadoresPorInstituto = () => import('@/views/reports/AvaliadoresPorInst
 const TrabalhosPorInstituto = () => import('@/views/reports/TrabalhosPorInstituto')
 const SessoesPorSala = () => import('@/views/reports/SessoesPorSala')
 
+//Fichas
+const FichasOrais = () => import('@/views/fichas/FichasOrais')
+const FichasPaineis = () => import('@/views/fichas/FichasPaineis')
+
 //Auth
 const Login = () => import('@/views/Login')
 const Register = () => import('@/views/Register')
@@ -174,7 +178,20 @@ const router = new Router({
           name: 'Administrador / Meus Dados',
           component: MeusDados,
           meta: { requiresAuth: true, adminAuth: false, userAuth: false },
-        },                            
+        },  
+        //Fichas
+        {
+          path: '/admin/fichas_orais',
+          name: 'Administrador / Fichas de Trabalhos Orais',
+          component: FichasOrais,
+          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
+        },
+        {
+          path: '/admin/fichas_paineis',
+          name: 'Administrador / Fichas de Trabalhos Paineis',
+          component: FichasPaineis,
+          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
+        },                 
       ]
     },
 
@@ -278,6 +295,19 @@ const router = new Router({
           path: 'meusdados',
           name: 'Meus Dados',
           component: MeusDados,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: false },
+        },
+        //Fichas
+        {
+          path: 'fichas_orais',
+          name: 'Fichas de Trabalhos Orais',
+          component: FichasOrais,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: false },
+        },
+        {
+          path: 'fichas_paineis',
+          name: 'Fichas de Trabalhos Paineis',
+          component: FichasPaineis,
           meta: { requiresAuth: true, adminAuth: false, userAuth: false },
         },                              
       ]

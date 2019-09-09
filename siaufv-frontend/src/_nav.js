@@ -125,6 +125,22 @@ export default {
         },                                 
       ]
     },
+    {
+      name: 'Fichas',
+      url: '/',
+      icon: 'icon-notebook',
+      children: [
+        {
+          name: 'Trabalhos Orais',
+          url: '/fichas_orais',
+        },              
+        {
+          name: 'Trabalhos Paineis',
+          url: '/fichas_paineis',
+        },
+                
+      ]
+    }, 
     // {
     //   name: 'Minicursos',
     //   url: '/6',

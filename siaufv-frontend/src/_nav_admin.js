@@ -105,6 +105,22 @@ export default {
         },                  
       ]
     },
+    {
+      name: 'Fichas',
+      url: '/',
+      icon: 'icon-notebook',
+      children: [
+        {
+          name: 'Trabalhos Orais',
+          url: '/admin/fichas_orais',
+        },              
+        {
+          name: 'Trabalhos Paineis',
+          url: '/admin/fichas_paineis',
+        },
+                
+      ]
+    },    
     // {
     //   name: 'Minicursos',
     //   url: '/6',

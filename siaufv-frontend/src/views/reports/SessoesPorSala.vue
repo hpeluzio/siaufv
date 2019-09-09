@@ -46,114 +46,109 @@
             </v-flex>
           </v-card-title>
         </v-card>
-        <v-layout wrap>
+        <v-layout
+          wrap
+          v-for="(sala, i) in filterSalas"
+          :key="i + '-first'"
+          class="pagebreak divprint divscreen"
+        >
           <v-flex d-flex xs12 sm12 md12>
             <v-card flat>
-              <v-card-title>
-              </v-card-title>
               <v-card-text>
                 <!-- tabela da sala -->
-                <!-- <div class="pagebreak"></div> -->
-                <table
-                  class="pagebreak"
-                  align="center"
-                  height="40"
-                  v-for="(sala, i) in filterSalas"
-                  :key="i + '-first'"
-                  border="1"
-                  style="width:100%; "
-                >
-                  <thead>
-                    <tr align="center">
-                      <th style="width:100%;">
-                        <table border="0" style="width:100%; ">
-                          <tr height="90" align="center">
-                            <th>
-                              <img
-                                src="@/assets/sia-images/sia-logo.png"
-                                alt="sia-logo"
-                                style="width:60px"
-                              />
-                            </th>
-                            <th>
-                              <h1>{{ sala.nome }}</h1>
-                            </th>
-                            <th>
-                              <img
-                                src="@/assets/sia-images/ufv-logo.png"
-                                alt="sia-logo"
-                                style="width:90px"
-                              />
-                            </th>
-                          </tr>
-                        </table>
-
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <!-- Tabela da sessao -->
-                        <table border="1" style="width:100%;">
-                          <thead>
-                            <tr align="center">
-                              <th style="width:10%;">Instituto</th>
-                              <th style="width:10%;">Data</th>
-                              <th style="width:10%;">Horário</th>
-                              <th style="width:70%;">Trabalho</th>
+                <div>
+                  <table align="center" height="40" border="1" class="largura_table_screen">
+                    <thead>
+                      <tr align="center">
+                        <th class="largura_table_screen">
+                          <table border="0" class="largura_table_screen">
+                            <tr height="90" align="center">
+                              <th>
+                                <img
+                                  src="@/assets/sia-images/sia-logo.png"
+                                  alt="sia-logo"
+                                  style="width:60px"
+                                />
+                              </th>
+                              <th>
+                                <h1>{{ sala.nome }}</h1>
+                              </th>
+                              <th>
+                                <img
+                                  src="@/assets/sia-images/ufv-logo.png"
+                                  alt="sia-logo"
+                                  style="width:90px"
+                                />
+                              </th>
                             </tr>
-                          </thead>
-                          <tbody>
-                            <tr
-                              align="center"
-                              v-for="(sessao, i) in sala.sessoes"
-                              :key="i + '-second'"
-                            >
-                              <td>{{ sessao.instituto }}</td>
-                              <td>{{ sessao.data | formatDate() }}</td>
-                              <td>{{ sessao.horario | formatHour }} às {{ sessao.horariofim | formatHour }}</td>
-                              <td>
-                                <!-- tabela do trabalho -->
-                                <table border="1" style="width:100%;">
-                                  <thead>
-                                    <tr align="center">
-                                      <th style="width:60%;">Título</th>
-                                      <th style="width:40%;">Avaliadores</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr
-                                      align="center"
-                                      v-for="(avaliacao, i) in sessao.avaliacoes"
-                                      :key="i + '-third'"
-                                    >
-                                      <td>{{ avaliacao.nome }}</td>
-                                      <td>
-                                        <!-- tabela dos avaliadores -->
-                                        <table border="0" style="width:100%; ">
-                                          <tbody>
-                                            <tr
-                                              align="center"
-                                              v-for="(avaliador, i) in avaliacao.avaliadores"
-                                              :key="i + '-fourth'"
-                                            >
-                                              <td>{{ avaliador.nome }}</td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                          </table>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <!-- Tabela da sessao -->
+                          <table border="1" class="largura_table_screen">
+                            <thead>
+                              <tr align="center">
+                                <th style="width:6%;">Instituto</th>
+                                <th style="width:8%;">Data</th>
+                                <th style="width:10%;">Horário</th>
+                                <th style="width:70%;">Trabalho</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr
+                                align="center"
+                                v-for="(sessao, i) in sala.sessoes"
+                                :key="i + '-second'"
+                              >
+                                <td>{{ sessao.instituto }}</td>
+                                <td>{{ sessao.data | formatDate() }}</td>
+                                <td>{{ sessao.horario | formatHour }} às {{ sessao.horariofim | formatHour }}</td>
+                                <td>
+                                  <!-- tabela do trabalho -->
+                                  <table border="1" class="largura_table_screen">
+                                    <thead>
+                                      <tr align="center">
+                                        <th style="width:60%;">Título</th>
+                                        <th style="width:40%;">Avaliadores</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr
+                                        align="center"
+                                        v-for="(avaliacao, i) in sessao.avaliacoes"
+                                        :key="i + '-third'"
+                                      >
+                                        <td>{{ avaliacao.nome }}</td>
+                                        <td>
+                                          <!-- tabela dos avaliadores -->
+                                          <table border="0" class="largura_table_screen">
+                                            <tbody>
+                                              <tr
+                                                align="center"
+                                                v-for="(avaliador, i) in avaliacao.avaliadores"
+                                                :key="i + '-fourth'"
+                                              >
+                                                <td>{{ avaliador.nome }}</td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -328,30 +323,53 @@ export default {
 </script>
 <style>
 @media print {
-  .quebra {
-    page-break-after: always !important;
-  }
-
   .noprint {
     display: none !important;
   }
 
   .pagebreak {
     page-break-after: always !important;
-    display: -moz-box;
   }
 
-  /* table { page-break-after:auto !important}
-  tr    { page-break-inside:avoid !important; page-break-after:auto !important}
-  td    { page-break-inside:avoid !important; page-break-after:auto !important}
-  thead { display:table-header-group !important}
-  tbody { display:table-footer-group !important} */
+  .divprint {
+    /* Como aparece na tela de IMPRESSAO*/
+    width: 100%;
+    padding: 5%;
+  }
 
-  /* .tr {
-      page-break-inside: avoid !important;
-  }   */
+  /*@page {
+    size: auto; 
+    margin:0;
+  }*/
+
+  /*body  
+  { 
+      margin: 0px;  
+  } */
+
+  /* Largura da tabela na tela normal*/
+  /*.largura_table_print { 
+    position: relative !important; 
+    width: 100% !important;
+    padding: 3vh;
+  }*/
 }
 
+.divscreen {
+  /* Como aparece na tela normal*/
+  position: relative;
+  width: 100%;
+  padding: 3vh;
+}
+
+.largura_table_screen {
+  /* Largura da tabela na tela normal*/
+  position: relative;
+  width: 100%;
+  /*padding: 3vh;*/
+}
+
+/*
 .bordas {
   border-style: solid;
   border-width: 1px;
@@ -363,5 +381,6 @@ export default {
   border-bottom: none;
   border-top: none;
 }
+*/
 </style>
 
