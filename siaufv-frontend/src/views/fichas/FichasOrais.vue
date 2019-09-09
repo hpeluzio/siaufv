@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn">
+  <div class="animated fadeIn ">
     <!-- Data Table -->
     <div data-app="true">
       <v-container grid-list-md fluid>
@@ -8,7 +8,7 @@
             <v-flex d-flex xs12 sm12 md12>
               <v-card flat>
                 <v-card-text>
-                  <h4>Fichas de trabalhos orais</h4>
+                  <h4>Fichas de Trabalhos Orais</h4>
                   <ul>
                     <li>Caso precise utilize filtro do instituto</li>
                   </ul>
@@ -32,7 +32,9 @@
         <!-- Aqui começa a ficha -->
         <v-layout
           wrap
-          class="pagebreak noscreen page"
+          class="pagebreak noscreen"
+
+          
           v-for="(trabalho, i) in filterTrabalhosInstituto"
           :key="i + '-first'"
         >
@@ -40,7 +42,7 @@
             <v-card flat>
               <v-card-text>
                 <!-- Aqui começa a tabela -->
-                <table border="1" style="width:100%;">
+                <table border="1" class="alturaelargura">
                   <thead>
                     <tr>
                       <td style="width:25%;"></td>
@@ -78,7 +80,7 @@
                       <td colspan="4" class="conteudo1"><span style="color:BLUE">NÚMERO ID do TRABALHO:</span> {{ trabalho.trabalho_id }}</td>
                     </tr>
                     <tr>
-                      <td colspan="4" class="conteudo1"><span style="color:BLUE">Título do TRABALHO:</span> {{ trabalho.nome }}</td>
+                      <td colspan="4" class="conteudo1"><div><span style="color:BLUE">Título do TRABALHO:</span> {{ trabalho.nome }} </div></td>
                     </tr>
                     <tr>
                       <td colspan="4" class="conteudo1">APRESENTADO POR:</td>
@@ -309,52 +311,48 @@ export default {
 }
 </script>
 <style>
-
-@page {
-  size: auto;
-}
-
 @media screen {
     .noscreen {
-        display: none !important;
+        display: none;
     }
 }
 
 @media print {
-  * {
+
+  @page :first {
+  margin: 0;
+  }
+
+  @page {
+    size: A4;
     margin: 0;
-    padding: 0;
+    margin-top: 1.5cm;
+    
   }
 
   .noprint {
-    display: none !important;
+    display: none;
   }
 
   .pagebreak {
-    page-break-after: always !important;
+    page-break-after: always ;
   }
 
-  .divprint {
-    /* Como aparece na tela de IMPRESSAO*/
-    width: 100%;
-    padding: 5%;
+  /* .no-print {
+    visibility: hidden !important;
   }
-
-  /*body  
-  { 
-      margin: 0px;  
+  .do-print {
+    visibility: visible !important;
   } */
+}
 
-  /* Largura da tabela na tela normal*/
-  /*.largura_table_print { 
-    position: relative !important; 
-    width: 100% !important;
-    padding: 3vh;
-  }*/
+.alturaelargura {
+  max-width: 22.5cm; 
+  min-width: 22.5cm;
 }
 
 .sialogo {
-  font-size: 40px;
+  font-size: 50px;
   color: cornflowerblue;
   align-content: center;
   text-align: center;
@@ -363,7 +361,7 @@ export default {
 }
 
 .ufv {
-  font-size: 20px;
+  font-size: 25px;
   align-content: center;
   text-align: center;
   vertical-align: baseline;
@@ -373,25 +371,25 @@ export default {
 
 .apresentacao {
   font-family: 'Times New Roman', Times, serif;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .conteudo1 {
   font-family: 'Times New Roman', Times, serif;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .conteudo2 {
   font-family: 'Times New Roman', Times, serif;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .comentarios {
   font-family: 'Times New Roman', Times, serif;
   font-weight: bold;
-  font-size: 20px;
-  height: 150px;
+  font-size: 16px;
+  height: 125px;
   vertical-align: text-top;
 }
 </style>

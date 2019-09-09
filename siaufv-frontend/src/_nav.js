@@ -1,36 +1,23 @@
 export default {
   items: [
-    {
-      title: true,
-      name: 'Menu Principal',
-      class: '',
-      wrapper: {
-        element: '',
-        attributes: {}
-      }
-    },    
-    {
-      name: 'Home',
-      url: '/home',
-      icon: 'icon-home',
-      //badge: {
-      //  variant: 'primary',
-      //  text: 'NEW'
-      //}
-    },
     // {
     //   title: true,
-    //   name: 'Principal',
+    //   name: 'Menu',
     //   class: '',
     //   wrapper: {
     //     element: '',
     //     attributes: {}
     //   }
-    // },
+    // },    
+    {
+      name: 'Home',
+      url: '',
+      icon: 'icon-home',
+    },
     
     {
       title: true,
-      name: 'Sistema',
+      name: 'Lançamentos do Sistema',
       class: '',
       wrapper: {
         element: '',
@@ -38,9 +25,14 @@ export default {
       }
     },
     {
+      name: 'Sistema',
+      url: '/',
+      icon: 'cui-cog',
+      children: [    
+    {
       name: 'Institutos',
       url: '/institutos',
-      icon: 'cui-cog'
+      icon: 'cui-graph'
     },     
     {
       name: 'Anos',
@@ -62,6 +54,8 @@ export default {
       url: '/trabalhos',
       icon: 'icon-pencil'
     },
+  ]
+},
     {
       title: true,
       name: 'Lançamentos de Sessões',
@@ -71,21 +65,14 @@ export default {
         attributes: {}
       }
     },
-    // {
-    //   name: 'Avaliações',
-    //   url: '/avaliacoes',
-    //   icon: 'icon-bubbles'
-    // },
-
-
     {
       name: 'Orais',
       url: '/orais',
       icon: 'cui-speech'
     },
     {
-      name: 'Painéis',
-      url: 'paineis',
+      name: 'Paineis',
+      url: '/paineis',
       icon: 'cui-dashboard'
     },
 
@@ -108,7 +95,7 @@ export default {
           url: '/relatorios_orais',
         },              
         {
-          name: 'Paineis',
+          name: 'Sessões Paineis',
           url: '/relatorios_paineis',
         },
         {
@@ -122,7 +109,7 @@ export default {
         {
           name: 'Salas e suas Sessões',
           url: '/sessoesporsala',
-        },                                 
+        },                  
       ]
     },
     {
@@ -131,16 +118,16 @@ export default {
       icon: 'icon-notebook',
       children: [
         {
-          name: 'Trabalhos Orais',
+          name: '> Trabalhos Orais',
           url: '/fichas_orais',
         },              
         {
-          name: 'Trabalhos Paineis',
+          name: '> Paineis',
           url: '/fichas_paineis',
         },
                 
       ]
-    }, 
+    },    
     // {
     //   name: 'Minicursos',
     //   url: '/6',

@@ -55,7 +55,7 @@
             <v-card flat>
               <v-card-title>
 
-                <table border="0" style="width:100%; ">
+                <table border="0" class="alturaelarguraprint alturaelargurascreen">
                   <tr height="90" align="center">
                     
                       <th><img src="@/assets/sia-images/sia-logo.png" alt="sia-logo" style="width:60px"></th>
@@ -67,7 +67,7 @@
               </v-card-title>
               <v-card-text>
 
-                  <table border="1" style="width:100%; ">
+                  <table border="1" class="alturaelarguraprint alturaelargurascreen">
                     <thead>
                       <tr align="center">
                         <th style="width: 6%;">ID</th>
@@ -236,21 +236,49 @@ export default {
 }
 </script>
 <style>
+@media screen {
+    .noscreen {
+        display: none !important;
+    }
+    .alturaelargurascreen {
+      width: 100%; 
+      /* min-width: 22.5cm; */
+    }
+}
 
- @media print {
-  .noprint{
-    display: none !important;
+@media print {
+
+  @page :first {
+  margin: 0;
+  /* margin-right: 1.5cm; */
   }
 
-  /* table { page-break-after:auto !important}
-  tr    { page-break-inside:avoid !important; page-break-after:auto !important}
-  td    { page-break-inside:avoid !important; page-break-after:auto !important}
-  thead { display:table-header-group !important}
-  tbody { display:table-footer-group !important} */
+  @page {
+    size: A4;
+    margin: 0;
+    margin-top: 1.5cm;
+    /* margin-right: 1.5cm; */
+  }
 
-  /* .tr {
-      page-break-inside: avoid !important;
-  }   */
+  .noprint {
+    display: none;
+  }
+
+  .pagebreak {
+    page-break-after: always ;
+  }
+
+  .alturaelarguraprint {
+    max-width: 22.5cm; 
+    min-width: 22.5cm;
+  }
+
+  /* .no-print {
+    visibility: hidden !important;
+  }
+  .do-print {
+    visibility: visible !important;
+  } */
 }
 </style>
 

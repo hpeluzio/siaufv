@@ -32,7 +32,7 @@
             <!--<td class="text-xs-right">{{ props.item.id }}</td>-->
             <td class="text-xs-left">{{ props.item.nome }}</td>
             <td class="text-xs-left">{{ props.item.data | formatDate }}</td>
-            <td class="text-xs-left">{{ props.item.horario }}</td>
+            <td class="text-xs-left">{{ props.item.horario | formatHour}} às {{ props.item.horariofim | formatHour }}</td>
             <td class="text-xs-left">{{ props.item.sala_nome }}</td>
             <td class="text-xs-left">{{ props.item.instituto }}</td>
             <td class="text-xs-left">{{ props.item.anos_ano }}</td>
@@ -521,6 +521,7 @@ export default {
       { text: 'Nome', value: 'nome' },
       { text: 'Data', value: 'data' },
       { text: 'Horário', value: 'horario' },
+      //{ text: 'Horário Fim', value: 'horariofim' },
       { text: 'Sala', value: 'sala_id' },
       { text: 'Instituto', value: 'instituto' },
       { text: 'Ano', value: 'anos_ano' },
@@ -767,6 +768,13 @@ export default {
         return moment.utc(String(date)).format('DD/MM/YYYY')
       }
     },
+    formatHour(hour) {
+      //return 'oi'
+      if (hour) {
+        return hour.split(':')[0] + ':' + hour.split(':')[1]
+        //return moment.utc(String(hour)).format('DD/MM/YYYY')
+      }
+    },    
     filterTrabalhos(trabalhos, filtroInstitutoTrabalho) {
       if (filtroInstitutoTrabalho === '') return trabalhos
       else

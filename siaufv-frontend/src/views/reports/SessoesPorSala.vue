@@ -50,18 +50,18 @@
           wrap
           v-for="(sala, i) in filterSalas"
           :key="i + '-first'"
-          class="pagebreak divprint divscreen"
+          class="pagebreak divprint alturaelarguraprint alturaelargurascreen"
         >
           <v-flex d-flex xs12 sm12 md12>
             <v-card flat>
               <v-card-text>
                 <!-- tabela da sala -->
                 <div>
-                  <table align="center" height="40" border="1" class="largura_table_screen">
+                  <table align="center" height="40" border="1" class="alturaelarguraprint alturaelargurascreen">
                     <thead>
                       <tr align="center">
-                        <th class="largura_table_screen">
-                          <table border="0" class="largura_table_screen">
+                        <th class="alturaelarguraprint alturaelargurascreen">
+                          <table border="0" class="alturaelarguraprint alturaelargurascreen">
                             <tr height="90" align="center">
                               <th>
                                 <img
@@ -89,7 +89,7 @@
                       <tr>
                         <td>
                           <!-- Tabela da sessao -->
-                          <table border="1" class="largura_table_screen">
+                          <table border="1" class="alturaelarguraprint alturaelargurascreen">
                             <thead>
                               <tr align="center">
                                 <th style="width:6%;">Instituto</th>
@@ -109,7 +109,7 @@
                                 <td>{{ sessao.horario | formatHour }} às {{ sessao.horariofim | formatHour }}</td>
                                 <td>
                                   <!-- tabela do trabalho -->
-                                  <table border="1" class="largura_table_screen">
+                                  <table border="1" style="width: 100%">
                                     <thead>
                                       <tr align="center">
                                         <th style="width:60%;">Título</th>
@@ -125,7 +125,7 @@
                                         <td>{{ avaliacao.nome }}</td>
                                         <td>
                                           <!-- tabela dos avaliadores -->
-                                          <table border="0" class="largura_table_screen">
+                                          <table border="0" style="width: 100%">
                                             <tbody>
                                               <tr
                                                 align="center"
@@ -322,7 +322,43 @@ export default {
 }
 </script>
 <style>
+@media screen {
+    .noscreen {
+        display: none !important;
+    }
+    .alturaelargurascreen {
+      width: 100%; 
+      /* min-width: 22.5cm; */
+    }
+}
+
 @media print {
+
+  @page :first {
+  margin: 0;
+  /* margin-right: 1.5cm; */
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+    margin-top: 1.5cm;
+    /* margin-right: 1.5cm; */
+  }
+
+  .noprint {
+    display: none;
+  }
+
+  .pagebreak {
+    page-break-after: always ;
+  }
+
+  .alturaelarguraprint {
+    max-width: 22.5cm; 
+    min-width: 22.5cm;
+  }
+
   .noprint {
     display: none !important;
   }
@@ -331,11 +367,6 @@ export default {
     page-break-after: always !important;
   }
 
-  .divprint {
-    /* Como aparece na tela de IMPRESSAO*/
-    width: 100%;
-    padding: 5%;
-  }
 
   /*@page {
     size: auto; 
@@ -362,7 +393,7 @@ export default {
   padding: 3vh;
 }
 
-.largura_table_screen {
+.largura100 {
   /* Largura da tabela na tela normal*/
   position: relative;
   width: 100%;

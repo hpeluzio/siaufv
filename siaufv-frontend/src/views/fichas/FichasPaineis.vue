@@ -40,7 +40,7 @@
             <v-card flat>
               <v-card-text>
                 <!-- Aqui começa a tabela -->
-                <table border="1" style="width:100%;">
+                <table border="1" class="alturaelargura">
                   <thead>
                     <tr>
                       <td style="width:25%;"></td>
@@ -84,8 +84,14 @@
                       <td colspan="4" class="conteudo1"><span style="color:BLUE">Título do TRABALHO:</span> {{ trabalho.nome }}</td>
                     </tr>
                     <tr>
-                      <td colspan="4" class="conteudo1">APRESENTADO POR:</td>
+                      <td colspan="4" class="conteudo1">NOME DO AVALIADOR:</td>
                     </tr>
+                    <tr>
+                      <td colspan="4" class="conteudo1">MATRÍCULA DO AVALIADOR:</td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="conteudo1">APRESENTADO POR:</td>
+                    </tr>                    
                     <tr>
                       <td
                         colspan="4"
@@ -284,40 +290,41 @@ export default {
 }
 
 @media print {
-  * {
+
+  @page :first {
+  margin: 0;
+  }
+
+  @page {
+    size: A4;
     margin: 0;
-    padding: 0;
+    margin-top: 1.5cm;
+    
   }
 
   .noprint {
-    display: none !important;
+    display: none;
   }
 
   .pagebreak {
-    page-break-after: always !important;
+    page-break-after: always ;
   }
 
-  .divprint {
-    /* Como aparece na tela de IMPRESSAO*/
-    width: 100%;
-    padding: 5%;
+  /* .no-print {
+    visibility: hidden !important;
   }
-
-  /*body  
-  { 
-      margin: 0px;  
+  .do-print {
+    visibility: visible !important;
   } */
+}
 
-  /* Largura da tabela na tela normal*/
-  /*.largura_table_print { 
-    position: relative !important; 
-    width: 100% !important;
-    padding: 3vh;
-  }*/
+.alturaelargura {
+  max-width: 22.5cm; 
+  min-width: 22.5cm;
 }
 
 .sialogo {
-  font-size: 40px;
+  font-size: 50px;
   color: cornflowerblue;
   align-content: center;
   text-align: center;
@@ -326,7 +333,7 @@ export default {
 }
 
 .ufv {
-  font-size: 20px;
+  font-size: 30px;
   align-content: center;
   text-align: center;
   vertical-align: baseline;
@@ -336,29 +343,26 @@ export default {
 
 .apresentacao {
   font-family: 'Times New Roman', Times, serif;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .conteudo1 {
   font-family: 'Times New Roman', Times, serif;
   font-weight: bold;
   font-size: 20px;
-  padding: 12px;
 }
 
 .conteudo2 {
   font-family: 'Times New Roman', Times, serif;
   font-size: 20px;
-  padding: 12px;
 }
 
 .comentarios {
   font-family: 'Times New Roman', Times, serif;
   font-weight: bold;
   font-size: 20px;
-  height: 175px;
+  height: 125px;
   vertical-align: text-top;
-  padding: 12px;
 }
 </style>
 

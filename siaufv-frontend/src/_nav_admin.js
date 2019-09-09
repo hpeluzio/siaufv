@@ -1,14 +1,14 @@
 export default {
   items: [
-    {
-      title: true,
-      name: 'Menu Admin',
-      class: '',
-      wrapper: {
-        element: '',
-        attributes: {}
-      }
-    },    
+    // {
+    //   title: true,
+    //   name: 'Menu Admin',
+    //   class: '',
+    //   wrapper: {
+    //     element: '',
+    //     attributes: {}
+    //   }
+    // },    
     {
       name: 'Home',
       url: '/admin',
@@ -17,7 +17,7 @@ export default {
     
     {
       title: true,
-      name: 'Sistema',
+      name: 'Lançamentos do Sistema',
       class: '',
       wrapper: {
         element: '',
@@ -25,9 +25,14 @@ export default {
       }
     },
     {
+      name: 'Sistema',
+      url: '/',
+      icon: 'cui-cog',
+      children: [    
+    {
       name: 'Institutos',
       url: '/admin/institutos',
-      icon: 'cui-cog'
+      icon: 'cui-graph'
     },     
     {
       name: 'Anos',
@@ -49,6 +54,8 @@ export default {
       url: '/admin/trabalhos',
       icon: 'icon-pencil'
     },
+  ]
+},
     {
       title: true,
       name: 'Lançamentos de Sessões',
@@ -88,7 +95,7 @@ export default {
           url: '/admin/relatorios_orais',
         },              
         {
-          name: ' Paineis',
+          name: 'Sessões Paineis',
           url: '/admin/relatorios_paineis',
         },
         {
@@ -111,11 +118,11 @@ export default {
       icon: 'icon-notebook',
       children: [
         {
-          name: 'Trabalhos Orais',
+          name: '> Trabalhos Orais',
           url: '/admin/fichas_orais',
         },              
         {
-          name: 'Trabalhos Paineis',
+          name: '> Paineis',
           url: '/admin/fichas_paineis',
         },
                 
