@@ -272,6 +272,8 @@ export default {
         link.href = window.URL.createObjectURL(blob)
         link.download = 'SIA - Salas e suas sessões.pdf'
         link.click()        
+        document.body.appendChild(link);
+        document.body.removeChild(link);  
         //console.log(response.data);
       })
       .catch(function (error) {

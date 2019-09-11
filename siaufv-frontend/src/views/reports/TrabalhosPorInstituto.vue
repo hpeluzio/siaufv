@@ -212,7 +212,9 @@ export default {
         let link = document.createElement('a')
         link.href = window.URL.createObjectURL(blob)
         link.download = 'SIA - Trabalhos por Instituto.pdf'
-        link.click()        
+        document.body.appendChild(link);
+        link.click()  
+        document.body.removeChild(link);      
         //console.log(response.data);
       })
       .catch(function (error) {
