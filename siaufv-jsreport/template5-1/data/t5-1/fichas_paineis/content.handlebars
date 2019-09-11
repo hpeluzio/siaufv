@@ -1,0 +1,154 @@
+<html>
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <style>
+            
+            {#asset styles.css @encoding=utf8}
+            {#asset bootstrap4/bootstrap.min.css @encoding=utf8}
+        </style>
+    </head>
+
+<body>
+    {{#each trabalhos}}
+    <div class="div-body pagebreak">
+                <table border="1" class="alturaelargura">
+                  <thead>
+                    <tr>
+                      <td style="width:25%;"></td>
+                      <td style="width:25%;"></td>
+                      <td style="width:15%;"></td>
+                      <td style="width:35%;"></td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="sialogo" style="width:15%;">
+                        <img
+                          src="{#asset sia-logo.png @encoding=dataURI}"
+                          alt="sia-logo"
+                          style="width:60px"
+                        />
+                        SIA
+                      </td>
+                      <td class="ufv" colspan="3">
+                        UNIVERSIDADE FEDERAL DE VIÇOSA<br />
+                        CAMPUS RIO PARANAÍBA<br />
+                        SIMPÓSIO DE INTEGRAÇÃO ACADÊMICA<br />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="apresentacao" colspan="4">
+                        <center style=" font-weight: bold;">ORIENTAÇÕES PARA AVALIAÇÃO</center>1. As notas deverão ser ranqueadas, ou seja, deve-se evitar a repetição de notas entre o grupo de trabalhos avaliados.
+                        <br />2. Favor seguir a pontuação indicada em cada item.
+                        <br />3. Esta ficha deverá ser preenchida, guardada no envelope recebido e devolvida ao monitor da sala após a sessão de avaliação dos trabalhos.
+                        <br />4. Favor preencher a nota final de cada avaliação no local indicado no envelope. Caso o apresentador não tenha comparecido, favor indicar com um hífen (-).
+                        <br />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="conteudo1" style="text-align: center;">AVALIAÇÃO DO PAINEL</td>
+                    </tr>                    
+                    <tr>
+                      <td colspan="4" class="conteudo1"><span style="color:BLUE">NÚMERO ID do TRABALHO:</span> {{ trabalho_id }}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="conteudo1"><span style="color:BLUE">Título do TRABALHO:</span> {{ nome }}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="conteudo1">NOME DO AVALIADOR:</td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="conteudo1">MATRÍCULA DO AVALIADOR:</td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="conteudo1">APRESENTADO POR:</td>
+                    </tr>                    
+                    <tr>
+                      <td
+                        colspan="4"
+                        class="conteudo1"
+                      >NÃO APRESENTADO (&nbsp; &nbsp; &nbsp; &nbsp;)</td>
+                    </tr>
+                    <tr>
+                      <td
+                        colspan="4"
+                        class="conteudo1"
+                        style="text-align: center;"
+                      >ITENS PARA AVALIAÇÃO – 100 PONTOS</td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="conteudo1">
+                        A) APRESENTAÇÃO E DOMÍNIO DO CONTEÚDO -  VALOR: 80 PONTOS
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="conteudo2" colspan="3">Contexto e justificativa (20 pontos)</td>
+                      <td
+                        class="conteudo1"
+                        colspan="1"
+                        style="text-align: center;"
+                      >(&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;) pontos</td>
+                    </tr>
+                    <tr>
+                      <td class="conteudo2" colspan="3">Objetivos e métodos (20 pontos)</td>
+                      <td
+                        class="conteudo1"
+                        colspan="1"
+                        style="text-align: center;"
+                      >(&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;) pontos</td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="conteudo2"
+                        colspan="3"
+                      >Resultados/ações desenvolvidas (20 pontos)</td>
+                      <td
+                        class="conteudo1"
+                        colspan="1"
+                        style="text-align: center;"
+                      >(&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;) pontos</td>
+                    </tr>
+                    <tr>
+                      <td class="conteudo2" colspan="3">Conclusões e, ou considerações finais (20 pontos)</td>
+                      <td
+                        class="conteudo1"
+                        colspan="1"
+                        style="text-align: center;"
+                      >(&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;) pontos</td>
+                    </tr>
+                    <tr>
+                      <td class="conteudo1" colspan="3">
+                        B) QUALIDADE DO PAINEL – VALOR: 20 PONTOS
+                      </td>
+                      <td
+                        class="conteudo1"
+                        colspan="1"
+                        style="text-align: center;"
+                      >(&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;) pontos</td>
+                    </tr>                      
+                    </tr>
+                    <tr>
+                    <tr>
+                      <td class="conteudo1" colspan="3">TOTAL DE PONTOS:</td>
+                      <td
+                        class="conteudo1"
+                        colspan="1"
+                        style="text-align: center;"
+                      >(&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;) pontos</td>
+                    </tr>
+                    <tr>
+                      <td class="comentarios" colspan="4">COMENTÁRIOS (Opcional):</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="conteudo1" style="text-align: center;">
+                  <br />
+                  <p>Assinatura do Avaliador: _________________________________________________</p>
+                </div>
+    </div>
+
+    {{/each}}    
+</body>
+
+</html>

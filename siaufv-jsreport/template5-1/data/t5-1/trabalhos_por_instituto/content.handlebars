@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <style>
+            
+            {#asset styles.css @encoding=utf8}
+            {#asset bootstrap4/bootstrap.min.css @encoding=utf8}
+        </style>
+    </head>
+
+<body>
+
+        
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <table border="0" >
+                  <tr height="90" align="center">
+                    
+                      <th><img src="{#asset sia-logo.png @encoding=dataURI}" alt="sia-logo" style="width:60px"></th>
+                      <th><h1>RELATÓRIO DE TRABALHOS POR INSTITUTO</h1></th> 
+                      <th><img src="{#asset ufv-logo.png @encoding=dataURI}" alt="sia-logo" style="width:90px"></th>
+                    </tr>
+                </table>
+              </th>  
+            </tr>
+          </thead>  
+          <tbody>
+            
+            <tr>
+              
+              <td>
+
+                  <table border="1" style="text-align: center;" class="fontTrabalhos">
+                    <thead>
+                      <tr align="center">
+                        <th style="width: 6%;">ID</th>
+                        <th style="width: 20%;">Título</th>
+                        <th style="width: 20%;">Autor</th> 
+                        <th style="width: 10%;">Orientador</th>
+                        <th style="width: 6%;">Instituto</th>
+                        <th style="width: 6%;">Data</th>
+                        <th style="width: 6%;">Horário</th>
+                        <th style="width: 6%;">Sala</th>
+                        <th >Avaliadores</th>
+
+                      </tr>
+                    </thead>
+                    <tbody >
+                      {{#each trabalhos}}               
+                      <tr>
+                        <td>{{ trabalho_id }}</td>
+                        <td class="padding">{{ nome }}</td>
+                        <td >
+                          <table style="width:100%;">
+                            <tbody>
+                              {{#each autores}}
+                              <tr align="center" >
+                                <td class="padding">{{ autor }}</td>
+                              </tr>
+                              {{/each}} 
+                            </tbody>  
+                          </table>                          
+                        </td>
+                        <td>{{ orientador }}</td>
+                        <td>{{ instituto }}</td>
+                        <td>{{ formatDate sessao_data }}</td>
+                        <td>{{ formatHour sessao_horario  }}</td>
+                        <td>{{ sala_nome }}</td>
+                        <td>
+                          <table  style="width:100%;">
+                            <tbody>
+                              {{#each avaliadores}}
+                              <tr align="center">
+                                <td>{{ nome }}</td>
+                              </tr>
+                              {{/each}}
+                            </tbody>  
+                          </table>                            
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody> 
+                  </table>
+
+                </td>
+                
+            </tr>
+            
+          </tbody>
+
+        </table>
+           
+
+     
+</body>
+
+</html>

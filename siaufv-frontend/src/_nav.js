@@ -91,25 +91,25 @@ export default {
       icon: 'icon-note',
       children: [
         {
+          name: '> Avaliadores por Instituto',
+          url: '/avaliadoresporinstituto',
+        },
+        {
+          name: '> Trabalhos por Instituto',
+          url: '/trabalhosporinstituto',
+        },
+        {
+          name: '> Salas e suas Sessões',
+          url: '/sessoesporsala',
+        },
+        {
           name: 'Sessões Orais',
           url: '/relatorios_orais',
         },              
         {
           name: 'Sessões Paineis',
           url: '/relatorios_paineis',
-        },
-        {
-          name: 'Avaliadores por Instituto',
-          url: '/avaliadoresporinstituto',
-        },
-        {
-          name: 'Trabalhos por Instituto',
-          url: '/trabalhosporinstituto',
-        },
-        {
-          name: 'Salas e suas Sessões',
-          url: '/sessoesporsala',
-        },                  
+        },               
       ]
     },
     {
@@ -122,7 +122,7 @@ export default {
           url: '/fichas_orais',
         },              
         {
-          name: '> Paineis',
+          name: '> Trabalhos Paineis',
           url: '/fichas_paineis',
         },
                 

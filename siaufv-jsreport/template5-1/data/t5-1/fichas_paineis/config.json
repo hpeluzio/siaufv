@@ -1,0 +1,24 @@
+{
+    "folder": {
+        "shortid": "KKK6xXS"
+    },
+    "shortid": "HygnuhsILH",
+    "name": "fichas_paineis",
+    "recipe": "chrome-pdf",
+    "engine": "handlebars",
+    "chrome": {
+        "printBackground": true,
+        "marginTop": "2.5cm",
+        "marginBottom": "2.5cm",
+        "marginRight": "1.5cm",
+        "marginLeft": "1.5cm"
+    },
+    "creationDate": "2019-09-11T17:18:48.738Z",
+    "modificationDate": {
+        "$$date": 1568222978711
+    },
+    "inheritedReadPermissions": [],
+    "inheritedEditPermissions": [],
+    "_id": "CVl0Vq0yZHfvJUgs",
+    "$entitySet": "templates"
+}

@@ -45,6 +45,7 @@
                       </v-card-text>
                     </v-card>                    
                     <v-spacer></v-spacer>
+                    <v-icon color="black" large @click="jsreport()">archive</v-icon>              
                     <v-icon color="blue" large @click="imprimir()">print</v-icon>
                   </v-flex>
                 </v-card-title>    
@@ -127,6 +128,7 @@
 
 <script>
 import axios_instance from '../../axios'
+import axios from 'axios';
 import moment from 'moment'
 const helpers = require('../../helpers')
 
@@ -189,6 +191,35 @@ export default {
     imprimir() {
         window.print();
     },
+
+    jsreport() {
+      //Todas CFGs do jsreport
+      const data = {"template":{"shortid":"Hyg-rz2U8r"},"data":{"trabalhos": this.filterTrabalhosInstituto}}
+
+      axios.post(process.env.VUE_APP_API_JSREPORT_URL + ':5488' + '/api/report', data, {
+          responseType: 'arraybuffer',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          auth: {
+            username: process.env.VUE_APP_API_JSREPORT_USER,
+            password: process.env.VUE_APP_API_JSREPORT_PASSWORD
+          },          
+      })   
+      .then(function (response) {
+        //return response.download('', 'test.pdf', '');
+        let blob = new Blob([response.data], { type: 'application/pdf' })
+        let link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = 'SIA - Trabalhos por Instituto.pdf'
+        link.click()        
+        //console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });  
+        
+    },  
 
     setArrayInstitutos() {
       //Inicializando instituto com '' para zerar o filtro das selections

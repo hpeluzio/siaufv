@@ -1,0 +1,101 @@
+/* CSS comum a todos */
+
+.pagebreak {
+    page-break-after: always;
+}
+
+.div-body {
+    /* max-width: 900px; */
+    /* margin: auto; */
+    /* padding: 30px; */
+    /* border: 1px solid #eee; */
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, .15); */
+    /* font-size: 16px; */
+    /* line-height: 24px; */
+    /* font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; */
+    /* color: #555; */
+    /* align-content: center; */
+}
+.div-body table {
+    width: 100%;
+    border-collapse: collapse;
+    /* line-height: inherit; */
+    /* text-align: center; */
+    /* align-content: center; */
+    /* font-family: Arial, Helvetica, sans-serif; */
+
+    /* border-style: solid; */
+}
+.div-body table td {
+    padding: 10px;
+    /* text-align: center; */
+    vertical-align: middle; 
+    
+}
+
+/* Aqui ja eh das fichas orais */
+/* Aqui ja eh das fichas orais */
+/* Aqui ja eh das fichas orais */
+/* Aqui ja eh das fichas orais */
+/* Aqui ja eh das fichas orais */
+
+
+.sialogo {
+  font-size: 50px;
+  color: cornflowerblue;
+  align-content: center;
+  text-align: center;
+  padding: 2px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.ufv {
+  font-size: 30px;
+  align-content: center;
+  text-align: center;
+  vertical-align: baseline;
+  font-weight: bold;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.apresentacao {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 22px;
+}
+
+.conteudo1 {
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.conteudo2 {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 22px;
+}
+
+.comentarios {
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 22px;
+  height: 150px;
+  vertical-align: text-top;
+}
+
+
+/* Padding de algumas tabelas TDs */
+.padding{
+  padding: 10px;
+}
+
+
+/* TrabalhosPorInsituto por instituto */
+.fontTrabalhos{
+  font-size: 18px;
+}
+
+
+/* Avaliadores por instituto */
+.fontAvaliadores{
+  font-size: 18px;
+}

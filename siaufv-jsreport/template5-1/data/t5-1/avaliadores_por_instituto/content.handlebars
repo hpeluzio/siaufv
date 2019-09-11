@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <style>
+            
+            {#asset styles.css @encoding=utf8}
+            {#asset bootstrap4/bootstrap.min.css @encoding=utf8}
+        </style>
+    </head>
+
+<body>
+
+          
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <table border="0" >
+                  <tr height="90" align="center">
+                    
+                      <th><img src="{#asset sia-logo.png @encoding=dataURI}" alt="sia-logo" style="width:60px"></th>
+                      <th><h1>RELATÓRIO DE TRABALHOS POR INSTITUTO</h1></th> 
+                      <th><img src="{#asset ufv-logo.png @encoding=dataURI}" alt="sia-logo" style="width:90px"></th>
+                    </tr>
+                </table>
+              </th>  
+            </tr>
+          </thead>  
+          <tbody>
+            <tr>
+              <td>
+
+                <table border="1" class="fontAvaliadores">
+                  <thead>
+                    <tr align="center">
+                      <th style="width: 15%">Nome</th>
+                      <th style="width: 10%">Data</th>
+                      <th style="width: 10%">Horário</th>
+                      <th style="width: 6%">Instituto</th>
+                      <th style="width: 9%">Sala</th>
+                      <th style="width: 6%">Tipo</th>
+                      <th style="width: 9%">Trabalho ID</th>
+                      <th>Título do Trabalho</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                    {{#each avaliadores}}   
+                    <tr align="center">
+                      <td class="padding">{{ nome }}</td>
+                      <td>{{ formatDate sessao_data }}</td>
+                      <td>{{ formatHour sessao_horario }} às {{ formatHour sessao_horariofim }}</td>
+                      <td>{{ instituto }}</td>
+                      <td>{{ sala_nome }}</td>
+                      <td>{{ tipoTrabalho sala_tipo }}</td>
+                      <td>{{ trabalho_id }}</td>
+                      <td class="padding">{{ trabalhos_nome }}</td>
+                    </tr>
+                    {{/each}}
+                  </tbody> 
+                  </table>
+
+                </td>
+                
+            </tr>
+            
+          </tbody>
+
+        </table>
+     
+</body>
+
+</html>

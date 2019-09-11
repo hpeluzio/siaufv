@@ -1,0 +1,19 @@
+version: '3.2'
+
+services:
+  jsreport-sia:
+    image: jsreport/jsreport:2.5.0
+    container_name: jsreport-sia-t5-2
+    restart: always
+    ports:
+      - 5489:5488
+    volumes:
+      - ./:/jsreport
+#    command: jsreport start
+
+volumes:
+  data:
+
+
+
+

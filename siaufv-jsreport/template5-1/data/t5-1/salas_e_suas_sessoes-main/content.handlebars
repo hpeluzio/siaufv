@@ -1,0 +1,96 @@
+<html>
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <style>
+            
+            {#asset styles.css @encoding=utf8}
+            {#asset bootstrap4/bootstrap.min.css @encoding=utf8}
+        </style>
+    </head>
+
+<body>
+    {{#each salas}}
+    <div class="div-body pagebreak">
+        <table>
+            <thead>
+                <tr align="center" class="top">
+                    <th>
+                        <table>
+                            <tr height="90" align="center">
+                                <th>
+                                    <img src="{#asset sia-logo.png @encoding=dataURI}" alt="sia-logo" style="width:60px" />
+                                </th>
+                                <th>
+                                    <h1>{{nome}}</h1>
+                                </th>
+                                <th>
+                                    <img src="{#asset ufv-logo.png @encoding=dataURI}" alt="sia-logo" style="width:90px" />
+                                </th>
+                            </tr>
+                        </table>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+
+                        <!-- Tabela da sessao -->
+                        <table border="1">
+                            <thead>
+                                <tr align="center">
+                                    <th style="width:6%;">Instituto</th>
+                                    <th style="width:8%;">Data</th>
+                                    <th style="width:10%;">Horário</th>
+                                    <th style="width:70%;">Trabalho</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each sessoes}}
+                                <tr>
+                                    <td>{{ instituto }}</td>
+                                    <td>{{ formatDate data }}</td>
+                                    <td>{{ formatHour horario }} às {{ formatHour horariofim }}</td>
+                                    <td>
+                                        <table border="1">
+                                            <thead>
+                                                <tr align="center">
+                                                    <th style="width:60%;">Título</th>
+                                                    <th style="width:40%;">Avaliadores</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#each avaliacoes}}
+                                                <tr>
+                                                    <td>{{ nome }}</td>
+                                                    <td>
+                                                        <!-- tabela dos avaliadores -->
+                                                        <table>
+                                                            <tbody>
+                                                                {{#each avaliadores}}
+                                                                <tr>
+                                                                    <td>{{ nome }}</td>
+                                                                </tr>
+                                                                {{/each}}
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    {{/each}}    
+</body>
+
+</html>
