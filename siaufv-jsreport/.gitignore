@@ -2,3 +2,4 @@
 node_modules
 package-lock.json
 jsreport.config.json
+data/settings

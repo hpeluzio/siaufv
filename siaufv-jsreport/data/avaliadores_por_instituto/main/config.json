@@ -1,0 +1,24 @@
+{
+    "folder": {
+        "shortid": "Je_zuS3"
+    },
+    "shortid": "S1e_9nhULS",
+    "name": "main",
+    "recipe": "chrome-pdf",
+    "engine": "handlebars",
+    "chrome": {
+        "printBackground": true,
+        "marginTop": "2.5cm",
+        "marginBottom": "2.5cm",
+        "marginRight": "1.5cm",
+        "marginLeft": "1.5cm"
+    },
+    "creationDate": "2019-09-11T18:27:39.294Z",
+    "modificationDate": {
+        "$$date": 1568640415878
+    },
+    "inheritedReadPermissions": [],
+    "inheritedEditPermissions": [],
+    "_id": "kYOjbKS6VEyUPzhK",
+    "$entitySet": "templates"
+}
