@@ -3,7 +3,7 @@ version: '3.2'
 services:
   jsreport-sia:
     image: jsreport/jsreport:2.5.0
-    container_name: jsreport-sia-t5-1
+    container_name: jsreport-sia
     restart: always
     ports:
       - 5488:5488

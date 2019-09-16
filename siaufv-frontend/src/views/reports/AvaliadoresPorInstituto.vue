@@ -181,7 +181,7 @@ export default {
       //Todas CFGs do jsreport
       const data = {"template":{"shortid":"S1e_9nhULS"},"data":{"avaliadores": this.filterAvaliadoresInstituto}}
 
-      axios.post(process.env.VUE_APP_API_JSREPORT_URL + ':5488' + '/api/report', data, {
+      axios.post(process.env.VUE_APP_API_JSREPORT_URL, data, {
           responseType: 'arraybuffer',
           headers: {
               'Content-Type': 'application/json',
