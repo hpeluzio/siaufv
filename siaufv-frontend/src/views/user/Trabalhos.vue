@@ -32,6 +32,7 @@
           <td class="text-xs-left">{{ props.item.orientador }}</td>
           <td class="text-xs-left">{{ props.item.modalidade }}</td>
           <td class="text-xs-left">{{ props.item.instituto }}</td>
+          <td class="text-xs-left">{{ props.item.tipo }}</td>
           <td class="text-xs-left">{{ props.item.area }}</td>
           <td class="text-xs-left">{{ props.item.ano }}</td>
           <td class="text-xs-left">
@@ -55,6 +56,7 @@
 </template>
 
 <script>
+const helpers = require('../../helpers')
 
 export default {
   data: () => ({
@@ -67,6 +69,7 @@ export default {
       { text: 'orientador', value: 'orientador' },
       { text: 'Modalidade', value: 'modalidade' },
       { text: 'Instituto', value: 'instituto' },
+      { text: 'Tipo', value: 'tipo' },
       { text: 'Área', value: 'area' },
       { text: 'Ano', value: 'ano' },
       { text: 'Sessão', value: 'sessao' }
@@ -95,7 +98,15 @@ export default {
       })
         .then(response => {
           // Pegando os trabalhos e os autores desses trabalhos
-          this.trabalhos = response.data //.trabalhos;
+          this.trabalhos = response.data.map(trabalho => {
+            if (trabalho.tipo == '0') {
+              trabalho.tipo = 'Oral'
+              return trabalho
+            } else if (trabalho.tipo == '1') {
+              trabalho.tipo = 'Painel'
+              return trabalho
+            }
+          })
           //console.log('TRABALHOS: ', this.trabalhos)
         })
         .catch(error => {
@@ -118,6 +129,7 @@ export default {
         if (helpers.normaliza(item.orientador).includes(search)) return item
         if (helpers.normaliza(item.modalidade).includes(search)) return item
         if (helpers.normaliza(item.instituto).includes(search)) return item
+        if (helpers.normaliza(item.tipo).includes(search)) return item
         if (helpers.normaliza(item.area).includes(search)) return item
         for (var item of item.sessao)
           if (helpers.normaliza(item.nome).includes(search)) return item
