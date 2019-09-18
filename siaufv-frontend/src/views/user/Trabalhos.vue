@@ -26,7 +26,7 @@
 
           <!-- AUTOR -->
           <td class="text-xs-left">
-            <span v-for="(autor, index) in props.item.autores" :key="index">{{ autor.autor }}</span>
+            <p v-for="(autor, index) in props.item.autores" :key="index">{{ autor.autor }}</p>
           </td>
           <!-- AUTOR -->
           <td class="text-xs-left">{{ props.item.orientador }}</td>
