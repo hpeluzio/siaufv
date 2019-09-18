@@ -31,8 +31,10 @@ class Helpers {
       sessoes.map( sessao => {
         //Se a sessao for a mesma do avaliado entao nao faz sentido filtrar
         if(sessao.id !== sessao_do_avaliador.id){
-          if (this.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, sessao_do_avaliador.horario, sessao_do_avaliador.horariofim)){
-            if(sessao.avaliador_id == avaliador_id){
+          if (sessao.data === sessao_do_avaliador.data && 
+            this.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, sessao_do_avaliador.horario, sessao_do_avaliador.horariofim)){
+              //Se avaliador for o mesmo então podemos retornar avaliador indisponivel
+              if(sessao.avaliador_id == avaliador_id){
               avaliadorDisponivel = false
             }
           }
