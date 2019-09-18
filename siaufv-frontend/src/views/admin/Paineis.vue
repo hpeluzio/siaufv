@@ -63,7 +63,7 @@
                 <v-card-title>
                   <v-icon large color="green darken-2">business</v-icon>
                   <span class="headline">
-                    <h5>Cadastro de sessão de avaliação oral</h5>
+                    <h5>Cadastro de sessão de avaliação painel</h5>
                   </span>
                 </v-card-title>
 
@@ -853,7 +853,7 @@ export default {
       })
         .then(response => {
           this.trabalhos = response.data.filter( trabalho => {
-            if(trabalho.tipo === 0)
+            if(trabalho.tipo === 1)
               return trabalho
           })
           //console.log('TRABALHOS: ', this.trabalhos)
