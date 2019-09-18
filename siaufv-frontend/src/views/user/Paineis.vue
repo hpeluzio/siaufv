@@ -637,6 +637,8 @@ export default {
     },
     setArrayHorarios() {
       this.horarios = [
+        { horario: '06:00:00' },
+        { horario: '07:00:00' },
         { horario: '08:00:00' },
         { horario: '09:00:00' },
         { horario: '10:00:00' },
@@ -650,7 +652,10 @@ export default {
         { horario: '18:00:00' },
         { horario: '19:00:00' },
         { horario: '20:00:00' },
-        { horario: '21:00:00' }
+        { horario: '21:00:00' },
+        { horario: '22:00:00' },
+        { horario: '23:00:00' },
+        { horario: '23:59:00' }
       ]
     },
     setArrayInstitutos() {
