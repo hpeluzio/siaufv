@@ -1,8 +1,10 @@
 'use strict'
 
+const Sessao = use('App/Models/Sessao')
 const Avaliacao = use('App/Models/Avaliacao')
 const AvaliadorAvaliacao = use('App/Models/AvaliadorAvaliacao')
 const Database = use('Database')
+const Helpers = use('App/Helpers')
 
 /**
  * Resourceful controller for interacting with avaliacaos
@@ -57,10 +59,26 @@ class AvaliacaoController {
   }
 
   async store ({ request, response }) {
-    console.log(request.only([ 'sessao_id', 'trabalho_id', 'avaliador1_id', 'avaliador2_id' ]))
+
+    //Verificando se o avaliador está disponivel
+    ////////////////////////////////////////////////////////////////////////
     const { sessao_id, trabalho_id, avaliador1_id, avaliador2_id } 
         = request.only([
-           'sessao_id', 'trabalho_id', 'avaliador1_id', 'avaliador2_id' ])
+           'sessao_id', 'trabalho_id', 'avaliador1_id', 'avaliador2_id' ])    
+
+    const sessao = await Sessao.findOrFail(sessao_id)
+
+    //Somente para as sessões paineis faremos essa verificação de avaliadores
+    if(sessao.tipo === 0) {
+      var obj = new Helpers();
+      if( !await obj.confereSeAvaliadorEstaDisponivel(sessao_id, avaliador1_id ))
+        return response.status(409).send({ "error": "Este avaliador já foi cadastrado em outra sessão de mesmo horário" });
+      if( !await obj.confereSeAvaliadorEstaDisponivel(sessao_id, avaliador2_id ))
+        return response.status(409).send({ "error": "Este avaliador já foi cadastrado em outra sessão de mesmo horário" });        
+    }
+    //console.log ('O avaliador', avaliador1_id, 'esta disponivel para sessao ',  sessao_id,'? ')
+    ////////////////////////////////////////////////////////////////////////
+
 
     try {
       //Criando avaliacao
