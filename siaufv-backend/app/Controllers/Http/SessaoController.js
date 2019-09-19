@@ -4,6 +4,7 @@ const Sessao = use('App/Models/Sessao')
 const Avaliacao = use('App/Models/Avaliacao')
 const AvaliadorAvaliacao = use('App/Models/AvaliadorAvaliacao')
 const Database = use('Database')
+const Helpers = use('App/Helpers')
 
 /**
  * Resourceful controller for interacting with sessaos
@@ -43,6 +44,7 @@ class SessaoController {
 
     //STORE
     async store({ request, response }) {
+        console.log('|********************************|\n\n')        
         console.log(
             request.only([ 'nome', 'data', 'horario', 'horariofim', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
         )
@@ -50,7 +52,14 @@ class SessaoController {
             nome, data, horario, horariofim, tipo, sala_id, instituto, ano_id, avaliacoes
         } = request.only([ 'nome', 'data', 'horario', 'horariofim', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
 
-        //return
+        // ////////////////////////////////////////////////////////////
+        // //Verificar se a sala esta disponivel
+        if(tipo == 0) {
+          var obj = new Helpers();
+          if( !await obj.confereSeSalaEstaDisponivelStore(data, horario, horariofim, sala_id))
+            return response.status(409).send({ "error": "Esta sala já foi cadastrada em outra sessão de mesmo horário" });
+        }       
+        // ////////////////////////////////////////////////////////////
 
         try {
             //const trx = await Database.beginTransaction()
@@ -75,13 +84,20 @@ class SessaoController {
     //UPDATE
     async update({ params, request, response }) {
         console.log('|********************************|\n\n')
-        console.log(
-            request.only([ 'nome', 'data', 'horario', 'horariofim', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
-        )
+        // console.log(
+        //     request.only([ 'nome', 'data', 'horario', 'horariofim', 'tipo', 'sala_id', 'instituto', 'ano_id' ])
+        // )
         const {
             nome, data, horario, horariofim, tipo, sala_id, instituto, ano_id
         } = request.only([ 'nome', 'data', 'horario', 'horariofim', 'tipo', 'sala_id', 'instituto', 'ano_id'])
 
+        // //Verificar se a sala esta disponivel
+        if(tipo == 0) {
+            var obj = new Helpers();
+            if( !await obj.confereSeSalaEstaDisponivelUpdate(params.id, data, horario, horariofim, sala_id))
+              return response.status(409).send({ "error": "Esta sala já foi cadastrada em outra sessão de mesmo horário" });
+        } 
+        //////////////////////////////////////////////////////////////
         
         try {
             //beginTransaction
@@ -104,7 +120,6 @@ class SessaoController {
         }
         //Se chegou até aqui então o Trabalho foi adicionado com sucesso
         return response
-            
             .status(200)
             .send({ success: 'Sessão registrada com sucesso' })    
     }
