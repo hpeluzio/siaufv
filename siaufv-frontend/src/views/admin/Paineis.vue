@@ -106,6 +106,7 @@
                       <!-- Horario -->
                       <v-flex xs12 sm6 md3>
                         <v-select
+                          :disabled="horarioIsDisabled"
                           :items="horarios"
                           item-value="horario"
                           item-text="horario"
@@ -134,6 +135,7 @@
                       <!-- Horario Final -->
                       <v-flex xs12 sm6 md3>
                         <v-select
+                          :disabled="horariofimIsDisabled"
                           :items="horariosFimDisponiveis"
                           item-value="horario"
                           item-text="horario"
@@ -163,6 +165,7 @@
                       <v-flex xs12 sm6 md3>
                         <v-select
                           :items="salas"
+                          :disabled="salaIsDisabled"
                           item-value="id"
                           item-text="nome"
                           outline
@@ -582,7 +585,7 @@ export default {
   }),
 
   created() {
-    document.title = "SIA - Painéis";
+    document.title = "SIA - Paineis";
     //Mudando o locale do Vuetify
     this.changeLocale()
     //Pegando todos sessoes
@@ -608,26 +611,83 @@ export default {
       //Se nao existe sessao entao retornar todas as salas
       if (this.sessoes.length === 0) return this.salas
 
-      var filtrarEstaSala = false
+      //Estado cadastro de sessão
+      if(this.cadastrarSessaoForm == true && this.editedSessaoIndex == -1 && this.avaliacaoCadastroForm == false){
+        var filtrarEstaSala = false
 
-      var salasVazias = this.salas.filter(sala => {
-        filtrarEstaSala = false
-        this.sessoes.map(sessao => {
-          //Filtro das salas que já estao cadastrados na mesma data e mesmo horário
-          if (moment.utc(sessao.data).format('DD/MM/YYYY') === moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
-              helpers.checkRangeIntervalHorario(sessao.horario, sessao.horariofim, this.editedSessao.horario, this.editedSessao.horariofim) && 
-                sessao.sala_nome === sala.nome)
-            filtrarEstaSala = true
-          //Se a sala já pertece a sessao editada entao inclui-se ela também
-          if (this.editedSessaoIndex > -1 && sala.id === this.editedSessao.sala_id)
+          var salasVazias = this.salas.filter(sala => {
             filtrarEstaSala = false
-        })
-        if (filtrarEstaSala === false) return sala
-      })
+            this.sessoes.map(sessao => {
+              //Filtro das salas que já estao cadastrados na mesma data e mesmo horário
+              if (
+                moment.utc(sessao.data).format('DD/MM/YYYY') ===
+                  moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
+                helpers.checkRangeIntervalHorario(
+                  sessao.horario,
+                  sessao.horariofim,
+                  this.editedSessao.horario,
+                  this.editedSessao.horariofim
+                ) &&
+                sessao.sala_nome === sala.nome
+              )
+                filtrarEstaSala = true
+              //Se a sala já pertece a sessao editada entao inclui-se ela também
+              if (
+                this.editedSessaoIndex > -1 &&
+                sala.id === this.editedSessao.sala_id
+              )
+                filtrarEstaSala = false
+            })
+            if (filtrarEstaSala === false) return sala
+          })
 
-      // console.log('salas:', this.salas)
-      // console.log('salasVazias:', salasVazias)
-      return salasVazias
+          // console.log('salas:', this.salas)
+          // console.log('salasVazias:', salasVazias)
+          return salasVazias     
+      }
+
+      //Estado edição de sessão
+      if(this.cadastrarSessaoForm == true && this.avaliacaoCadastroForm == true){
+        //Achar a sessão sendo editada
+        var sessaoAchada = this.sessoesOrais.find((sessao) => {
+          return sessao.id == this.editedSessao.id;
+        });
+
+        var filtrarEstaSala = false
+
+        var salasVazias = this.salas.filter(sala => {
+          filtrarEstaSala = false
+          this.sessoes.map(sessao => {
+            //Filtro das salas que já estao cadastrados na mesma data e mesmo horário
+            if (
+              moment.utc(sessao.data).format('DD/MM/YYYY') ===
+                moment.utc(this.editedSessao.data).format('DD/MM/YYYY') &&
+              helpers.checkRangeIntervalHorario(
+                sessao.horario,
+                sessao.horariofim,
+                this.editedSessao.horario,
+                this.editedSessao.horariofim
+              ) &&
+              sessao.sala_nome === sala.nome &&
+              sessao.id != sessaoAchada.id
+            )
+              filtrarEstaSala = true
+            //Se a sala já pertece a sessao editada entao inclui-se ela também
+            if (
+              this.editedSessaoIndex > -1 &&
+              sala.id === this.editedSessao.sala_id
+            )
+              filtrarEstaSala = false
+          })
+          if (filtrarEstaSala === false) return sala
+        })
+
+        // console.log('salas:', this.salas)
+        // console.log('salasVazias:', salasVazias)
+        return salasVazias 
+      }
+
+  
     },
     computedDateFormattedMomentjs() {
       return this.editedSessao.data
@@ -638,9 +698,14 @@ export default {
       if (this.editedSessao.data === '') return true
       return false
     },
-    salaIsDisabled() {
-      if (this.editedSessao.data === '') return true
+    horariofimIsDisabled() {
       if (this.editedSessao.horario === '') return true
+      return false
+    },    
+    salaIsDisabled() {
+      if (this.editedSessao.data == '') return true
+      if (this.editedSessao.horario == '') return true
+      if (this.editedSessao.horariofim == '') return true
       return false
     },
     avaliadorIsDisabled() {
