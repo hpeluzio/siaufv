@@ -266,12 +266,12 @@ export default {
             url: '/avaliador/'+ item.id +'',
           })
           .then(response => {
-            //this.getAxiosArrayAvaliadores()
+            this.getAxiosArrayAvaliadores()
           })
           .catch((error) => {
             this.errors.add({ field: 'defaulterror2', msg: 'Erro ao deletar item' })
           })
-          this.getAxiosArrayAvaliadores()
+
       },
 
       close () {

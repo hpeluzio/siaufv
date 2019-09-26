@@ -51,50 +51,54 @@
           <v-flex d-flex xs12 sm12 md12>
             <v-card flat>
               <v-card-title>
-                <table border="0" class="alturaelarguraprint alturaelargurascreen">
-                  <tr height="90" align="center">
-                    <th>
-                      <img src="@/assets/sia-images/sia-logo.png" alt="sia-logo" style="width:60px" />
-                    </th>
-                    <th>
-                      <h1>RELATÓRIO DE AVALIADORES POR INSTITUTO</h1>
-                    </th>
-                    <th>
-                      <img src="@/assets/sia-images/ufv-logo.png" alt="sia-logo" style="width:90px" />
-                    </th>
-                  </tr>
-                </table>
+
               </v-card-title>
               <v-card-text>
                 <table border="1" class="alturaelarguraprint alturaelargurascreen">
                   <thead>
                     <tr align="center">
-                      <th style="width: 15%">Nome</th>
-                      <th style="width: 10%">Data</th>
-                      <th style="width: 10%">Horário</th>
-                      <th style="width: 6%">Instituto</th>
-                      <th style="width: 9%">Sala</th>
-                      <th style="width: 6%">Tipo</th>
-                      <th style="width: 9%">Trabalho ID</th>
+                      <th colspan="8" style="width: 100%">
+                        <table border="0" class="alturaelarguraprint alturaelargurascreen">
+                          <tr height="90" align="center">
+                            <th>
+                              <img src="@/assets/sia-images/sia-logo.png" alt="sia-logo" style="width:60px" />
+                            </th>
+                            <th>
+                              <h1>RELATÓRIO DE AVALIADORES POR INSTITUTO</h1>
+                            </th>
+                            <th>
+                              <img src="@/assets/sia-images/ufv-logo.png" alt="sia-logo" style="width:90px" />
+                            </th>
+                          </tr>
+                        </table>
+                      </th>
+                    </tr>                    
+                    <tr align="center">
+                      <th class="paddingg" style="width: 15%">Nome</th>
+                      <th class="paddingg" style="width: 10%">Data</th>
+                      <th class="paddingg" style="width: 10%">Horário</th>
+                      <th class="paddingg" style="width: 6%">Instituto</th>
+                      <th class="paddingg" style="width: 9%">Sala</th>
+                      <th class="paddingg" style="width: 6%">Tipo</th>
+                      <th class="paddingg" style="width: 9%">Trabalho ID</th>
                       <th>Título do Trabalho</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr
-                      style="page-break-inside: avoid"
                       align="center"
                       height="40"
                       v-for="(avaliador, i) in filterAvaliadoresInstituto"
                       :key="i + '-first'"
                     >
-                      <td>{{ avaliador.nome }}</td>
-                      <td>{{ avaliador.sessao_data }}</td>
-                      <td>{{ avaliador.sessao_horario }}</td>
-                      <td>{{ avaliador.instituto }}</td>
-                      <td>{{ avaliador.sala_nome }}</td>
-                      <td>{{ avaliador.sala_tipo }}</td>
-                      <td>{{ avaliador.trabalho_id }}</td>
-                      <td>{{ avaliador.trabalhos_nome }}</td>
+                      <td class="paddingg">{{ avaliador.nome }}</td>
+                      <td class="paddingg">{{ avaliador.sessao_data }}</td>
+                      <td class="paddingg">{{ avaliador.sessao_horario }}</td>
+                      <td class="paddingg">{{ avaliador.instituto }}</td>
+                      <td class="paddingg">{{ avaliador.sala_nome }}</td>
+                      <td class="paddingg">{{ avaliador.sala_tipo }}</td>
+                      <td class="paddingg">{{ avaliador.trabalho_id }}</td>
+                      <td class="paddingg">{{ avaliador.trabalhos_nome }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -294,15 +298,21 @@ export default {
 
 @media print {
   @page :first {
-    margin: 0;
-    /* margin-right: 1.5cm; */
+    /* margin: 0; */
+    margin-top: 0;
+    margin-left: 1.5cm;
+    margin-right: 1.5cm;
+    margin-bottom: 2.5cm;
   }
 
   @page {
+    /* Por algum motivo com tamanho a4 o page break funciona */
     size: A4;
-    margin: 0;
-    margin-top: 1.5cm;
-    /* margin-right: 1.5cm; */
+    /* margin: 0; */
+    /* margin-top: 2.5cm;
+    margin-left: 1.5cm;
+    margin-right: 1.5cm;
+    margin-bottom: 2.5cm; */
   }
 
   .noprint {
@@ -314,8 +324,16 @@ export default {
   }
 
   .alturaelarguraprint {
-    max-width: 22.5cm;
-    min-width: 22.5cm;
+    max-width: 100%; 
+    min-width: 100%;
+  }
+
+  .paddingg {
+    padding: 5px;
+  }
+
+  .page-break-in {
+    page-break-inside: avoid;
   }
 
   /* .no-print {

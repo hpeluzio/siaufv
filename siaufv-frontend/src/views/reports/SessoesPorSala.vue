@@ -368,15 +368,21 @@ export default {
 @media print {
 
   @page :first {
-  margin: 0;
-  /* margin-right: 1.5cm; */
+    /* margin: 0; */
+    margin-top: 0;
+    margin-left: 1.5cm;
+    margin-right: 1.5cm;
+    margin-bottom: 2.5cm;
   }
 
   @page {
+    /* Por algum motivo com tamanho a4 o page break funciona */
     size: A4;
-    margin: 0;
-    margin-top: 1.5cm;
-    /* margin-right: 1.5cm; */
+    /* margin: 0; */
+    /* margin-top: 2.5cm;
+    margin-left: 1.5cm;
+    margin-right: 1.5cm;
+    margin-bottom: 2.5cm; */
   }
 
   .noprint {
@@ -388,8 +394,8 @@ export default {
   }
 
   .alturaelarguraprint {
-    max-width: 22.5cm; 
-    min-width: 22.5cm;
+    max-width: 100%; 
+    min-width: 100%;
   }
 
   .noprint {

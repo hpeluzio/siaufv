@@ -56,38 +56,46 @@
             <v-card flat>
               <v-card-title>
 
-                <table border="0" class="alturaelarguraprint alturaelargurascreen">
-                  <tr height="90" align="center">
-                    
-                      <th><img src="@/assets/sia-images/sia-logo.png" alt="sia-logo" style="width:60px"></th>
-                      <th><h1>RELATÓRIO DE TRABALHOS POR INSTITUTO</h1></th> 
-                      <th><img src="@/assets/sia-images/ufv-logo.png" alt="sia-logo" style="width:90px"></th>
-                    </tr>
-                </table>
-
               </v-card-title>
               <v-card-text>
 
                   <table border="1" class="alturaelarguraprint alturaelargurascreen">
                     <thead>
+                    <tr align="center">
+                      <th colspan="9" style="width: 100%">
+                        <table border="0" class="alturaelarguraprint alturaelargurascreen">
+                          <tr height="90" align="center">
+                            <th>
+                              <img src="@/assets/sia-images/sia-logo.png" alt="sia-logo" style="width:60px" />
+                            </th>
+                            <th>
+                              <h1>RELATÓRIO DE TRABALHOS POR INSTITUTO</h1>
+                            </th>
+                            <th>
+                              <img src="@/assets/sia-images/ufv-logo.png" alt="sia-logo" style="width:90px" />
+                            </th>
+                          </tr>
+                        </table>
+                      </th>
+                    </tr>                       
                       <tr align="center">
-                        <th style="width: 6%;">ID</th>
-                        <th style="width: 20%;">Título</th>
-                        <th style="width: 20%;">Autor</th> 
-                        <th style="width: 10%;">Orientador</th>
-                        <th style="width: 6%;">Instituto</th>
-                        <th style="width: 6%;">Data</th>
-                        <th style="width: 6%;">Horário</th>
-                        <th style="width: 6%;">Sala</th>
+                        <th class="paddingg">ID</th>
+                        <th class="paddingg" >Título</th>
+                        <th class="paddingg">Autor</th> 
+                        <th class="paddingg">Orientador</th>
+                        <th class="paddingg">Instituto</th>
+                        <th class="paddingg">Data</th>
+                        <th class="paddingg">Horário</th>
+                        <th class="paddingg">Sala</th>
                         <th >Avaliadores</th>
 
                       </tr>
                     </thead>
                     <tbody>               
                       <tr style="page-break-inside: avoid" align="center" height="40" v-for="(trabalho, i) in filterTrabalhosInstituto" :key="i + '-first'" >
-                        <td>{{ trabalho.trabalho_id }}</td>
-                        <td>{{ trabalho.nome }}</td>
-                        <td>
+                        <td class="paddingg">{{ trabalho.trabalho_id }}</td>
+                        <td class="paddingg">{{ trabalho.nome }}</td>
+                        <td class="paddingg">
                           <table style="width:100%;">
                             <tbody>
                               <tr align="center" v-for="(autor, i) in trabalho.autores" :key="i + '-second'" >
@@ -96,12 +104,12 @@
                             </tbody>  
                           </table>                          
                         </td>
-                        <td>{{ trabalho.orientador }}</td>
-                        <td>{{ trabalho.instituto }}</td>
-                        <td>{{ trabalho.sessao_data | formatDate }}</td>
-                        <td>{{ trabalho.sessao_horario }}</td>
-                        <td>{{ trabalho.sala_nome }}</td>
-                        <td>
+                        <td class="paddingg">{{ trabalho.orientador }}</td>
+                        <td class="paddingg">{{ trabalho.instituto }}</td>
+                        <td class="paddingg">{{ trabalho.sessao_data | formatDate }}</td>
+                        <td class="paddingg">{{ trabalho.sessao_horario | formatHour}} às {{ trabalho.sessao_horariofim | formatHour}}</td>
+                        <td class="paddingg">{{ trabalho.sala_nome }}</td>
+                        <td class="paddingg">
                           <table  style="width:100%;">
                             <tbody>
                               <tr align="center" v-for="(avaliador, i) in trabalho.avaliadores" :key="i + '-third'" >
@@ -184,7 +192,14 @@ export default {
       if (date) {
         return moment.utc(String(date)).format('DD/MM/YYYY')
       }
-    }
+    },
+    formatHour(hour) {
+      //return 'oi'
+      if (hour) {
+        return hour.split(':')[0] + ':' + hour.split(':')[1]
+        //return moment.utc(String(hour)).format('DD/MM/YYYY')
+      }
+    },     
   },
 
   methods: {
@@ -282,15 +297,21 @@ export default {
 @media print {
 
   @page :first {
-  margin: 0;
-  /* margin-right: 1.5cm; */
+    /* margin: 0; */
+    margin-top: 0;
+    margin-left: 1.5cm;
+    margin-right: 1.5cm;
+    margin-bottom: 2.5cm;
   }
 
   @page {
+    /* Por algum motivo com tamanho a4 o page break funciona */
     size: A4;
-    margin: 0;
-    margin-top: 1.5cm;
-    /* margin-right: 1.5cm; */
+    /* margin: 0; */
+    /* margin-top: 2.5cm;
+    margin-left: 1.5cm;
+    margin-right: 1.5cm;
+    margin-bottom: 2.5cm; */
   }
 
   .noprint {
@@ -302,8 +323,24 @@ export default {
   }
 
   .alturaelarguraprint {
-    max-width: 22.5cm; 
-    min-width: 22.5cm;
+    max-width: 100%; 
+    min-width: 100%;
+  }
+
+  .paddingg {
+    padding: 5px;
+  }
+
+  .page-break-in {
+    page-break-inside: avoid;
+  }
+
+  .sizew {
+    width: 1% !important;
+  }
+
+  .sizew2 {
+    width: 50% !important;
   }
 
   /* .no-print {

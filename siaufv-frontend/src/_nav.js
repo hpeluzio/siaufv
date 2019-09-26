@@ -11,29 +11,25 @@ export default {
     // },    
     {
       name: 'Home',
-      url: '',
+      url: '/admin',
       icon: 'icon-home',
     },
-    
+
     {
       title: true,
-      name: 'Lançamentos do Sistema',
+      name: 'Consultas do Sistema',
       class: '',
       wrapper: {
         element: '',
         attributes: {}
       }
     },
-    {
-      name: 'Sistema',
-      url: '/',
-      icon: 'cui-cog',
-      children: [    
+
     {
       name: 'Institutos',
       url: '/institutos',
       icon: 'cui-graph'
-    },     
+    },
     {
       name: 'Anos',
       url: '/anos',
@@ -43,7 +39,7 @@ export default {
       name: 'Salas',
       url: '/salas',
       icon: 'cui-location-pin'
-    },    
+    },
     {
       name: 'Avaliadores',
       url: '/avaliadores',
@@ -54,11 +50,10 @@ export default {
       url: '/trabalhos',
       icon: 'icon-pencil'
     },
-  ]
-},
+
     {
       title: true,
-      name: 'Lançamentos de Sessões',
+      name: 'Consulta de Sessões',
       class: '',
       wrapper: {
         element: '',
@@ -78,56 +73,55 @@ export default {
 
     {
       title: true,
-      name: 'Consultas',
+      name: 'Relatórios',
       class: '',
       wrapper: {
         element: '',
         attributes: {}
       }
-    }, 
+    },
+
     {
-      name: 'Relatórios',
-      url: '/',
-      icon: 'icon-note',
-      children: [
-        {
-          name: '> Avaliadores por Instituto',
-          url: '/avaliadoresporinstituto',
-        },
-        {
-          name: '> Trabalhos por Instituto',
-          url: '/trabalhosporinstituto',
-        },
-        {
-          name: '> Salas e suas Sessões',
-          url: '/sessoesporsala',
-        },
-        {
-          name: 'Sessões Orais',
-          url: '/relatorios_orais',
-        },              
-        {
-          name: 'Sessões Paineis',
-          url: '/relatorios_paineis',
-        },               
-      ]
+      name: '> Avaliadores por Instituto',
+      url: '/avaliadoresporinstituto',
     },
     {
+      name: '> Trabalhos por Instituto',
+      url: '/trabalhosporinstituto',
+    },
+    {
+      name: '> Salas e suas Sessões',
+      url: '/sessoesporsala',
+    },
+    {
+      name: 'Sessões Orais',
+      url: '/relatorios_orais',
+    },
+    {
+      name: 'Sessões Paineis',
+      url: '/relatorios_paineis',
+    },
+
+    {
+      title: true,
       name: 'Fichas',
-      url: '/',
-      icon: 'icon-notebook',
-      children: [
-        {
-          name: '> Trabalhos Orais',
-          url: '/fichas_orais',
-        },              
-        {
-          name: '> Trabalhos Paineis',
-          url: '/fichas_paineis',
-        },
-                
-      ]
-    },    
+      class: '',
+      wrapper: {
+        element: '',
+        attributes: {}
+      }
+    },
+
+    {
+      name: 'Fichas trabalhos Orais',
+      url: '/fichas_orais',
+    },
+    {
+      name: 'Fichas trabalhos Paineis',
+      url: '/fichas_paineis',
+    },
+
+
     // {
     //   name: 'Minicursos',
     //   url: '/6',

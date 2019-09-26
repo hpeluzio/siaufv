@@ -28,7 +28,8 @@
             <v-card flat>
               <v-card-title>
                 <v-flex d-flex xs12 sm6 md12>
-                 <h3 ><strong>FUNCIONALIDADES DO SISTEMA</strong></h3>
+                 <h3 ><strong>Para ter acesso as funcionalidades de inclusão/exclusão/edição consulte o instituto para ter a permissão</strong></h3>
+
                 </v-flex>
         
 
@@ -47,11 +48,20 @@
 
                 <h5><strong>Funcionalidades de emissões e consultas</strong></h5>
                 <ul>
+                  <li><b>Emissão de Relatórios de Avaliadores por instituto</b></li>
+                  <li><b>Emissão de Relatórios de Trabalhos por instituto</b></li>                  
+                  <li><b>Emissão de Relatórios de Salas e suas sessões</b></li>                  
                   <li><b>Emissão de Relatórios de Sessões Orais</b></li>
                   <li><b>Emissão de Relatórios de Painéis</b></li>
-                  <li><b>Emissão de Relatórios de Avaliadores por instituto</b></li>
-                  <li><b>Emissão de Relatórios de Trabalhos por instituto</b></li>
-                </ul>                
+
+                </ul> 
+
+                <h5><strong>Emissão de fichas dos trabalhos</strong></h5>
+                <ul>
+                  <li><b>Emissão de fichas dos trabalhos orais</b></li>
+                  <li><b>Emissão de fichas dos trabalhos paineis</b></li>                  
+
+                </ul>                                 
               </v-card-text>
             </v-card>
           </v-flex>
