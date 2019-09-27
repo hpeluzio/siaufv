@@ -41,6 +41,7 @@ const FichasPaineis = () => import('@/views/fichas/FichasPaineis')
 
 //Auth
 const Login = () => import('@/views/Login')
+const Page404 = () => import('@/views/Page404')
 const Register = () => import('@/views/Register')
 const MeusDados = () => import('@/views/MeusDados')
 
@@ -53,6 +54,10 @@ const router = new Router({
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
+    {
+      path: '*',
+      redirect: '/Page404'
+    },
     {
       path: '/',
       redirect: '/login',
@@ -69,6 +74,11 @@ const router = new Router({
           name: 'Login',
           component: Login,
         },
+        {
+          path: 'page404',
+          name: 'Page404',
+          component: Page404,
+        },        
       ]
     },
 

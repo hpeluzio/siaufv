@@ -1,7 +1,7 @@
 <template>
   <div class="animated fadeIn">
     <div data-app="true">
-      <!-- Exibição das seções -->
+      <!-- Exibição das sessões -->
       <span v-if="!cadastrarSessaoForm">
         <v-toolbar color="grey lighten-3">
           <i class="icon-people"></i>
@@ -447,7 +447,7 @@
                   :items="avaliacoesDaSessao"
                   :rows-per-page-items="rowsPerPageItems"
                   :pagination.sync="pagination"
-                  :search="search"
+                  :search="searchavaliacoes"
                   class="elevation-1"
                 >
                   <template slot="items" slot-scope="props">
@@ -510,6 +510,7 @@ export default {
     menuhorarioinicio: false,
     menuhorariofim: false,
     search: '',
+    searchavaliacoes: '',
     trabalhos: [],
     trabalhos_nao_cadastrados: [],
     sessoes: [],

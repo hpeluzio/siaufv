@@ -245,7 +245,7 @@
                   :items="avaliacoesDaSessao"
                   :rows-per-page-items="rowsPerPageItems"
                   :pagination.sync="pagination"
-                  :search="search"
+                  :search="searchavaliacoes"
                   class="elevation-1"
                 >
                   <template slot="items" slot-scope="props">
@@ -302,6 +302,7 @@ export default {
     menuhorarioinicio: false,
     menuhorariofim: false,
     search: '',
+    searchavaliacoes: '',
     trabalhos: [],
     trabalhos_nao_cadastrados: [],
     sessoes: [],
