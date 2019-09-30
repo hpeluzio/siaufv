@@ -92,8 +92,8 @@
                       :key="i + '-first'"
                     >
                       <td class="paddingg">{{ avaliador.nome }}</td>
-                      <td class="paddingg">{{ avaliador.sessao_data }}</td>
-                      <td class="paddingg">{{ avaliador.sessao_horario }}</td>
+                      <td class="paddingg">{{ avaliador.sessao_data | formatDate}}</td>
+                      <td class="paddingg">{{ avaliador.sessao_horario | formatHour}} às {{ avaliador.sessao_horariofim | formatHour}}</td>
                       <td class="paddingg">{{ avaliador.instituto }}</td>
                       <td class="paddingg">{{ avaliador.sala_nome }}</td>
                       <td class="paddingg">{{ avaliador.sala_tipo }}</td>
@@ -176,6 +176,21 @@ export default {
     }
   },
 
+  filters:{
+    formatDate(date) {
+      if (date) {
+        return moment.utc(String(date)).format('DD/MM/YYYY')
+      }
+    },
+    formatHour(hour) {
+      //return 'oi'
+      if (hour) {
+        return hour.split(':')[0] + ':' + hour.split(':')[1]
+        //return moment.utc(String(hour)).format('DD/MM/YYYY')
+      }
+    },     
+  },
+
   methods: {
     imprimir() {
       window.print()
@@ -243,21 +258,6 @@ export default {
           this.avaliadores_json = response.data.filter(avaliador => {
             //if(sessao.tipo === 0){
             // Pego tudo, orais e paineis
-            avaliador.sessao_data = moment
-              .utc(avaliador.sessao_data)
-              .format('DD/MM/YYYY')
-            avaliador.sessao_horario =
-              avaliador.sessao_horario.split(':')[0] +
-              ':' +
-              avaliador.sessao_horario.split(':')[1] +
-              ' às ' +
-              avaliador.sessao_horariofim.split(':')[0] +
-              ':' +
-              avaliador.sessao_horariofim.split(':')[1]
-            avaliador.sessao_horariofim =
-              avaliador.sessao_horariofim.split(':')[0] +
-              ':' +
-              avaliador.sessao_horariofim.split(':')[1]
             if (avaliador.sala_tipo === 0) {
               avaliador.sala_tipo = 'Oral'
               avaliador.sala_tipo_id = 0
@@ -268,7 +268,7 @@ export default {
             return avaliador
             //}
           })
-          console.log('avaliadores_json: ', this.avaliadores_json)
+          //console.log('avaliadores_json: ', this.avaliadores_json)
         })
         .catch(error => {
           console.log(error)
