@@ -268,7 +268,7 @@ export default {
             return avaliador
             //}
           })
-          //console.log('avaliadores_json: ', this.avaliadores_json)
+          console.log('avaliadores_json: ', this.avaliadores_json)
         })
         .catch(error => {
           console.log(error)
