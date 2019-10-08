@@ -79,10 +79,13 @@ class SalaController {
           .table('avaliacoes')
           .innerJoin('sessoes', 'avaliacoes.sessao_id', 'sessoes.id')
           .where('sessoes.sala_id', '=', salas[index].id )
+          .orderBy('sessoes.data')
+          .orderBy('sessoes.horario')
           .groupBy('sessoes.id')
           .orderBy('sessoes.instituto')
     }
 
+    
     for(let index in salas){
       for(let index2 in salas[index].sessoes){
         salas[index].sessoes[index2].avaliacoes =
