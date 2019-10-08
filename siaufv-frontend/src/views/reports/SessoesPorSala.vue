@@ -164,6 +164,8 @@ import axios_instance from '../../axios'
 import axios from 'axios';
 import moment from 'moment'
 const helpers = require('../../helpers')
+import http_jsreport from '@/http/jsreport'
+import { mapActions } from 'vuex'
 
 export default {
   data: () => ({
@@ -247,38 +249,43 @@ export default {
   },
 
   methods: {
+    ... mapActions('reports', ['GET_SALAS_E_SUAS_SESSOES_ACT']),
+
     imprimir() {
       window.print()
     },
 
     jsreport() {
-      //Todas CFGs do jsreport
-      const data = {"template":{"shortid":"rkeAz_ISIH"},"data":{"salas": this.filterSalas}}
 
-      axios.post(process.env.VUE_APP_API_JSREPORT_URL, data, {
-          responseType: 'arraybuffer',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          auth: {
-            username: process.env.VUE_APP_API_JSREPORT_USER,
-            password: process.env.VUE_APP_API_JSREPORT_PASSWORD
-          },          
-      })   
-      .then(function (response) {
-        //return response.download('', 'test.pdf', '');
-        let blob = new Blob([response.data], { type: 'application/pdf' })
-        let link = document.createElement('a')
-        link.href = window.URL.createObjectURL(blob)
-        link.download = 'SIA - Salas e suas sessões.pdf'
-        document.body.appendChild(link);
-        link.click()                
-        document.body.removeChild(link);  
-        //console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });  
+      this.GET_SALAS_E_SUAS_SESSOES_ACT(this.filterSalas)
+
+      // //Todas CFGs do jsreport
+      // const data = {"template":{"shortid":"rkeAz_ISIH"},"data":{"salas": this.filterSalas}}
+
+      // axios.post(process.env.VUE_APP_API_JSREPORT_URL, data, {
+      //     responseType: 'arraybuffer',
+      //     headers: {
+      //         'Content-Type': 'application/json',
+      //     },
+      //     auth: {
+      //       username: process.env.VUE_APP_API_JSREPORT_USER,
+      //       password: process.env.VUE_APP_API_JSREPORT_PASSWORD
+      //     },          
+      // })   
+      // .then(function (response) {
+      //   //return response.download('', 'test.pdf', '');
+      //   let blob = new Blob([response.data], { type: 'application/pdf' })
+      //   let link = document.createElement('a')
+      //   link.href = window.URL.createObjectURL(blob)
+      //   link.download = 'SIA - Salas e suas sessões.pdf'
+      //   document.body.appendChild(link);
+      //   link.click()                
+      //   document.body.removeChild(link);  
+      //   //console.log(response.data);
+      // })
+      // .catch(function (error) {
+      //   console.log(error);
+      // });  
         
     },    
 

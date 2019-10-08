@@ -114,7 +114,9 @@
 <script>
 import moment from 'moment'
 import axios from 'axios';
+import http_jsreport from '@/http/jsreport'
 const helpers = require('../../helpers')
+import { mapActions } from 'vuex'
 
 export default {
   data: () => ({
@@ -192,38 +194,41 @@ export default {
   },
 
   methods: {
+    ... mapActions('reports', ['GET_AVALIADORES_POR_INSTITUTO_ACT']),
+
     imprimir() {
       window.print()
     },
 
     jsreport() {
       //Todas CFGs do jsreport
-      const data = {"template":{"shortid":"S1e_9nhULS"},"data":{"avaliadores": this.filterAvaliadoresInstituto}}
+      this.GET_AVALIADORES_POR_INSTITUTO_ACT(this.filterAvaliadoresInstituto)
+      // const data = {"template":{"shortid":"S1e_9nhULS"},"data":{"avaliadores": this.filterAvaliadoresInstituto}}
 
-      axios.post(process.env.VUE_APP_API_JSREPORT_URL, data, {
-          responseType: 'arraybuffer',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          auth: {
-            username: process.env.VUE_APP_API_JSREPORT_USER,
-            password: process.env.VUE_APP_API_JSREPORT_PASSWORD
-          },          
-      })   
-      .then(function (response) {
-        //return response.download('', 'test.pdf', '');
-        let blob = new Blob([response.data], { type: 'application/pdf' })
-        let link = document.createElement('a')
-        link.href = window.URL.createObjectURL(blob)
-        link.download = 'SIA - Avaliadores por Instituto.pdf'
-        document.body.appendChild(link);
-        link.click()       
-        document.body.removeChild(link);  
-        //console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });  
+      // axios.post(process.env.VUE_APP_API_JSREPORT_URL, data, {
+      //     responseType: 'arraybuffer',
+      //     headers: {
+      //         'Content-Type': 'application/json',
+      //     },
+      //     auth: {
+      //       username: process.env.VUE_APP_API_JSREPORT_USER,
+      //       password: process.env.VUE_APP_API_JSREPORT_PASSWORD
+      //     },          
+      // })   
+      // .then(function (response) {
+      //   //return response.download('', 'test.pdf', '');
+      //   let blob = new Blob([response.data], { type: 'application/pdf' })
+      //   let link = document.createElement('a')
+      //   link.href = window.URL.createObjectURL(blob)
+      //   link.download = 'SIA - Avaliadores por Instituto.pdf'
+      //   document.body.appendChild(link);
+      //   link.click()       
+      //   document.body.removeChild(link);  
+      //   //console.log(response.data);
+      // })
+      // .catch(function (error) {
+      //   console.log(error);
+      // });  
         
     }, 
 
@@ -268,7 +273,7 @@ export default {
             return avaliador
             //}
           })
-          console.log('avaliadores_json: ', this.avaliadores_json)
+          //console.log('avaliadores_json: ', this.avaliadores_json)
         })
         .catch(error => {
           console.log(error)

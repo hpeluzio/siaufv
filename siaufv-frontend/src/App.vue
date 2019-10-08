@@ -1,10 +1,23 @@
 <template>
+  <div>
+  <Loader></Loader>
   <router-view></router-view>
+  </div>
 </template>
 
 <script>
+import Loader from './Loader'
+
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    Loader
+  },
+  computed: {
+    SET_LOADER() {
+      return this.$store.state.loader
+    }
+  }  
 }
 </script>
 

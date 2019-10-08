@@ -239,6 +239,8 @@
 import moment from 'moment'
 import axios from 'axios';
 const helpers = require('../../helpers')
+import http_jsreport from '@/http/jsreport'
+import { mapActions } from 'vuex'
 
 export default {
   data: () => ({
@@ -269,38 +271,42 @@ export default {
   },
 
   methods: {
+    ... mapActions('fichas', ['GET_FICHAS_ORAIS_ACT']),
+
     imprimir() {
       window.print()
     },
 
     jsreport() {
-      //Todas CFGs do jsreport
-      const data = {"template":{"shortid":"H1etMtjIIH"},"data":{"trabalhos": this.filterTrabalhosInstituto}}
+      this.GET_FICHAS_ORAIS_ACT(this.filterTrabalhosInstituto)
 
-      axios.post(process.env.VUE_APP_API_JSREPORT_URL, data, {
-          responseType: 'arraybuffer',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          auth: {
-            username: process.env.VUE_APP_API_JSREPORT_USER,
-            password: process.env.VUE_APP_API_JSREPORT_PASSWORD
-          },          
-      })   
-      .then(function (response) {
-        //return response.download('', 'test.pdf', '');
-        let blob = new Blob([response.data], { type: 'application/pdf' })
-        let link = document.createElement('a')
-        link.href = window.URL.createObjectURL(blob)
-        link.download = 'SIA - Fichas de Trabalhos Orais.pdf'
-        document.body.appendChild(link);
-        link.click()
-        document.body.removeChild(link);    
-        //console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });  
+      //Todas CFGs do jsreport
+      // const data = {"template":{"shortid":"H1etMtjIIH"},"data":{"trabalhos": this.filterTrabalhosInstituto}}
+
+      // axios.post(process.env.VUE_APP_API_JSREPORT_URL, data, {
+      //     responseType: 'arraybuffer',
+      //     headers: {
+      //         'Content-Type': 'application/json',
+      //     },
+      //     auth: {
+      //       username: process.env.VUE_APP_API_JSREPORT_USER,
+      //       password: process.env.VUE_APP_API_JSREPORT_PASSWORD
+      //     },          
+      // })   
+      // .then(function (response) {
+      //   //return response.download('', 'test.pdf', '');
+      //   let blob = new Blob([response.data], { type: 'application/pdf' })
+      //   let link = document.createElement('a')
+      //   link.href = window.URL.createObjectURL(blob)
+      //   link.download = 'SIA - Fichas de Trabalhos Orais.pdf'
+      //   document.body.appendChild(link);
+      //   link.click()
+      //   document.body.removeChild(link);    
+      //   //console.log(response.data);
+      // })
+      // .catch(function (error) {
+      //   console.log(error);
+      // });  
         
     },  
 
