@@ -46,7 +46,7 @@
 </template>
 
 <script>
-
+import http_api from '@/http/api'
 const helpers = require('../../helpers')
 
 export default {
@@ -79,7 +79,7 @@ export default {
   //methods
   methods: {
     getAxiosArraySalas() {
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/sala'
       })

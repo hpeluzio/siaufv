@@ -43,6 +43,8 @@
 
 <script>
 import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue'
+import { mapActions } from 'vuex'
+
 export default {
   name: 'DefaultHeaderDropdownAccnt',
   components: {
@@ -52,11 +54,15 @@ export default {
     return { itemsCount: 42 }
   },
   methods: {
+    ... mapActions('auth', ['SET_DESLOGAR_ACT']),
+
     logout(){
+      this.SET_DESLOGAR_ACT()
       //sessionStorage.clear()
       localStorage.removeItem('user');
-      this.$store.loggedIn = false
-      this.$store.permission = ''    
+      localStorage.removeItem('state');
+      //this.$store.loggedIn = false
+      //this.$store.permission = ''    
       this.$router.push({ name: 'Login' })
       //window.location.reload(true);
       this.$axios = null

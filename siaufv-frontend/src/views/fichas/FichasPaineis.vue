@@ -202,10 +202,10 @@
 </template>
 
 <script>
-import moment from 'moment'
-import axios from 'axios';
-const helpers = require('../../helpers')
+import http_api from '@/http/api'
 import http_jsreport from '@/http/jsreport'
+import moment from 'moment'
+const helpers = require('../../helpers')
 import { mapActions } from 'vuex'
 
 export default {
@@ -281,7 +281,7 @@ export default {
       this.institutos.push({ instituto: '' })
 
       //Pegando todos os anos
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/instituto'
       })
@@ -298,7 +298,7 @@ export default {
 
     getArrayAxiosTrabalhos() {
       //Pegando todos Avaliadores
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/trabalho'
       })

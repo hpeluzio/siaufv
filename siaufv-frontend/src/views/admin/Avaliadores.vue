@@ -132,6 +132,7 @@
 </template>
 
 <script>
+import http_api from '@/http/api'
 const helpers = require('../../helpers')
 
 export default {
@@ -202,7 +203,7 @@ export default {
     methods: {
       getAxiosArrayAvaliadores() {
         //Pegando todos avaliadores 
-        this.$axios({
+        http_api({
             method:'get',
             url: '/avaliador'
         })
@@ -261,7 +262,7 @@ export default {
 
         // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
         confirm('Está certo que deseja deletar este item?') &&
-        this.$axios({
+        http_api({
             method: 'delete',
             url: '/avaliador/'+ item.id +'',
           })
@@ -285,7 +286,7 @@ export default {
       save () {
         if (this.editedIndex > -1) { // Se this.editedIndex  > -1 entao estamos na edição
           //Editando item chama-se o metodo put na rota avaliador e irá para update
-          this.$axios({
+          http_api({
             method: 'put',
             url: '/avaliador/'+ this.editedItem.id +'',
             data: {
@@ -312,7 +313,7 @@ export default {
           })
 
         } else { // Se this.editedIndex  == -1 entao estamos na inserção
-          this.$axios({
+          http_api({
             method: 'post',
             url: '/avaliador',
             data: {
@@ -353,7 +354,7 @@ export default {
           ativar = 0
 
         //Ativando ou desativando o avaliador
-        this.$axios({
+        http_api({
           method: 'put',
           url: '/avaliador_ativar/'+ item.id +'',
           data: {

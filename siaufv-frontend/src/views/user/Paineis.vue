@@ -288,6 +288,7 @@
 </template>
 
 <script>
+import http_api from '@/http/api'
 import moment from 'moment'
 const helpers = require('../../helpers')
 
@@ -563,7 +564,7 @@ export default {
     },
     getArrayAxiosAvaliacoes() {
       //Pegando todos Avaliacoes
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/avaliacao'
       })
@@ -577,7 +578,7 @@ export default {
     },
     getArrayAxiosSessoes() {
       //Pegando todos Avaliacoes
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/sessao'
       })
@@ -595,7 +596,7 @@ export default {
     },
     getArrayAxiosTrabalhos() {
       //Pegando todos os anos
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/trabalho'
       })
@@ -608,7 +609,7 @@ export default {
         })
     },
     getArrayAxiosSalas() {
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/sala'
       })
@@ -624,7 +625,7 @@ export default {
         })
     },
     getArrayAxiosAvaliadoresAtivos() {
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/avaliador_ativo'
       })
@@ -664,7 +665,7 @@ export default {
       this.institutos.push({ instituto: '' })
 
       //Pegando todos os anos
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/instituto'
       })
@@ -680,7 +681,7 @@ export default {
     },
     getArrayAxiosAnos() {
       //Pegando todos os anos
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/ano'
       })
@@ -734,7 +735,7 @@ export default {
 
       // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
       confirm('Está certo que deseja deletar este item?') &&
-        this.$axios({
+        http_api({
           method: 'delete',
           url: '/sessao/' + item.id + ''
         })
@@ -754,7 +755,7 @@ export default {
       if (this.editedSessaoIndex > -1 && this.cadastrarSessaoForm == true) {
         // Se this.editedSessaoIndex  > -1 entao estamos na edição
         //Editando item chama-se o metodo put na rota avaliacoes e irá para update
-        this.$axios({
+        http_api({
           method: 'put',
           url: '/sessao/' + this.editedSessao.id + '',
           data: {
@@ -782,7 +783,7 @@ export default {
           })
       } else {
         // Se this.editedSessaoIndex  == -1 entao estamos na inserção
-        this.$axios({
+        http_api({
           method: 'post',
           url: '/sessao',
           data: {
@@ -815,7 +816,7 @@ export default {
     },
 
     saveAvaliacao() {
-      this.$axios({
+      http_api({
         method: 'post',
         url: '/avaliacao',
         data: {
@@ -843,7 +844,7 @@ export default {
       //Setando algumas variaveis para uso do delete
       // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
       confirm('Está certo que deseja deletar este item?') &&
-        this.$axios({
+        http_api({
           method: 'delete',
           url: '/avaliacao/' + item.id + ''
         })

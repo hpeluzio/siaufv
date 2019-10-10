@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '@/store'
 
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer')
@@ -40,10 +41,10 @@ const FichasOrais = () => import('@/views/fichas/FichasOrais')
 const FichasPaineis = () => import('@/views/fichas/FichasPaineis')
 
 //Auth
-const Login = () => import('@/views/Login')
+const Login = () => import('@/views/auth/Login')
 const Page404 = () => import('@/views/Page404')
-const Register = () => import('@/views/Register')
-const MeusDados = () => import('@/views/MeusDados')
+const Register = () => import('@/views/auth/Register')
+const MeusDados = () => import('@/views/auth/MeusDados')
 
 
 Vue.use(Router)
@@ -331,15 +332,15 @@ router.beforeEach((to, from, next) => {
   // //Se precisar de autenticacao e nao tiver sessao ja manda logo pra pagina de login
 
   if(to.meta.requiresAuth ){
-    const authUser = JSON.parse(localStorage.getItem('user'))
+    //const authUser = JSON.parse(localStorage.getItem('user'))
 
-    if(!authUser /*|| Vue.prototype.$store.loggedIn === false*/){
+    if(store.getters['auth/logado'] === false /*|| Vue.prototype.$store.loggedIn === false*/){
       next({ path: '/login' })
     }
     
     else if (to.meta.adminAuth) {
-      const authUser = JSON.parse(localStorage.getItem('user'))
-      if(authUser.user.permission === 'admin' /*&& Vue.prototype.$store.permission === 'admin'*/){
+      //const authUser = JSON.parse(localStorage.getItem('user'))
+      if(store.getters['auth/permission']=== 'admin' /*&& Vue.prototype.$store.permission === 'admin'*/){
         next()
       }  
       else{
@@ -347,8 +348,8 @@ router.beforeEach((to, from, next) => {
       } 
     }
     else if (to.meta.userAuth) {
-      const authUser = JSON.parse(localStorage.getItem('user'))
-      if(authUser.user.permission === 'user' /*&& Vue.prototype.$store.permission === 'user'*/){
+      //const authUser = JSON.parse(localStorage.getItem('user'))
+      if(store.getters['auth/permission'] === 'user' /*&& Vue.prototype.$store.permission === 'user'*/){
         next()
       } else {
         next({ path: '/login' })

@@ -53,7 +53,7 @@
 </template>
 
 <script>
-
+import http_api from '@/http/api'
 const helpers = require('../../helpers')
 
 export default {
@@ -86,7 +86,7 @@ export default {
   methods: {
     getAxiosArrayAvaliadores() {
       //Pegando todos avaliadores
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/avaliador'
       })

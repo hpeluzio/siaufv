@@ -88,6 +88,7 @@
 </template>
 
 <script>
+import http_api from '@/http/api'
 
 export default {
     data: () => ({
@@ -140,7 +141,7 @@ export default {
     methods: {
       
       getAxiosArrayAnos() {
-        this.$axios({
+        http_api({
             method:'get',
             url: '/ano'
         })
@@ -184,7 +185,7 @@ export default {
 
         // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
         confirm('Está certo que deseja deletar este item?') &&
-        this.$axios({
+        http_api({
             method: 'delete',
             url: '/ano/'+ item.id +'',
           })
@@ -208,7 +209,7 @@ export default {
       save () {
         if (this.editedIndex > -1) { // Se this.editedIndex  > -1 entao estamos na edição
           //Editando item chama-se o metodo put na rota ano e irá para update
-          this.$axios({
+          http_api({
             method: 'put',
             url: '/ano/'+ this.editedItem.id +'',
             data: {
@@ -232,7 +233,7 @@ export default {
           })
 
         } else { // Se this.editedIndex  == -1 entao estamos na inserção
-          this.$axios({
+          http_api({
             method: 'post',
             url: '/ano',
             data: {

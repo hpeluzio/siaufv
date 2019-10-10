@@ -47,7 +47,7 @@
           </v-alert>
         </v-data-table>
       </span>
-      </span>
+
       <!-- Data Table de sessões-->
       <!-- Cadastro de sessão -->
       <!-- Cadastro de sessão -->
@@ -299,7 +299,7 @@
 </template>
 
 <script>
-
+import http_api from '@/http/api'
 import moment from 'moment'
 const helpers = require('../../helpers')
 
@@ -575,7 +575,7 @@ export default {
     },
     getArrayAxiosAvaliacoes() {
       //Pegando todos Avaliacoes
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/avaliacao'
       })
@@ -589,7 +589,7 @@ export default {
     },
     getArrayAxiosSessoes() {
       //Pegando todos Avaliacoes
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/sessao'
       })
@@ -607,7 +607,7 @@ export default {
     },
     getArrayAxiosTrabalhos() {
       //Pegando todos os anos
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/trabalho'
       })
@@ -620,7 +620,7 @@ export default {
         })
     },
     getArrayAxiosSalas() {
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/sala'
       })
@@ -636,7 +636,7 @@ export default {
         })
     },
     getArrayAxiosAvaliadoresAtivos() {
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/avaliador_ativo'
       })
@@ -676,7 +676,7 @@ export default {
       this.institutos.push({ instituto: '' })
 
       //Pegando todos os anos
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/instituto'
       })
@@ -692,7 +692,7 @@ export default {
     },
     getArrayAxiosAnos() {
       //Pegando todos os anos
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/ano'
       })
@@ -746,7 +746,7 @@ export default {
 
       // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
       confirm('Está certo que deseja deletar este item?') &&
-        this.$axios({
+        http_api({
           method: 'delete',
           url: '/sessao/' + item.id + ''
         })

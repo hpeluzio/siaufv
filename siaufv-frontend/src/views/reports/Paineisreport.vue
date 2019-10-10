@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import axios_instance from '../../axios'
+import http_api from '@/http/api'
 import moment from 'moment'
 const helpers = require('../../helpers')
 
@@ -147,7 +147,7 @@ export default {
 
     getArrayAxiosSessoesPaineisJson() {
       //Pegando todos Avaliacoes
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/sessao'
       })
@@ -173,7 +173,7 @@ export default {
 
     // getArrayAxiosSessoesPaineis() {
     //   //Pegando todos Avaliacoes
-    //   this.$axios({
+    //   http_api({
     //     method: 'get',
     //     url: '/sessao_report'
     //   })

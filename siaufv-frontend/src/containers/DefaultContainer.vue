@@ -100,8 +100,7 @@ export default {
       return this.$route.matched.filter((route) => route.name || route.meta.label )
     },
     email () {
-      const authUser = JSON.parse(localStorage.getItem('user'))
-      return authUser.user.email
+      return this.$store.getters['auth/email']
     }
   }
 }

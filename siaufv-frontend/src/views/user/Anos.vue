@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import http_api from '@/http/api'
+
 export default {
   data: () => ({
     search: '',
@@ -66,7 +68,7 @@ export default {
   //methods
   methods: {
     getAxiosArrayAnos() {
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/ano'
       })

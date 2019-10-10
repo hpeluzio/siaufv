@@ -1,12 +1,12 @@
 <template>
     <div class="container">
       <b-row class="justify-content-center">
-        <b-col md="6" sm="8">
+        <b-col md="6" sm="8" >
           <b-card no-body class="mx-4">
             <b-card-body class="p-4">
               <b-form>
-                <h1>Registrar</h1>
-                <p class="text-muted">Crie sua conta</p>
+                <h1>Meus Dados</h1>
+
                 <b-input-group class="mb-3">
                   <b-input-group-prepend>
                     <b-input-group-text><i class="icon-user"></i></b-input-group-text>
@@ -64,12 +64,12 @@
                           placeholder="Confirme sua senha" data-vv-as="password"
                     />
                     <div v-if="submitted && errors.has('confirm_password')" class="invalid-feedback">{{ errors.first('confirm_password') }}</div> 
-                    <!-- CONFIRM PASSWORD-->    
+                    <!-- CONFIRM PASSWORD-->   
                 </b-input-group>
       
                 <div style="color: red" v-if="submitted && errors.has('defaulterror')" ><strong>{{ errors.first('defaulterror') }}</strong></div> 
                 
-                <b-button variant="success" @click="handleSubmit" block>Criar Conta</b-button>
+                <b-button variant="success" @click="handleSubmit" block>Atualizar Dados</b-button>
               </b-form>
             </b-card-body>
             <!--<b-card-footer class="p-4">
@@ -89,10 +89,10 @@
 </template>
 
 <script>
-import axios from 'axios';
+import http_api from '@/http/api'
 
 export default {
-  name: 'Register',
+  name: 'Update',
   data () {
     return {
       name: '',
@@ -103,84 +103,52 @@ export default {
     }
   },
   created() {
-    document.title = "SIA - Register";
+    document.title = "SIA - atualizar";
+    //Setando dados do usuario
+    this.setDados()
+
   },  
   methods: {
+
+    setDados() {
+      this.name = this.$store.getters['auth/name']
+      this.email = this.$store.getters['auth/email']
+    },
+
     handleSubmit(e) {
       this.submitted = true;
       this.$validator.validate().then(valid => {
           if (valid) {
-              this.register()
+              this.atualizar()
               //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.user))
           }
       });
     },
-    register() {
-      this.$axios({
-        method: 'post',
-        url: '/register',
+
+    atualizar() {
+      //const authUser = JSON.parse(localStorage.getItem('user'))
+
+      http_api({
+        method: 'put',
+        url: '/usuario/' + this.email = this.$store.getters['auth/id'] + '',
         data: {
+          id: authUser.user.id,
           name: this.name,
           email: this.email,
           password: this.password,
           confirm_password: this.confirm_password
         }
-      })      
+      })
       .then(response => {
-        if(response.data.token){
-          //console.log("Register Response")
-          // Se entrar aqui autenticou com sucesso
-          localStorage.setItem('user', JSON.stringify(response.data))
-          this.$store.loggedIn = true
-          this.$store.permission = response.data.user.permission
-          this.axiosInstance()
-          this.$router.push('/home')
-        }
-        console.log(response)
+        //localStorage.setItem('user', JSON.stringify(response.data))
+        //this.$store.loggedIn = true
+        //this.$store.permission = response.data.user.permission
+        alert('Dados editados.'); 
       })
       .catch((error) => {
-        console.log(error);
-            this.errors.clear()
-            if(error.response.data.error[0].message)
-              this.errors.add({ field: 'defaulterror', msg: error.response.data.error[0].message })
-            else
-              this.errors.add({ field: 'defaulterror', msg: error.response.data.error.message })
-      });
-    },
-
-    axiosInstance() {
-
-
-      //Setar a URL e PORTA
-      var URL = process.env.VUE_APP_API_URL
-      var PORT = process.env.VUE_APP_API_PORT
-
-      let axios_instance
-
-      if(localStorage.getItem('user')){
-
-        var userSession = JSON.parse(localStorage.getItem('user')) 
-
-        axios_instance = axios.create({
-          baseURL: URL + ':' + PORT,
-          headers: {
-            'Authorization': 'Bearer ' + userSession.token.token
-          }
-        })
-      }
-      else {
-
-        var userSession = JSON.parse(localStorage.getItem('user')) 
-
-        axios_instance = axios.create({
-          baseURL: URL + ':' + PORT
-        })
-      }
-
-
-
-      this.$axiosMutation(axios_instance)
-    }    
+        this.errors.clear() 
+      })
+    }
   }
 }
 </script>

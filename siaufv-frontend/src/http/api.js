@@ -3,9 +3,10 @@ import axios from 'axios'
 import store from '@/store'
 
 var URL = process.env.VUE_APP_API_URL
+var PORT = process.env.VUE_APP_API_PORT
 
 const http = axios.create({
-    baseURL: URL,
+    baseURL: URL + ':' + PORT,
 })
 
 http.interceptors.request.use(config => {
@@ -18,10 +19,11 @@ http.interceptors.request.use(config => {
     // store.state.loader = true
 
     const token = store.getters['auth/token'];
-
+    //console.log('token: ', token)
     if (token) {
     //   config.headers.Authorization = `Bearer ${token}`
-        config.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        config.headers.common['Authorization'] = `Bearer ${token}`
+        //config.defaults.headers.common['Authorization'] = `Bearer ${token}`
     }
 
     return config

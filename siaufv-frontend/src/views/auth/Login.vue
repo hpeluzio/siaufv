@@ -65,9 +65,12 @@
 
 <script>
 import axios from 'axios'
+import http from '@/http/api'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Login',
+
   data () {
     return {
       email: '',
@@ -75,10 +78,13 @@ export default {
       submitted: false
     }
   },
+
   created() {
     document.title = "SIA - Login"
   },
+
   methods: {
+    ... mapActions('auth', ['SET_LOGAR_ACT']),
     //Checar o formulário em busca de erros
     handleSubmit(e) {
       this.submitted = true;
@@ -89,77 +95,29 @@ export default {
           }
       });
     },
-    //Função de login para retornar o token
+
+    //Função de login
     login() {
 
-      this.$axios({
-        method: 'post',
-        url: '/login',
-        data: {
-          email: this.email,
-          password: this.password
-        }
-      })
-
-      .then(response => {
-        // console.log("response.data.user: " )
-        // console.log(response.data.user.isAdmin)
-        // console.log("response.data.token: ")
-        // console.log(response.data.token.token)
-        if(response.data.token){
-          // Se entrar aqui autenticou com sucesso
-          localStorage.setItem('user', JSON.stringify(response.data))
-          this.$store.loggedIn = true
-          this.$store.permission = response.data.user.permission
-
-          if(this.$store.permission === 'admin'){
-            this.axiosInstance()
+      //Action retornando uma promise... Resolve isso aqui priimeiro, depois vai para then
+      this.SET_LOGAR_ACT({ 'email': this.email, 'password': this.password })    
+        
+      .then( response_resolve => {
+        // console.log('response_resolve', response_resolve)
+        if(response_resolve){
+          // console.log('LOGOU', this.$store.getters['auth/permission'])
+          if(this.$store.getters['auth/permission'] === 'admin'){
             this.$router.push('/admin')
           }  
           else {
-            this.axiosInstance()
             this.$router.push('/home')
           }
         } 
-      })
-      .catch((error) => {
-        this.errors.add({ field: 'auth', msg: 'E-mail ou senha inválidos' })
+      }).catch( error => {
+        console.log('Error: ', error)
       });
+      
     },
-
-    axiosInstance() {
-
-
-      //Setar a URL e PORTA
-      var URL = process.env.VUE_APP_API_URL
-      var PORT = process.env.VUE_APP_API_PORT
-
-      let axios_instance
-
-      if(localStorage.getItem('user')){
-
-        var userSession = JSON.parse(localStorage.getItem('user')) 
-
-        axios_instance = axios.create({
-          baseURL: URL + ':' + PORT,
-          headers: {
-            'Authorization': 'Bearer ' + userSession.token.token
-          }
-        })
-      }
-      else {
-
-        var userSession = JSON.parse(localStorage.getItem('user')) 
-
-        axios_instance = axios.create({
-          baseURL: URL + ':' + PORT
-        })
-      }
-
-
-
-      this.$axiosMutation(axios_instance)
-    }
   }
 }
 </script>

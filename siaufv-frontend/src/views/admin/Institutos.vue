@@ -88,6 +88,7 @@
 </template>
 
 <script>
+import http_api from '@/http/api'
 
 export default {
     data: () => ({
@@ -131,7 +132,7 @@ export default {
     created () {
       //console.log(this.$store)
       // console.log('sessionStorage.getItem: ',sessionStorage.getItem('user'))
-      // console.log(this.$axios.defaults.headers.common['Authorization'] )
+      // console.log(http_api.defaults.headers.common['Authorization'] )
 
 
       document.title = "SIA - Institutos"
@@ -145,7 +146,7 @@ export default {
     methods: {
 
       getAxiosArrayInstitutos() {
-        this.$axios({
+        http_api({
             method:'get',
             url: '/instituto/',
         })
@@ -196,7 +197,7 @@ export default {
         //   password: this.password,
         //   confirm_password: this.confirm_password
         // })        
-        this.$axios({
+        http_api({
             method: 'delete',
             url: '/instituto/' + item.id +'',
           })
@@ -220,7 +221,7 @@ export default {
       save () {
         if (this.editedIndex > -1) { // Se this.editedIndex  > -1 entao estamos na edição
           //Editando item chama-se o metodo put na rota instituto e irá para update
-          this.$axios({
+          http_api({
             method: 'put',
             url: '/instituto/' + this.editedItem.id +'',
             data: {
@@ -242,7 +243,7 @@ export default {
           })
 
         } else { // Se this.editedIndex  == -1 entao estamos na inserção
-          this.$axios({
+          http_api({
             method: 'post',
             url:  '/instituto/',
             data: {

@@ -160,8 +160,7 @@
 </template>
 
 <script>
-import axios_instance from '../../axios'
-import axios from 'axios';
+import http_api from '@/http/api'
 import moment from 'moment'
 const helpers = require('../../helpers')
 import http_jsreport from '@/http/jsreport'
@@ -294,7 +293,7 @@ export default {
       this.institutos.push({ instituto: '' })
 
       //Pegando todos os anos
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/instituto'
       })
@@ -311,7 +310,7 @@ export default {
 
     getArrayAxiosSalasSessoesAvaliadoresJson() {
       //Pegando todos Avaliadores
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/sessoes_por_sala'
       })
@@ -331,7 +330,7 @@ export default {
     },
     getArrayAxiosTrabalhosJson() {
       //Pegando todos Avaliadores
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/trabalhos_por_instituto'
       })

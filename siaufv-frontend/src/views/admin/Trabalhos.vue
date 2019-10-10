@@ -248,6 +248,7 @@
 </template>
 
 <script>
+import http_api from '@/http/api'
 const helpers = require('../../helpers')
 
 export default {
@@ -351,7 +352,7 @@ export default {
   methods: {
     // Pega todos trabalhos
     getAxiosArrayTrabalhos() {
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/trabalho'
       })
@@ -366,7 +367,7 @@ export default {
               return trabalho
             }
           })
-          console.log('TRABALHOS: ', this.trabalhos)
+          //console.log('TRABALHOS: ', this.trabalhos)
         })
         .catch(error => {
           console.log(error)
@@ -375,7 +376,7 @@ export default {
 
     getAxiosArrayAnos() {
       //Pegando todos os anos
-      this.$axios({
+      http_api({
         method: 'get',
         url: '/ano'
       })
@@ -481,7 +482,7 @@ export default {
 
       // Confirmando && enviando o ... as duas linhas abaixo estão atreladas
       confirm('Está certo que deseja deletar este item?') &&
-        this.$axios({
+        http_api({
           method: 'delete',
           url: '/trabalho/' + item.id + ''
         })
@@ -517,7 +518,7 @@ export default {
         else if (this.editedItem.tipo == 'Painel') 
           this.editedItem.tipo = 1
 
-        this.$axios({
+        http_api({
           method: 'put',
           url: '/trabalho/' + this.editedItem.id + '',
           data: {
@@ -561,7 +562,7 @@ export default {
         else if (this.editedItem.tipo == 'Painel') 
           this.editedItem.tipo = 1
 
-        this.$axios({
+        http_api({
           method: 'post',
           url: '/trabalho',
           data: {
@@ -585,7 +586,7 @@ export default {
             this.close()
           })
           .catch(error => {
-            console.log(error.response)
+            console.log('Error: ', error)
 
             this.errors.clear()
             if (error.response.data[0].message)

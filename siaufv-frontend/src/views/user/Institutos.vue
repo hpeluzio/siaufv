@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import http_api from '@/http/api'
 
 export default {
     data: () => ({
@@ -68,7 +69,7 @@ export default {
     //methods
     methods: {
       getAxiosArrayInstitutos() {
-        this.$axios({
+        http_api({
             method:'get',
             url: '/instituto/',
         })
