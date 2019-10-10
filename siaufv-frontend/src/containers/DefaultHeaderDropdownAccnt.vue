@@ -58,14 +58,7 @@ export default {
 
     logout(){
       this.SET_DESLOGAR_ACT()
-      //sessionStorage.clear()
-      localStorage.removeItem('user');
-      localStorage.removeItem('state');
-      //this.$store.loggedIn = false
-      //this.$store.permission = ''    
-      this.$router.push({ name: 'Login' })
-      //window.location.reload(true);
-      this.$axios = null
+      //this.$router.push({ name: 'Login' })
     }
   }
 

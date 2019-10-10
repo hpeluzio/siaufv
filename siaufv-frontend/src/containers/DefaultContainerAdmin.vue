@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <AppHeader fixed>
+    <AppHeader fixed :style="dev">
       <SidebarToggler class="d-lg-none" display="md" mobile />
       <b-link class="navbar-brand" to="/admin">
         <img class="navbar-brand-full" src="/img/brand/logo.svg" width="89" height="25" alt="SIA Logo">
@@ -92,6 +92,9 @@ export default {
       logged: true,
     }
   },
+  // created(){
+  //   console.log('NODE_ENV: ' , process.env.NODE_ENV)
+  // },
   computed: {
     name () {
       return this.$route.name
@@ -101,6 +104,17 @@ export default {
     },
     email () {
       return this.$store.getters['auth/email']
+    },
+    dev() {
+      if(process.env.NODE_ENV =='development'){
+       return {
+         backgroundColor:"yellow"
+        }
+      }
+      else
+         return {
+           backgroundColor:"white"        
+         }
     }
   }
 }

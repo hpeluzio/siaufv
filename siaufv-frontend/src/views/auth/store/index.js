@@ -49,8 +49,6 @@ export default {
             state.id = ''
             state.created_at = ''
             state.updated_at = ''
-
-            localStorage.removeItem('state')
         }
     },
 
@@ -183,6 +181,7 @@ export default {
         },
 
         SET_DESLOGAR_ACT (context ) {
+            localStorage.removeItem('state')
             context.commit('SET_DESLOGAR')
         },
     }

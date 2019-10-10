@@ -1,7 +1,7 @@
 <template>
   <div>
-  <Loader></Loader>
-  <router-view></router-view>
+    <Loader></Loader>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -15,10 +15,16 @@ export default {
   },
 
   watch: {
+    //Observa o estado de autenticacao
     logado(newValue, oldValue) {
-      console.log('newValue, oldValue: ', newValue, oldValue)
       if(newValue === false)
         this.$router.push('login')
+      if(newValue === true){
+        if(this.$store.getters['auth/permission'] === 'admin')
+          this.$router.push('admin')
+        else
+          this.$router.push('home')
+      }
     }
   },
 

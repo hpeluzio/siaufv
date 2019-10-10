@@ -330,6 +330,17 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   //Next é para onde está indo e from é de onde veio
   // //Se precisar de autenticacao e nao tiver sessao ja manda logo pra pagina de login
+  //console.log(to)
+  if((to.name === 'Login' || to.name === 'Register') && store.getters['auth/logado'] === true){
+    if(store.getters['auth/permission']=== 'admin')
+      next({ path: '/admin' })
+    else
+      next({ path: '/home' })
+  }
+
+  // if(to.name === 'Home' && store.getters['auth/permission'] === admin){
+  //     next({ path: '/admin' })
+  // }  
 
   if(to.meta.requiresAuth ){
     //const authUser = JSON.parse(localStorage.getItem('user'))

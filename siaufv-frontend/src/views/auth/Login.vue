@@ -106,12 +106,12 @@ export default {
         //console.log('response_resolve', response_resolve)
         if(response_resolve){
           // console.log('LOGOU', this.$store.getters['auth/permission'])
-          if(this.$store.getters['auth/permission'] === 'admin'){
-            this.$router.push('/admin')
-          }  
-          else {
-            this.$router.push('/home')
-          }
+          // if(this.$store.getters['auth/permission'] === 'admin'){
+          //   this.$router.push('/admin')
+          // }  
+          // else {
+          //   this.$router.push('/home')
+          // }
         } 
       }).catch( error => {
         console.log('Error: ', error)

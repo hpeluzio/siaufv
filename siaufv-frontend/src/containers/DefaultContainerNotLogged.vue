@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <AppHeader fixed>
+    <AppHeader fixed :style="dev">
       <SidebarToggler class="d-lg-none" display="md" mobile />
       <b-link class="navbar-brand" to="/login">
         <img class="navbar-brand-full" src="/img/brand/logo.svg" width="89" height="25" alt="SIA Logo">
@@ -98,6 +98,17 @@ export default {
     },
     list () {
       return this.$route.matched.filter((route) => route.name || route.meta.label )
+    },
+    dev() {
+      if(process.env.NODE_ENV =='development'){
+       return {
+         backgroundColor:"yellow"
+        }
+      }
+      else
+         return {
+           backgroundColor:"white"        
+         }
     }
   }
 }
