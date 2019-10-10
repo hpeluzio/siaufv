@@ -150,7 +150,7 @@ const router = new Router({
     {
       path: '/admin',
       redirect: '/admin',
-      name: 'admin',
+      name: 'Admin',
       component: DefaultContainerAdmin,
       meta: { requiresAuth: true, adminAuth: true, userAuth: false },
       children: [
@@ -330,7 +330,8 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   //Next é para onde está indo e from é de onde veio
   // //Se precisar de autenticacao e nao tiver sessao ja manda logo pra pagina de login
-  //console.log(to)
+  // console.log(to)
+  // console.log(from)
   if((to.name === 'Login' || to.name === 'Register') && store.getters['auth/logado'] === true){
     if(store.getters['auth/permission']=== 'admin')
       next({ path: '/admin' })
