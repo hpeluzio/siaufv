@@ -90,6 +90,7 @@
 
 <script>
 import http_api from '@/http/api'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Update',
@@ -109,6 +110,7 @@ export default {
 
   },  
   methods: {
+    ... mapActions('auth', ['SET_UPDATE_USER_ACT']),
 
     setDados() {
       this.name = this.$store.getters['auth/name']
@@ -126,28 +128,48 @@ export default {
     },
 
     atualizar() {
-      //const authUser = JSON.parse(localStorage.getItem('user'))
+      this.SET_UPDATE_USER_ACT({ 
+        'name': this.name, 
+        'email': this.email ,
+        'password': this.password ,
+        'confirm_password': this.confirm_password
+      })  
+      .then( response_resolve => {
+        //console.log('response_resolve', response_resolve)
+        if(response_resolve){
+          console.log('ATUALIZOU')
+          // if(this.$store.getters['auth/permission'] === 'admin'){
+          //   this.$router.push('/admin')
+          // }  
+          // else {
+          //   this.$router.push('/home')
+          // }
+        } 
+      }).catch( error => {
+        console.log('Error: ', error)
+      });
 
-      http_api({
-        method: 'put',
-        url: '/usuario/' + this.email = this.$store.getters['auth/id'] + '',
-        data: {
-          id: authUser.user.id,
-          name: this.name,
-          email: this.email,
-          password: this.password,
-          confirm_password: this.confirm_password
-        }
-      })
-      .then(response => {
-        //localStorage.setItem('user', JSON.stringify(response.data))
-        //this.$store.loggedIn = true
-        //this.$store.permission = response.data.user.permission
-        alert('Dados editados.'); 
-      })
-      .catch((error) => {
-        this.errors.clear() 
-      })
+      // http_api({
+      //   method: 'put',
+      //   url: '/usuario/' + this.$store.getters['auth/id'] + '',
+      //   data: {
+      //     id: this.$store.getters['auth/id'],
+      //     name: this.name,
+      //     email: this.email,
+      //     password: this.password,
+      //     confirm_password: this.confirm_password
+      //   }
+      // })
+      // .then(response => {
+        
+      //   //localStorage.setItem('user', JSON.stringify(response.data))
+      //   //this.$store.loggedIn = true
+      //   //this.$store.permission = response.data.user.permission
+      //   alert('Dados editados.'); 
+      // })
+      // .catch((error) => {
+      //   this.errors.clear() 
+      // });
     }
   }
 }

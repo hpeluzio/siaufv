@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import modules from './modules'
+import router from '@/router'
 
 Vue.use(Vuex)
 
@@ -28,7 +29,26 @@ export default new Vuex.Store({
 					Object.assign(state, JSON.parse(localStorage.getItem('state')))
 				);
 			}
-        },                 
+        },
+		EVENT_LISTENER(state) {
+            var _this = this 
+            window.addEventListener("storage", event => {
+                // if(event)
+                //     console.log('EVENT: ', event)
+                //console.log('addEventListener ADICIONADO NAS OUTRAS ABAS/JANELAS') 
+                //const auth = JSON.parse(localStorage.getItem('state')).auth
+
+                // if(localStorage.getItem('state') == null){
+                //     // this.console.log('naoLogado')
+                //     // router.push('/login')
+                //     window.location.href = "/login";
+                // }
+
+				_this.replaceState(
+					Object.assign(state, JSON.parse(localStorage.getItem('state')))
+				);
+            })
+        },                         
     },
     plugins:[ls]    
 })

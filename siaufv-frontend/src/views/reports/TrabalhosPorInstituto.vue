@@ -275,7 +275,7 @@ export default {
           this.trabalhos_json.sort(function(a,b) {
               return a.autores[0].autor < b.autores[0].autor  ? -1 : a.autores[0].autor  > b.autores[0].autor  ? 1 : 0;
           });
-          console.log('this.trabalhos_json ', this.trabalhos_json)
+          //console.log('this.trabalhos_json ', this.trabalhos_json)
         })
         .catch(error => {
           console.log(error)

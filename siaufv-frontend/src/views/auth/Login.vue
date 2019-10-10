@@ -82,7 +82,7 @@ export default {
   created() {
     document.title = "SIA - Login"
   },
-
+  
   methods: {
     ... mapActions('auth', ['SET_LOGAR_ACT']),
     //Checar o formulário em busca de erros
@@ -103,7 +103,7 @@ export default {
       this.SET_LOGAR_ACT({ 'email': this.email, 'password': this.password })    
         
       .then( response_resolve => {
-        // console.log('response_resolve', response_resolve)
+        //console.log('response_resolve', response_resolve)
         if(response_resolve){
           // console.log('LOGOU', this.$store.getters['auth/permission'])
           if(this.$store.getters['auth/permission'] === 'admin'){

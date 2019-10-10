@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import axios_instance from '../../axios'
 
 export default {
   data: () => ({

@@ -13,11 +13,25 @@ export default {
   components: {
     Loader
   },
+
+  watch: {
+    logado(newValue, oldValue) {
+      console.log('newValue, oldValue: ', newValue, oldValue)
+      if(newValue === false)
+        this.$router.push('login')
+    }
+  },
+
   computed: {
     SET_LOADER() {
       return this.$store.state.loader
+    },
+
+    logado() {
+      return this.$store.getters['auth/logado']
     }
-  }  
+  },
+  
 }
 </script>
 

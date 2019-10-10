@@ -4,7 +4,7 @@ const pluginLocalStorage = store => {
     console.log('STORE INIT')
     
     //store.dispatch('produtos/API_CALL_ACT')
-    //store.commit('eventListener');
+    store.commit('EVENT_LISTENER');
     store.commit('INITIALISE_STORE');
 
 
