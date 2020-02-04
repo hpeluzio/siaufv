@@ -1,5 +1,66 @@
 <template>
     <div class="container">
+
+    <v-dialog v-model="dialog" persistent max-width="65%">
+        <template v-slot:activator="{ on }">
+          <!-- <v-btn color="primary" dark v-on="on">Open Dialog</v-btn> -->
+        </template>
+        <v-card>
+          <v-card-title class="headline"></v-card-title>
+          <v-card-text>
+            
+            
+                <h1><center>POLÍTICAS E TERMOS DE USO</center><strong></strong></h1> 
+
+
+                <h5>Descrição</h5>
+                <p>O sistema do SIA de Rio Paranaíba foi criado para facilitar e viabilizar a
+                gestão e alocação das salas do campus nas datas do eventos para trabalhos orais, 
+                paineis e minicursos.
+                 </p>
+
+                <br>
+                <h5>O que faremos com as informações</h5>
+                <p>Quando você realiza algum acesso ou modificação no sistema coletamos as informações 
+                  para alocarmos e gerirmos da melhor forma os trabalhos e minicursos.
+                </p>
+
+                <br>
+                <h5>Divulgação</h5>
+                <p>Podemos divulgar suas informações pessoais 
+                  caso sejamos obrigados pela lei para fazê-lo 
+                  ou se você violar nossos Termos de Serviço.</p>
+
+                <br>
+                <h5>Segurança</h5>
+                <p>Para proteger suas informações pessoais, tomamos precauções razoáveis e 
+                  seguimos as melhores práticas para nos certificar que elas não 
+                  serão perdidas inadequadamente, usurpadas, acessadas, divulgadas, alteradas ou destruídas.
+
+                  Toda informação pessoal é 
+                  criptografada usando tecnologia "secure socket layer" (SSL) e armazenada com uma 
+                  criptografia AES-256. Embora nenhum método de transmissão pela Internet ou armazenamento 
+                  eletrônico é 100% seguro, nós seguimos todos os requisitos da PCI-DSS e implementamos padrões 
+                  adicionais geralmente aceitos pela indústria.
+                </p>
+
+                <br>
+                <h5>Conta de Acesso</h5>
+                <p>A conta é o meio de acesso aos recursos disponibilizados pelos administradores do sistema.
+                  Ao criar uma conta, o então usuário declara admitir incondicionalmente a política
+                  estabelecida neste documento, bem como conhecer e entender como operar o sistema.
+                </p>
+       
+          
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn class="primary" color="red" text @click="recusar()">Recusar</v-btn>
+            <v-btn class="primary" color="blue" text @click="dialog = false">Aceitar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
       <b-row class="justify-content-center">
         <b-col md="6" sm="8">
           <b-card no-body class="mx-4">
@@ -101,12 +162,13 @@ export default {
       email: '',
       password: '',
       confirm_password: '',
-      submitted: false
+      submitted: false,
+      dialog: true,
     }
   },
 
   created() {
-    document.title = "SIA - Register";
+    document.title = "SIA - Registrar";
   },  
 
   methods: {
@@ -139,6 +201,10 @@ export default {
         console.log('Error: ', error)
       });
     },
+
+    recusar() {
+      this.$router.push('/login')
+    },        
 
   }
 }

@@ -4,8 +4,8 @@ import store from '@/store'
 
 // Containers
 const DefaultContainer = () => import('@/containers/DefaultContainer')
-const DefaultContainerAdmin = () => import('@/containers/DefaultContainerAdmin')
-const DefaultContainerNotLogged = () => import('@/containers/DefaultContainerNotLogged')
+// const DefaultContainerAdmin = () => import('@/containers/DefaultContainerAdmin')
+// const DefaultContainerNotLogged = () => import('@/containers/DefaultContainerNotLogged')
 
 // SIA
 //admin
@@ -62,17 +62,17 @@ const router = new Router({
     {
       path: '/',
       redirect: '/login',
-      name: 'Autenticação',
-      component: DefaultContainerNotLogged,
+      // name: 'Autenticação',
+      component: DefaultContainer,
       children: [
         {
           path: 'register',
-          name: 'Register',
+          // name: 'Register',
           component: Register
         },
         {
           path: 'login',
-          name: 'Login',
+          // name: 'Login',
           component: Login,
         },
         {
@@ -87,61 +87,61 @@ const router = new Router({
     {
       path: '/',
       redirect: '/admin',
-      name: '',
-      component: DefaultContainerAdmin,
+      // name: 'admin',
+      component: DefaultContainer,
       meta: { requiresAuth: true, adminAuth: true, userAuth: false },
       children: [
         {
           path: 'admin',
-          name: 'Admin / Home',
+          // name: 'Home',
           component: Admin,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/institutos',
-          name: 'Admin / Institutos',
+          // name: 'Institutos',
           component: AdminInstitutos,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },          
         }, 
         {
           path: '/admin/anos',
-          name: 'Admin / Anos',
+          // name: 'Anos',
           component: AdminAnos,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/avaliadores',
-          name: 'Admin / Avaliadores',
+          // name: 'Avaliadores',
           component: AdminAvaliadores,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/orais',
-          name: 'Admin / Orais',
+          // name: 'Orais',
           component: AdminOrais,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/paineis',
-          name: 'Admin / Painéis',
+          // name: 'Painéis',
           component: AdminPaineis,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },                    
         {
           path: '/admin/trabalhos',
-          name: 'Admin / Trabalhos',
+          // name: 'Trabalhos',
           component: AdminTrabalhos,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/salas',
-          name: 'Admin / Salas',
+          // name: 'Salas',
           component: AdminSalas,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/usuarios',
-          name: 'Admin / Usuários',
+          // name: 'Usuários',
           component: AdminUsuarios,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
@@ -150,56 +150,56 @@ const router = new Router({
     {
       path: '/admin',
       redirect: '/admin',
-      name: 'Admin',
-      component: DefaultContainerAdmin,
+      // name: 'Admin',
+      component: DefaultContainer,
       meta: { requiresAuth: true, adminAuth: true, userAuth: false },
       children: [
         {
           path: '/admin/relatorios_orais',
-          name: 'Administrador / Relatórios Orais',
+          // name: 'Relatórios Orais',
           component: Oraisreport,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/relatorios_paineis',
-          name: 'Administrador / Relatórios Painéis',
+          // name: 'Relatórios Painéis',
           component: Paineisreport,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/avaliadoresporinstituto',
-          name: 'Administrador / Avaliadores por Instituto',
+          // name: 'Avaliadores por Instituto',
           component: AvaliadoresPorInstituto,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/trabalhosporinstituto',
-          name: 'Administrador / Trabalhos por Instituto',
+          // name: 'Trabalhos por Instituto',
           component: TrabalhosPorInstituto,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },                
         {
           path: '/admin/sessoesporsala',
-          name: 'Administrador / Sessões por Sala',
+          // name: 'Sessões por Sala',
           component: SessoesPorSala,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         }, 
         {
           path: '/meusdados',
-          name: 'Administrador / Meus Dados',
+          // name: 'Meus Dados',
           component: MeusDados,
           meta: { requiresAuth: true, adminAuth: false, userAuth: false },
         },  
         //Fichas
         {
           path: '/admin/fichas_orais',
-          name: 'Administrador / Fichas de Trabalhos Orais',
+          // name: 'Fichas de Trabalhos Orais',
           component: FichasOrais,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/fichas_paineis',
-          name: 'Administrador / Fichas de Trabalhos Paineis',
+          // name: 'Fichas de Trabalhos Paineis',
           component: FichasPaineis,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },                 
@@ -210,7 +210,7 @@ const router = new Router({
     {
       path: '/',
       redirect: '/home',
-      name: 'Home',
+      // name: 'Home',
       component: DefaultContainer,
       meta: { requiresAuth: true, adminAuth: false, userAuth: true },
       children: [
@@ -222,43 +222,43 @@ const router = new Router({
         },
         {
           path: 'institutos',
-          name: 'Institutos',
+          // name: 'Institutos',
           component: Institutos,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         }, 
         {
           path: 'anos',
-          name: 'Anos',
+          // name: 'Anos',
           component: Anos,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'avaliadores',
-          name: 'Avaliadores',
+          // name: 'Avaliadores',
           component: Avaliadores,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'orais',
-          name: 'Orais',
+          // name: 'Orais',
           component: Orais,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'paineis',
-          name: 'Painéis',
+          // name: 'Painéis',
           component: Paineis,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },                    
         {
           path: 'trabalhos',
-          name: 'Trabalhos',
+          // name: 'Trabalhos',
           component: Trabalhos,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'salas',
-          name: 'Salas',
+          // name: 'Salas',
           component: Salas,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
@@ -268,56 +268,56 @@ const router = new Router({
     {
       path: '/',
       redirect: '/relatorios_orais',
-      name: 'Relatorios',
+      // name: 'Relatorios',
       component: DefaultContainer,
       meta: { requiresAuth: true, adminAuth: false, userAuth: true },
       children: [
         {
           path: 'relatorios_orais',
-          name: 'Relatórios Orais',
+          // name: 'Relatórios Orais',
           component: Oraisreport,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'relatorios_paineis',
-          name: 'Relatórios Painéis',
+          // name: 'Relatórios Painéis',
           component: Paineisreport,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'avaliadoresporinstituto',
-          name: 'Avaliadores por Instituto',
+          // name: 'Avaliadores por Instituto',
           component: AvaliadoresPorInstituto,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'trabalhosporinstituto',
-          name: 'Trabalhos por Instituto',
+          // name: 'Trabalhos por Instituto',
           component: TrabalhosPorInstituto,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'sessoesporsala',
-          name: 'Sessões por Sala',
+          // name: 'Sessões por Sala',
           component: SessoesPorSala,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },                        
         {
           path: 'meusdados',
-          name: 'Meus Dados',
+          // name: 'Meus Dados',
           component: MeusDados,
           meta: { requiresAuth: true, adminAuth: false, userAuth: false },
         },
         //Fichas
         {
           path: 'fichas_orais',
-          name: 'Fichas de Trabalhos Orais',
+          // name: 'Fichas de Trabalhos Orais',
           component: FichasOrais,
           meta: { requiresAuth: true, adminAuth: false, userAuth: false },
         },
         {
           path: 'fichas_paineis',
-          name: 'Fichas de Trabalhos Paineis',
+          // name: 'Fichas de Trabalhos Paineis',
           component: FichasPaineis,
           meta: { requiresAuth: true, adminAuth: false, userAuth: false },
         },                              

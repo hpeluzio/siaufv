@@ -18,12 +18,12 @@ export default {
     //Observa o estado de autenticacao
     logado(newValue, oldValue) {
       if(newValue === false)
-        this.$router.push({ name: 'Login' })
+        this.$router.push('/login')
       if(newValue === true){
         if(this.$store.getters['auth/permission'] === 'admin')
-          this.$router.push({ name: 'Admin' })
+          this.$router.push('/admin')
         else
-          this.$router.push({ name: 'Home' })
+          this.$router.push('/home')
       }
     }
   },
