@@ -11,7 +11,7 @@ export default {
     // },    
     {
       name: 'Home',
-      url: '/admin',
+      url: '/home',
       icon: 'icon-home',
     },
 
@@ -25,21 +25,21 @@ export default {
       }
     },
 
-    {
-      name: 'Institutos',
-      url: '/institutos',
-      icon: 'cui-graph'
-    },
-    {
-      name: 'Anos',
-      url: '/anos',
-      icon: 'icon-calendar'
-    },
-    {
-      name: 'Salas',
-      url: '/salas',
-      icon: 'cui-location-pin'
-    },
+    // {
+    //   name: 'Institutos',
+    //   url: '/institutos',
+    //   icon: 'cui-graph'
+    // },
+    // {
+    //   name: 'Anos',
+    //   url: '/anos',
+    //   icon: 'icon-calendar'
+    // },
+    // {
+    //   name: 'Salas',
+    //   url: '/salas',
+    //   icon: 'cui-location-pin'
+    // },
     {
       name: 'Avaliadores',
       url: '/avaliadores',

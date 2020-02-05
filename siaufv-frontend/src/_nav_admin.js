@@ -11,7 +11,7 @@ export default {
     // },    
     {
       name: 'Home',
-      url: '/admin',
+      url: '/home',
       icon: 'icon-home',
     },
 
@@ -83,23 +83,23 @@ export default {
 
     {
       name: '> Avaliadores por Instituto',
-      url: '/admin/avaliadoresporinstituto',
+      url: '/avaliadoresporinstituto',
     },
     {
       name: '> Trabalhos por Instituto',
-      url: '/admin/trabalhosporinstituto',
+      url: '/trabalhosporinstituto',
     },
     {
       name: '> Salas e suas Sessões',
-      url: '/admin/sessoesporsala',
+      url: '/sessoesporsala',
     },
     {
       name: 'Sessões Orais',
-      url: '/admin/relatorios_orais',
+      url: '/relatorios_orais',
     },
     {
       name: 'Sessões Paineis',
-      url: '/admin/relatorios_paineis',
+      url: '/relatorios_paineis',
     },
 
     {
@@ -113,11 +113,11 @@ export default {
     },
     {
       name: 'Fichas trabalhos Orais',
-      url: '/admin/fichas_orais',
+      url: '/fichas_orais',
     },
     {
       name: 'Fichas trabalhos Paineis',
-      url: '/admin/fichas_paineis',
+      url: '/fichas_paineis',
     },
 
 

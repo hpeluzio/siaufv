@@ -20,10 +20,7 @@ export default {
       if(newValue === false)
         this.$router.push('/login')
       if(newValue === true){
-        if(this.$store.getters['auth/permission'] === 'admin')
-          this.$router.push('/admin')
-        else
-          this.$router.push('/home')
+        this.$router.push('/home')
       }
     }
   },

@@ -8,8 +8,9 @@ const DefaultContainer = () => import('@/containers/DefaultContainer')
 // const DefaultContainerNotLogged = () => import('@/containers/DefaultContainerNotLogged')
 
 // SIA
+const Home = () => import('@/views/Home')
+
 //admin
-const Admin = () => import('@/views/admin/Home')
 const AdminAnos = () => import('@/views/admin/Anos')
 const AdminInstitutos = () => import('@/views/admin/Institutos')
 const AdminAvaliadores = () => import('@/views/admin/Avaliadores')
@@ -20,7 +21,6 @@ const AdminPaineis = () => import('@/views/admin/Paineis')
 const AdminUsuarios = () => import('@/views/admin/Usuarios')
 
 //Users
-const Home = () => import('@/views/user/Home')
 const Anos = () => import('@/views/user/Anos')
 const Institutos = () => import('@/views/user/Institutos')
 const Avaliadores = () => import('@/views/user/Avaliadores')
@@ -62,7 +62,6 @@ const router = new Router({
     {
       path: '/',
       redirect: '/login',
-      // name: 'Autenticação',
       component: DefaultContainer,
       children: [
         {
@@ -77,132 +76,78 @@ const router = new Router({
         },
         {
           path: 'page404',
-          name: 'Page404',
+          // name: 'Page404',
           component: Page404,
-        },        
+        },
+      ]
+    },
+
+    //Paginas comuns a USER E ADMIN
+    {
+      path: '/',
+      redirect: '/home',
+      component: DefaultContainer,
+      children: [
+        {
+          path: 'home',
+          // name: 'Home',
+          component: Home,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: false }
+        },
+        {
+          path: 'meusdados',
+          component: MeusDados,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: false },
+        }, 
       ]
     },
 
     //Admin permission
     {
       path: '/',
-      redirect: '/admin',
-      // name: 'admin',
+      redirect: '/home',
       component: DefaultContainer,
-      meta: { requiresAuth: true, adminAuth: true, userAuth: false },
       children: [
         {
-          path: 'admin',
-          // name: 'Home',
-          component: Admin,
-          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-        },
-        {
           path: '/admin/institutos',
-          // name: 'Institutos',
           component: AdminInstitutos,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },          
         }, 
         {
           path: '/admin/anos',
-          // name: 'Anos',
           component: AdminAnos,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/avaliadores',
-          // name: 'Avaliadores',
           component: AdminAvaliadores,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/orais',
-          // name: 'Orais',
           component: AdminOrais,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/paineis',
-          // name: 'Painéis',
           component: AdminPaineis,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },                    
         {
           path: '/admin/trabalhos',
-          // name: 'Trabalhos',
           component: AdminTrabalhos,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/salas',
-          // name: 'Salas',
           component: AdminSalas,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
         {
           path: '/admin/usuarios',
-          // name: 'Usuários',
           component: AdminUsuarios,
           meta: { requiresAuth: true, adminAuth: true, userAuth: false },
         },
-      ]
-    },
-    {
-      path: '/admin',
-      redirect: '/admin',
-      // name: 'Admin',
-      component: DefaultContainer,
-      meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-      children: [
-        {
-          path: '/admin/relatorios_orais',
-          // name: 'Relatórios Orais',
-          component: Oraisreport,
-          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-        },
-        {
-          path: '/admin/relatorios_paineis',
-          // name: 'Relatórios Painéis',
-          component: Paineisreport,
-          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-        },
-        {
-          path: '/admin/avaliadoresporinstituto',
-          // name: 'Avaliadores por Instituto',
-          component: AvaliadoresPorInstituto,
-          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-        },
-        {
-          path: '/admin/trabalhosporinstituto',
-          // name: 'Trabalhos por Instituto',
-          component: TrabalhosPorInstituto,
-          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-        },                
-        {
-          path: '/admin/sessoesporsala',
-          // name: 'Sessões por Sala',
-          component: SessoesPorSala,
-          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-        }, 
-        {
-          path: '/meusdados',
-          // name: 'Meus Dados',
-          component: MeusDados,
-          meta: { requiresAuth: true, adminAuth: false, userAuth: false },
-        },  
-        //Fichas
-        {
-          path: '/admin/fichas_orais',
-          // name: 'Fichas de Trabalhos Orais',
-          component: FichasOrais,
-          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-        },
-        {
-          path: '/admin/fichas_paineis',
-          // name: 'Fichas de Trabalhos Paineis',
-          component: FichasPaineis,
-          meta: { requiresAuth: true, adminAuth: true, userAuth: false },
-        },                 
       ]
     },
 
@@ -210,114 +155,86 @@ const router = new Router({
     {
       path: '/',
       redirect: '/home',
-      // name: 'Home',
       component: DefaultContainer,
-      meta: { requiresAuth: true, adminAuth: false, userAuth: true },
       children: [
         {
-          path: 'home',
-          //name: 'Home',
-          component: Home,
-          meta: { requiresAuth: true, adminAuth: false, userAuth: true },
-        },
-        {
           path: 'institutos',
-          // name: 'Institutos',
           component: Institutos,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         }, 
         {
           path: 'anos',
-          // name: 'Anos',
           component: Anos,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'avaliadores',
-          // name: 'Avaliadores',
           component: Avaliadores,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'orais',
-          // name: 'Orais',
           component: Orais,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'paineis',
-          // name: 'Painéis',
           component: Paineis,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },                    
         {
           path: 'trabalhos',
-          // name: 'Trabalhos',
           component: Trabalhos,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
         {
           path: 'salas',
-          // name: 'Salas',
           component: Salas,
           meta: { requiresAuth: true, adminAuth: false, userAuth: true },
         },
       ]
     },
 
+    //Relatórios comuns a ADMIN e USER
     {
       path: '/',
       redirect: '/relatorios_orais',
       // name: 'Relatorios',
       component: DefaultContainer,
-      meta: { requiresAuth: true, adminAuth: false, userAuth: true },
       children: [
         {
-          path: 'relatorios_orais',
-          // name: 'Relatórios Orais',
+          path: '/relatorios_orais',
           component: Oraisreport,
-          meta: { requiresAuth: true, adminAuth: false, userAuth: true },
-        },
-        {
-          path: 'relatorios_paineis',
-          // name: 'Relatórios Painéis',
-          component: Paineisreport,
-          meta: { requiresAuth: true, adminAuth: false, userAuth: true },
-        },
-        {
-          path: 'avaliadoresporinstituto',
-          // name: 'Avaliadores por Instituto',
-          component: AvaliadoresPorInstituto,
-          meta: { requiresAuth: true, adminAuth: false, userAuth: true },
-        },
-        {
-          path: 'trabalhosporinstituto',
-          // name: 'Trabalhos por Instituto',
-          component: TrabalhosPorInstituto,
-          meta: { requiresAuth: true, adminAuth: false, userAuth: true },
-        },
-        {
-          path: 'sessoesporsala',
-          // name: 'Sessões por Sala',
-          component: SessoesPorSala,
-          meta: { requiresAuth: true, adminAuth: false, userAuth: true },
-        },                        
-        {
-          path: 'meusdados',
-          // name: 'Meus Dados',
-          component: MeusDados,
           meta: { requiresAuth: true, adminAuth: false, userAuth: false },
         },
+        {
+          path: '/relatorios_paineis',
+          component: Paineisreport,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: false },
+        },
+        {
+          path: '/avaliadoresporinstituto',
+          component: AvaliadoresPorInstituto,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: false },
+        },
+        {
+          path: '/trabalhosporinstituto',
+          component: TrabalhosPorInstituto,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: false },
+        },
+        {
+          path: '/sessoesporsala',
+          component: SessoesPorSala,
+          meta: { requiresAuth: true, adminAuth: false, userAuth: false },
+        },                        
         //Fichas
         {
-          path: 'fichas_orais',
-          // name: 'Fichas de Trabalhos Orais',
+          path: '/fichas_orais',
           component: FichasOrais,
           meta: { requiresAuth: true, adminAuth: false, userAuth: false },
         },
         {
-          path: 'fichas_paineis',
-          // name: 'Fichas de Trabalhos Paineis',
+          path: '/fichas_paineis',
           component: FichasPaineis,
           meta: { requiresAuth: true, adminAuth: false, userAuth: false },
         },                              
@@ -328,31 +245,29 @@ const router = new Router({
 
 // Middleware de autenticação para as rotas
 router.beforeEach((to, from, next) => {
-  //Next é para onde está indo e from é de onde veio
-  // //Se precisar de autenticacao e nao tiver sessao ja manda logo pra pagina de login
-  // console.log(to)
-  // console.log(from)
-  if((to.name === 'Login' || to.name === 'Register') && store.getters['auth/logado'] === true){
-    if(store.getters['auth/permission']=== 'admin')
-      next({ path: '/admin' })
-    else
+  // Next é para onde está indo e from é de onde veio
+  // Se precisar de autenticacao e nao tiver sessao ja manda logo pra pagina de login
+  console.log(to)
+  console.log(from)
+  console.log('LOGADO: ', store.getters['auth/logado'])
+
+  if((to.path == '/login' || to.path == '/register') && store.getters['auth/logado'] == true){
+    // if(store.getters['auth/permission']== 'admin')
+    //   next({ path: '/admin' })
+    // else
       next({ path: '/home' })
   }
-
-  // if(to.name === 'Home' && store.getters['auth/permission'] === admin){
-  //     next({ path: '/admin' })
-  // }  
 
   if(to.meta.requiresAuth ){
     //const authUser = JSON.parse(localStorage.getItem('user'))
 
-    if(store.getters['auth/logado'] === false /*|| Vue.prototype.$store.loggedIn === false*/){
+    if(store.getters['auth/logado'] == false /*|| Vue.prototype.$store.loggedIn === false*/){
       next({ path: '/login' })
     }
     
     else if (to.meta.adminAuth) {
       //const authUser = JSON.parse(localStorage.getItem('user'))
-      if(store.getters['auth/permission']=== 'admin' /*&& Vue.prototype.$store.permission === 'admin'*/){
+      if(store.getters['auth/permission']== 'admin' /*&& Vue.prototype.$store.permission === 'admin'*/){
         next()
       }  
       else{
@@ -361,7 +276,7 @@ router.beforeEach((to, from, next) => {
     }
     else if (to.meta.userAuth) {
       //const authUser = JSON.parse(localStorage.getItem('user'))
-      if(store.getters['auth/permission'] === 'user' /*&& Vue.prototype.$store.permission === 'user'*/){
+      if(store.getters['auth/permission'] == 'user' /*&& Vue.prototype.$store.permission === 'user'*/){
         next()
       } else {
         next({ path: '/login' })

@@ -8,11 +8,10 @@
       </b-link>
       <SidebarToggler class="d-md-down-none" display="lg" />
       <b-navbar-nav class="d-md-down-none">
-        <b-nav-item class="px-3" v-if="isLogged" to="/home">Home</b-nav-item>
-        
+
+        <b-nav-item class="px-3" to="/home">Home</b-nav-item>
         <b-nav-item class="px-3" v-if="isAdmin && isLogged" to="/admin/usuarios" exact>Usuários</b-nav-item>
 
-        <!-- <b-nav-item class="px-3" v-if="isLogged" to="/formulario">Meu Formulário</b-nav-item> -->
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <!--<b-nav-item class="d-md-down-none">
